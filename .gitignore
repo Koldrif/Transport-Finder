@@ -4,3 +4,5 @@ DataBase/.idea/encodings.xml
 DataBase/.idea/modules.xml
 DataBase/.idea/misc.xml
 *.xml
+.vscode/*
+venv/*
