@@ -6,3 +6,4 @@ DataBase/.idea/misc.xml
 *.xml
 .vscode/*
 venv/*
+DataBase/test.py
