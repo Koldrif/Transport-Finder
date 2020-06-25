@@ -11,11 +11,11 @@ class DataBase:
     def __init__(self, host=DB_SERVER, user=LOGIN, password=PASSWORD,
                  db=DATABASE, charset=CHARSET):
         self.connect = pms.connect(
-            host=DB_SERVER,
-            user=LOGIN,
-            password=PASSWORD,
-            db=DATABASE,
-            charset=CHARSET
+            host=host,
+            user=user,
+            password=password,
+            db=db,
+            charset=charset
         )
 
     def __task(self, request):
