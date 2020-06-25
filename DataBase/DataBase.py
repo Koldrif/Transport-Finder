@@ -7,7 +7,7 @@ DATABASE = 'DataBase'
 CHARSET = 'utf8'
 
 
-class ClientsType:
+class DataBase:
     def __init__(self):
         self.connect = pms.connect(
             host=DB_SERVER,
