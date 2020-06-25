@@ -8,7 +8,8 @@ CHARSET = 'utf8'
 
 
 class DataBase:
-    def __init__(self):
+    def __init__(self, host=DB_SERVER, user=LOGIN, password=PASSWORD,
+                 db=DATABASE, charset=CHARSET):
         self.connect = pms.connect(
             host=DB_SERVER,
             user=LOGIN,
