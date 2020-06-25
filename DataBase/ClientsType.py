@@ -17,10 +17,10 @@ class ClientsType:
             charset=CHARSET
         )
 
-    def task(self, task):
+    def task(self, request):
         with self.connect:
             cursor = self.connect.cursor()
-            cursor.execute(task)
+            cursor.execute(request)
             rows = cursor.fetchall()
             return rows
 
