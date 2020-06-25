@@ -1,10 +1,10 @@
 import pymysql as pms
 
 DB_SERVER = 'localhost'
-LOGIN = 'server'
-PASSWORD = 'secret'
-DATABASE = 'DataBase'
-CHARSET = 'utf8'
+LOGIN = u'server'
+PASSWORD = u'secret'
+DATABASE = u'transportfinder'
+CHARSET = u'utf8'
 
 
 class DataBase:
