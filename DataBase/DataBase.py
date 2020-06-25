@@ -17,7 +17,7 @@ class DataBase:
             charset=CHARSET
         )
 
-    def task(self, request):
+    def __task(self, request):
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request)
