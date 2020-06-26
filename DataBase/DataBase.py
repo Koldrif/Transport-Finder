@@ -53,3 +53,19 @@ class DataBase:
                                           Reg_address=reg_address,
                                           Implement_address=implement_address,
                                           Risk_category=risk_category))
+
+    def insert_license(self, starts_at, duration_hours, purpose, other_reason, form_of_holding, performs_with,
+                       risk_category):
+        request = "INSERT INTO transportfinder.prosec_inspecs (Starts_at, Duration_hours, Purpose, other_reason, " \
+                  "form_of_holding, Performs_with, Risk_category) VALUES ('{Starts_at}', '{Duration_hours}', " \
+                  "'{Purpose}', '{Other_reason}', '{Form_of_holding}', '{Performs_with}', '{Risk_category}'); "
+        with self.connect:
+            cursor = self.connect.cursor()
+            cursor.execute(request.format(Starts_at=starts_at,
+                                          Duration_hours=duration_hours,
+                                          Purpose=purpose,
+                                          Other_reason=other_reason,
+                                          Form_of_holding=form_of_holding,
+                                          Performs_with=performs_with,
+                                          Risk_category=risk_category
+                                          ))
