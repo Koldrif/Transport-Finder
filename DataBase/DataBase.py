@@ -90,5 +90,5 @@ class DataBase:
             serial = row[11]
             ownership = row[9]
             brand = row[7]
-            self.insert_owner(vin, srm, region, date, serial, ownership, brand)
+            self.insert_transport(vin, srm, region, date, serial, ownership, brand)
 
