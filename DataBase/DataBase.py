@@ -92,10 +92,3 @@ class DataBase:
             brand = row[7]
             self.insert_owner(vin, srm, region, date, serial, ownership, brand)
 
-    def read_owners(self, document_name):
-        print('reading owners...')
-        book = xlrd.open_workbook(document_name)
-        sheet = book.sheet_by_index(0)
-        nrows = sheet.nrows
-        ncols = sheet.ncols
-        for i_row in range()
