@@ -19,6 +19,17 @@ class DataBase:
             db=db,
             charset=charset
         )
+        self.functions = {
+            'license_1': self.read_license_1(),
+            'license_2': self.read_license_2(),
+            'license_3': self.read_license_3(),
+            'license_4': self.read_license_4()
+                          }
+        self.begins = {
+            'license_1': 4,
+            'license_2': 3,
+            'license_4': 5
+                       }
 
     def __task(self, request):
         with self.connect:
@@ -72,23 +83,165 @@ class DataBase:
                                           Risk_category=risk_category
                                           ))
 
-    def read_transport(self, document_name):
-        #todo:
-        # add connector-tables
+    def read_excel(self, document_name, type):
         print('reading transport...')
-        book = xlrd.open_workbook(document_name)
-        sheet = book.sheet_by_index(0)
-        nrows = sheet.nrows
-        ncols = sheet.ncols
+        self.book = xlrd.open_workbook(document_name)
+        self.sheet = self.book.sheet_by_index(0)
+        nrows = self.sheet.nrows
+        ncols = self.sheet.ncols
+        for i_row in range(self.begins[type], nrows):
+            self.row = self.sheet.row_values(i_row)
+            self.functions[type]()
 
-        for i_row in range(4, nrows):
-            row = sheet.row_values(i_row)
-            vin = row[6]
-            srm = row[3]
-            region = row[4]
-            date = ':'.join(map(str, xldate(sheet.row_values(3)[2], book.datemode)[:3:]))
-            serial = row[11]
-            ownership = row[9]
-            brand = row[7]
-            self.insert_transport(vin, srm, region, date, serial, ownership, brand)
+    def read_license_1(self):
+        date = ':'.join(map(str, xldate(self.row[2], self.book.datemode)[:3:]))
+        srm = self.row[3]
+        region = self.row[4]
+        vin = self.row[6]
+        brand = self.row[7]
+        model_number = self.row[8]
+        ownership = self.row[9]
+        date_of_end_rent = ':'.join(map(str, xldate(self.row[10], self.book.datemode)[:3:]))
+        serial = self.row[11]
+        number_of_license = self.row[12]
+        company = self.row[13]
+        inn = self.row[14]
+        self.insert_transport(vin, srm, region, date, serial, ownership, brand)
 
+    def read_license_2(self):
+        name_of_region = self.row[1]
+        region_license = self.row[2]
+        date_of_registration = ':'.join(map(str, xldate(self.row[3], self.book.datemode)[:3:]))
+        srm = self.row[4]
+        reg_number = self.row[5]
+        serial = reg_number[:2:]
+        number_of_license = reg_number[3::]
+        number_of_case = self.row[6].replace(' ', '')
+        company = self.row[7]
+        company_address = self.row[8]
+        actual_address = self.row[9]
+        inn = self.row[10]
+        ogrn = self.row[11]
+        type_of_license = self.row[12]
+        number_of_order = self.row[13].replace(' ', '')
+        date_of_order = self.row[14]
+        number_of_blank = self.row[16]
+        date_of_reestr = self.row[17]
+        info_of_prosecutor_check = self.row[20]
+
+    def read_license_3(self):
+        #todo: ask about this fucking shit
+        pass
+
+    def read_license_4(self):
+        serial = self.row[1]
+        number = self.row[2]
+        company = self.row[3]
+        inn = self.row[4]
+        ogrn = self.row[5]
+        licensing_authority = self.row[6]
+        type_of_license = self.row[7]
+        date_of_begin = self.row[8]
+
+    def read_license_5(self):
+        srm = self.row[2]
+        region_transport = self.row[3]
+        vin = self.row[4]
+        brand = self.row[5]
+        model_number = self.row[6]
+        production_year = self.row[7]
+        ownership = self.row[8]
+        # date_of_ending_rent = self.row[9]
+        date_of_begin = self.row[10]
+        serial = self.row[11]
+        number = self.row[12]
+        if vin == '':
+            vin = self.row[13]
+        inn = self.row[14]
+        ogrn = self.row[15]
+        name_of_client = self.row[16]
+        name_of_owner = self.row[17]
+        date_of_first_license = self.row[19]
+
+    def read_license_6(self):
+        srm = self.row[1]
+        region_srm = self.row[2]
+        brand = self.row[3]
+        model_number = self.row[4]
+        number_of_license = self.row[5]
+        vin = self.row[6]
+        if vin == '':
+            vin = self.row[7]
+        name_of_owner = self.row[8]
+        inn = self.row[9]
+        ogrn = self.row[10]
+        date_of_last_techcheck = self.row[11]
+        date_of_license = self.row[12]
+        production_year = self.row[14]
+        ownership = self.row[15]
+        name_of_licensing_authority = self.row[16]
+
+    def read_license_7(self):
+        pass
+
+    def read_license_8(self):
+        pass
+
+    def read_license_9(self):
+        pass
+
+    def read_license_10(self):
+        pass
+
+    def read_license_11(self):
+        pass
+
+    def read_license_12(self):
+        pass
+
+    def read_license_13(self):
+        pass
+
+    def read_license_14(self):
+        pass
+
+    def read_license_15(self):
+        pass
+
+    def read_license_16(self):
+        pass
+
+    def read_license_17(self):
+        pass
+
+    def read_license_18(self):
+        pass
+
+    def read_license_19(self):
+        pass
+
+    def read_license_20(self):
+        pass
+
+    def read_license_21(self):
+        pass
+
+    def read_license_22(self):
+        pass
+
+    def read_license_23(self):
+        pass
+
+    def read_license_24(self):
+        pass
+
+    def read_license_25(self):
+        pass
+
+    def read_license_26(self):
+        pass
+
+    def read_license_27(self):
+        pass
+
+    def read_
