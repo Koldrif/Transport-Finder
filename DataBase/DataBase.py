@@ -23,12 +23,37 @@ class DataBase:
             'license_1': self.read_license_1(),
             'license_2': self.read_license_2(),
             'license_3': self.read_license_3(),
-            'license_4': self.read_license_4()
+            'license_5': self.read_license_5(),
+            'license_6': self.read_license_6(),
+            'license_7': self.read_license_7(),
+            'license_8': self.read_license_8(),
+            'license_9': self.read_license_9(),
+            'license_10': self.read_license_10(),
+            'license_11': self.read_license_11(),
+            'license_12': self.read_license_12(),
+            'license_13': self.read_license_13(),
+            'license_14': self.read_license_14(),
+            'license_15': self.read_license_15(),
+            'license_16': self.read_license_16(),
+            'license_17': self.read_license_17(),
+            'license_18': self.read_license_18(),
+            'license_19': self.read_license_19(),
+            'license_20': self.read_license_20(),
+            'license_21': self.read_license_21(),
+            'license_22': self.read_license_22(),
+            'license_23': self.read_license_23(),
+            'license_24': self.read_license_24(),
+            'license_25': self.read_license_25(),
+            'license_26': self.read_license_26(),
+            'license_27': self.read_license_27(),
                           }
         self.begins = {
             'license_1': 4,
             'license_2': 3,
-            'license_4': 5
+            'license_4': 5,
+            'license_5': 7,
+            'license_6': 7,
+            'license_7':
                        }
 
     def __task(self, request):
@@ -182,7 +207,7 @@ class DataBase:
         name_of_licensing_authority = self.row[16]
 
     def read_license_7(self):
-        pass
+
 
     def read_license_8(self):
         pass
@@ -243,5 +268,3 @@ class DataBase:
 
     def read_license_27(self):
         pass
-
-    def read_
