@@ -39,10 +39,10 @@ class DataBase:
             return rows
 
     def insert_transport(self, vin, state_registr_mark, region,
-                         date_of_issue, pass_ser, ownership, brand):
+                         date_of_issue, pass_ser, ownership, brand, ttype, registred_at, license_number):
         request = "INSERT INTO transportfinder.transport (VIN, State_Registr_Mark, Region, Date_of_issue, pass_ser, " \
-                  "Ownership, brand) VALUES ('{VIN}', '{SRM}', '{Region}', '{DateOfIssue}', '{Serial}', " \
-                  "'{Ownership}', '{Brand}') "
+                  "Ownership, brand, type, Registred_at, License number) VALUES ('{VIN}', '{SRM}', '{Region}', '{DateOfIssue}', '{Serial}', " \
+                  "'{Ownership}', '{Brand}', '{TType}', '{Registred_at}', '{License_number}') "
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request.format(VIN=vin,
@@ -51,7 +51,10 @@ class DataBase:
                                           DateOfIssue=date_of_issue,
                                           Serial=pass_ser,
                                           Ownership=ownership,
-                                          Brand=brand))
+                                          Brand=brand,
+                                          TType=ttype,
+                                          Registred_at=registred_at,
+                                          License_number=license_number))
 
     def insert_owner(self, inn, title, registred_at, license_number, reg_address, implement_address, risk_category):
         request = "INSERT INTO transportfinder.owners (INN, Title, Registred_at, License_number, Reg_adress, " \
