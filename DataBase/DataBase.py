@@ -54,6 +54,8 @@ class DataBase:
             'license_5': 7,
             'license_6': 7,
             'license_7':
+            'license_25': 7,
+            'license_26': 4,
             'license_27': 2,
                        }
 
