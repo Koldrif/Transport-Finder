@@ -54,6 +54,7 @@ class DataBase:
             'license_5': 7,
             'license_6': 7,
             'license_7':
+            'license_27': 2,
                        }
 
     def __task(self, request):
@@ -210,7 +211,7 @@ class DataBase:
         name_of_licensing_authority = self.row[16]
 
     def read_license_7(self):
-
+        pass
 
     def read_license_8(self):
         pass
@@ -267,7 +268,27 @@ class DataBase:
         pass
 
     def read_license_26(self):
-        pass
+        status = self.row[1]
+        srm = self.row[2]
+        number_of_region = self.row[3]
+        year_of_manufacture = self.row[4]
+        vin = self.row[5]
+        number_of_license = self.row[6]
+        inn = self.row[7]
+        ogrn = self.row[8]
+        uniq_owner_identificaator = self.row[9]
 
     def read_license_27(self):
-        pass
+        srm = self.row[0]
+        data_of_last_changes = ':'.join(map(str, xldate(self.row[1], self.book.datemode)[:3:]))
+        licensee = self.row[2]
+        administration = self.row[3]
+        number_of_license = self.row[4]
+        date_of_license_issue = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:]))
+        date_of_inclusion_in_the_register = ':'.join(map(str, xldate(self.row[6], self.book.datemode)[:3:]))
+        vin = self.row[7]
+        date_of_the_last_technical_inspection = ':'.join(map(str, xldate(self.row[8], self.book.datemode)[:3:]))
+        ownership = self.row[9]
+        term_of_the_lease_agreement = self.row[10]
+        status = self.row[11]
+        
