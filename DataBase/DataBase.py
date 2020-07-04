@@ -265,7 +265,20 @@ class DataBase:
         pass
 
     def read_license_25(self):
-        pass
+        licensee = self.row[1]
+        inn = self.row[2]
+        ogrn = self.row[3]
+        company = self.row[4] # Лицензиат
+        licensed_activity = self.row[5] # Лицензируемый вид деятельности
+        work_type = self.row[6]
+        license_serial = self.row[7] # Серия лицензии
+        license_reg_date = ':'.join(map(str, xldate(self.row[8], self.book.datemode)[:3:])) # Дата регистрации лицензии
+        license_number = self.row[9] # Номер лицензии
+        company_adress = self.row[10] # Юридический адрес ЮЛ/Адрес регистрации ИП
+        order_number = self.row[11] # Номер приказа (распоряжения) лицензирующего органа о предоставлении лицензии
+        order_date = ':'.join(map(str, xldate(self.row[12], self.book.datemode)[:3:])) # Дата приказа (распоряжения) лицензирующего органа о предоставлении лицензии
+        added_risk_category = self.row[13] # Присвоенная категории риска
+
 
     def read_license_26(self):
         status = self.row[1]
