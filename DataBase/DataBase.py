@@ -79,7 +79,7 @@ class DataBase:
                                           Brand=brand))
 
     def insert_owner(self, inn, title, registred_at, license_number, reg_address, implement_address, risk_category):
-        request = "INSERT INTO transportfinder.owners (INN, Title, Registred_at, License_number, Reg_adress, " \
+        request = "INSERT INTO transportfinder.owners (INN, Title, Registred_at, License_number, Reg_address, " \
                   "Implement_adress, Risk_category) VALUES ('{INN}', '{Title}', '{Registred_at}', '{License_number}', " \
                   "'{Reg_address}', '{Implement_address}', '{Risk_category}'); "
         with self.connect:
