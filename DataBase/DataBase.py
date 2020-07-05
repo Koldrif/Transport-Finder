@@ -35,7 +35,18 @@ class DataBase:
             'license_14': self.read_license_14(),
             'license_15': self.read_license_15(),
             'license_16': self.read_license_16(),
-            'license_17': self.read_license_17()
+            'license_17': self.read_license_17(),
+            'license_18': self.read_license_18(),
+            'license_19': self.read_license_19(),
+            'license_20': self.read_license_20(),
+            'license_21': self.read_license_21(),
+            'license_22_v': self.read_license_22_vologodsk(),
+            'license_22_p': self.read_license_22_pskov(),
+            'license_23': self.read_license_23(),
+            'license_24': self.read_license_24(),
+            'license_25': self.read_license_25(),
+            'license_26': self.read_license_26(),
+            'license_27': self.read_license_27(),
                           }
         self.begins = {
             'license_1': 4,
@@ -53,7 +64,16 @@ class DataBase:
             'license_14': 6,
             'license_15': 6,
             'license_16': 3,
-            'license_17': 4
+            'license_17': 4,
+            'license_20': 3,
+            'license_21': 3,
+            'license_22_v': 2,
+            'license_22_p': 3,
+            'license_23': 2,
+            'license_24': 2,
+            'license_25': 7,
+            'license_26': 4,
+            'license_27': 2,
                        }
 
     def __task(self, request):
@@ -64,10 +84,10 @@ class DataBase:
             return rows
 
     def insert_transport(self, vin, state_registr_mark, region,
-                         date_of_issue, pass_ser, ownership, brand):
+                         date_of_issue, pass_ser, ownership, brand, ttype, registred_at, license_number):
         request = "INSERT INTO transportfinder.transport (VIN, State_Registr_Mark, Region, Date_of_issue, pass_ser, " \
-                  "Ownership, brand) VALUES ('{VIN}', '{SRM}', '{Region}', '{DateOfIssue}', '{Serial}', " \
-                  "'{Ownership}', '{Brand}') "
+                  "Ownership, brand, type, Registred_at, License number) VALUES ('{VIN}', '{SRM}', '{Region}', '{DateOfIssue}', '{Serial}', " \
+                  "'{Ownership}', '{Brand}', '{TType}', '{Registred_at}', '{License_number}') "
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request.format(VIN=vin,
@@ -76,7 +96,10 @@ class DataBase:
                                           DateOfIssue=date_of_issue,
                                           Serial=pass_ser,
                                           Ownership=ownership,
-                                          Brand=brand))
+                                          Brand=brand,
+                                          TType=ttype,
+                                          Registred_at=registred_at,
+                                          License_number=license_number))
 
     def insert_owner(self, inn, title, registred_at, license_number, reg_address, implement_address, risk_category):
         request = "INSERT INTO transportfinder.owners (INN, Title, Registred_at, License_number, Reg_address, " \
@@ -342,25 +365,116 @@ class DataBase:
         pass
 
     def read_license_20(self):
-        pass
-
+        srm = self.row[0]
+        data_of_last_changes = ':'.join(map(str, xldate(self.row[1], self.book.datemode)[:3:]))
+        licensee = self.row[2]
+        administration = self.row[3]
+        number_of_license = self.row[4]
+        date_of_license_issue = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:]))
+        date_of_inclusion_in_the_register = ':'.join(map(str, xldate(self.row[6], self.book.datemode)[:3:]))
+        vin = self.row[7]
+        date_of_the_last_technical_inspection = ':'.join(map(str, xldate(self.row[8], self.book.datemode)[:3:]))
+        ownership = self.row[9]
+        term_of_the_lease_agreement = self.row[10]
+        status = self.row[11]
+        
     def read_license_21(self):
-        pass
+        srm = self.row[1]
+        region_number = self.row[2]
+        ts_brand = self.row[3] # Марка транспортного средства
+        model_of_ts = self.row[4] # Модель (коммерческое наименование) транспортного средства
+        vin = self.row[5]
+        vin_main_component = self.row[6]
+        manufacture_year = self.row[7] # Год выпуска ТС
+        license_number = self.row[8]
+        inn = self.row[9]
+        ogrn = self.row[10]
+        company = self.row[11]
+        ownership = self.row[12]
+        end_of_contract = ':'.join(map(str, xldate(self.row[13], self.book.datemode)[:3:]))
+        date_of_inclusion_in_the_register = ':'.join(map(str, xlda(self.row[14], self.book.datemode)[:3:]))
+        inclusion_number = self.row[15]
 
-    def read_license_22(self):
-        pass
+
+
+    def read_license_22_vologodsk(self):
+        company = self.row[0]
+        inn = self.row[1]
+        ogrn = self.row[2]
+        license_number = self.row[3]
+        license_reg_date = ':'.join(map(str, xldate(self.row[4], self.book.datemode)[:3:])) # Дата регистрации лицензии
+        license_start_date = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:])) # Дата начала действия лицензии
+        status = self.row[6]
+
+    def read_license_22_pskov(self):
+        date = self.row[0] #Дата
+        license_number = self.row[1]
+        license_start_date = ':'.join(map(str, xldate(self.row[2], self.book.datemode)[:3:])) # Дата начала срока действия
+        bso = self.row[3] # БСО
+        number_of_transport = self.row[4]
+        case_number = self.row[5] # Номер дела, возможно потребуется форматировать
+        inn = self.row[6]
+        department = self.row[7] # управление
+        company = self.row[8]
+        status = self.row[9]
+
 
     def read_license_23(self):
-        pass
+        company = self.row[0]
+        inn = self.row[1]
+        ogrn = self.row[2]
+        license_number = self.row[3]
+        license_reg_date = ':'.join(map(str, xldate(self.row[4], self.book.datemode)[:3:])) # Дата регистрации лицензии
+        license_start_date = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:])) # Дата начала действия лицензии
+        status = self.row[6]
 
     def read_license_24(self):
-        pass
+        company = self.row[0]
+        inn = self.row[1]
+        ogrn = self.row[2]
+        license_number = self.row[3]
+        license_reg_date = ':'.join(map(str, xldate(self.row[4], self.book.datemode)[:3:])) # Дата регистрации лицензии
+        license_start_date = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:])) # Дата начала действия лицензии
+        status = self.row[6]
 
     def read_license_25(self):
-        pass
+        licensee = self.row[1]
+        inn = self.row[2]
+        ogrn = self.row[3]
+        company = self.row[4] # Лицензиат
+        licensed_activity = self.row[5] # Лицензируемый вид деятельности
+        work_type = self.row[6]
+        license_serial = self.row[7] # Серия лицензии
+        license_reg_date = ':'.join(map(str, xldate(self.row[8], self.book.datemode)[:3:])) # Дата регистрации лицензии
+        license_number = self.row[9] # Номер лицензии
+        company_adress = self.row[10] # Юридический адрес ЮЛ/Адрес регистрации ИП
+        order_number = self.row[11] # Номер приказа (распоряжения) лицензирующего органа о предоставлении лицензии
+        order_date = ':'.join(map(str, xldate(self.row[12], self.book.datemode)[:3:])) # Дата приказа (распоряжения) лицензирующего органа о предоставлении лицензии
+        added_risk_category = self.row[13] # Присвоенная категории риска
+
 
     def read_license_26(self):
-        pass
+        status = self.row[1]
+        srm = self.row[2]
+        number_of_region = self.row[3]
+        year_of_manufacture = self.row[4]
+        vin = self.row[5]
+        number_of_license = self.row[6]
+        inn = self.row[7]
+        ogrn = self.row[8]
+        uniq_owner_identificaator = self.row[9]
 
     def read_license_27(self):
-        pass
+        srm = self.row[0]
+        data_of_last_changes = ':'.join(map(str, xldate(self.row[1], self.book.datemode)[:3:]))
+        licensee = self.row[2]
+        administration = self.row[3]
+        number_of_license = self.row[4]
+        date_of_license_issue = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:]))
+        date_of_inclusion_in_the_register = ':'.join(map(str, xldate(self.row[6], self.book.datemode)[:3:]))
+        vin = self.row[7]
+        date_of_the_last_technical_inspection = ':'.join(map(str, xldate(self.row[8], self.book.datemode)[:3:]))
+        ownership = self.row[9]
+        term_of_the_lease_agreement = self.row[10]
+        status = self.row[11]
+        
