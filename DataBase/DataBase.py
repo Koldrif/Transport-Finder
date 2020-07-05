@@ -23,6 +23,7 @@ class DataBase:
             'license_1': self.read_license_1(),
             'license_2': self.read_license_2(),
             'license_3': self.read_license_3(),
+            'license_4': self.read_license_4(),
             'license_5': self.read_license_5(),
             'license_6': self.read_license_6(),
             'license_7': self.read_license_7(),
