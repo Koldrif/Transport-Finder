@@ -56,7 +56,9 @@ class DataBase:
             'license_5': 7,
             'license_6': 7,
             'license_7':
-            'license_22': 3,
+            'license_21': 3,
+            'license_22_v': 2,
+            'license_22_p': 3,
             'license_23': 2,
             'license_24': 2,
             'license_25': 7,
@@ -260,7 +262,23 @@ class DataBase:
         pass
 
     def read_license_21(self):
-        pass
+        srm = self.row[1]
+        region_number = self.row[2]
+        ts_brand = self.row[3] # Марка транспортного средства
+        model_of_ts = self.row[4] # Модель (коммерческое наименование) транспортного средства
+        vin = self.row[5]
+        vin_main_component = self.row[6]
+        manufacture_year = self.row[7] # Год выпуска ТС
+        license_number = self.row[8]
+        inn = self.row[9]
+        ogrn = self.row[10]
+        company = self.row[11]
+        ownership = self.row[12]
+        end_of_contract = ':'.join(map(str, xldate(self.row[13], self.book.datemode)[:3:]))
+        date_of_inclusion_in_the_register = ':'.join(map(str, xlda(self.row[14], self.book.datemode)[:3:]))
+        inclusion_number = self.row[15]
+
+
 
     def read_license_22_vologodsk(self):
         company = self.row[0]
