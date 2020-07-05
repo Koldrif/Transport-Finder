@@ -55,6 +55,7 @@ class DataBase:
             'license_5': 7,
             'license_6': 7,
             'license_7':
+            'license_22': 3,
             'license_23': 2,
             'license_24': 2,
             'license_25': 7,
@@ -261,7 +262,17 @@ class DataBase:
         pass
 
     def read_license_22(self):
-        pass
+        date = self.row[0] #Дата
+        license_number = self.row[1]
+        license_start_date = ':'.join(map(str, xldate(self.row[2], self.book.datemode)[:3:])) # Дата начала срока действия
+        bso = self.row[3] # БСО
+        number_of_transport = self.row[4]
+        case_number = self.row[5] # Номер дела, возможно потребуется форматировать
+        inn = self.row[6]
+        department = self.row[7] # управление
+        company = self.row[8]
+        status = self.row[9]
+
 
     def read_license_23(self):
         company = self.row[0]
