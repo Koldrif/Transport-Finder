@@ -56,6 +56,7 @@ class DataBase:
             'license_5': 7,
             'license_6': 7,
             'license_7':
+            'license_20': 3,
             'license_21': 3,
             'license_22_v': 2,
             'license_22_p': 3,
@@ -259,8 +260,19 @@ class DataBase:
         pass
 
     def read_license_20(self):
-        pass
-
+        srm = self.row[0]
+        data_of_last_changes = ':'.join(map(str, xldate(self.row[1], self.book.datemode)[:3:]))
+        licensee = self.row[2]
+        administration = self.row[3]
+        number_of_license = self.row[4]
+        date_of_license_issue = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:]))
+        date_of_inclusion_in_the_register = ':'.join(map(str, xldate(self.row[6], self.book.datemode)[:3:]))
+        vin = self.row[7]
+        date_of_the_last_technical_inspection = ':'.join(map(str, xldate(self.row[8], self.book.datemode)[:3:]))
+        ownership = self.row[9]
+        term_of_the_lease_agreement = self.row[10]
+        status = self.row[11]
+        
     def read_license_21(self):
         srm = self.row[1]
         region_number = self.row[2]
