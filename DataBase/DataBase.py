@@ -41,7 +41,8 @@ class DataBase:
             'license_19': self.read_license_19(),
             'license_20': self.read_license_20(),
             'license_21': self.read_license_21(),
-            'license_22': self.read_license_22(),
+            'license_22_v': self.read_license_22_vologodsk(),
+            'license_22_p': self.read_license_22_pskov(),
             'license_23': self.read_license_23(),
             'license_24': self.read_license_24(),
             'license_25': self.read_license_25(),
@@ -261,7 +262,16 @@ class DataBase:
     def read_license_21(self):
         pass
 
-    def read_license_22(self):
+    def read_license_22_vologodsk(self):
+        company = self.row[0]
+        inn = self.row[1]
+        ogrn = self.row[2]
+        license_number = self.row[3]
+        license_reg_date = ':'.join(map(str, xldate(self.row[4], self.book.datemode)[:3:])) # Дата регистрации лицензии
+        license_start_date = ':'.join(map(str, xldate(self.row[5], self.book.datemode)[:3:])) # Дата начала действия лицензии
+        status = self.row[6]
+
+    def read_license_22_pskov(self):
         date = self.row[0] #Дата
         license_number = self.row[1]
         license_start_date = ':'.join(map(str, xldate(self.row[2], self.book.datemode)[:3:])) # Дата начала срока действия
