@@ -65,6 +65,8 @@ class DataBase:
             'license_15': 6,
             'license_16': 3,
             'license_17': 4,
+            'license_18': ,
+            'license_19': ,
             'license_20': 3,
             'license_21': 3,
             'license_22_v': 2,
@@ -362,7 +364,23 @@ class DataBase:
         pass
 
     def read_license_19(self):
-        pass
+        status = self.row[1]
+        srm = self.row[2]
+        region = self.row[3]
+        manufacture_date = ':'.join(map(str, xldate(self.row[4], self.book.datemode)[:3:]))
+        vin = self.row[5]
+        license_number = self.row[6]
+        owner_type = self.row[7]
+        inn_sobst = self.row[8]
+        ogrn_sobst = self.row[9]
+        inn_owner = self.row[10]
+        ogrn_owner = self.row[11]
+        brand = self.row[12]
+        create_date = ':'.join(map(str, xldate(self.row[13], self.book.datemode)[:3:]))
+        model = self.row[14]
+        company = self.row[15]        
+        date_of_last_to = data_of_last_changes = ':'.join(map(str, xldate(self.row[16], self.book.datemode)[:3:]))
+
 
     def read_license_20(self):
         srm = self.row[0]
