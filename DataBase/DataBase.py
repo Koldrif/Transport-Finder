@@ -36,17 +36,17 @@ class DataBase:
             'license_15': self.read_license_15(),
             'license_16': self.read_license_16(),
             'license_17': self.read_license_17(),
-            'license_18': self.read_license_18(),
-            'license_19': self.read_license_19(),
-            'license_20': self.read_license_20(),
-            'license_21': self.read_license_21(),
+            'license_and_bus__18': self.read_license_and_bus__18(),
+            'license_and_bus__19': self.read_license_and_bus__19(),
+            'license_and_bus__20': self.read_license_and_bus__20(),
+            'license_and_bus__21': self.read_license_and_bus__21(),
             'license_22_v': self.read_license_22_vologodsk(),
             'license_22_p': self.read_license_22_pskov(),
             'license_23': self.read_license_23(),
             'license_24': self.read_license_24(),
             'license_25': self.read_license_25(),
-            'license_26': self.read_license_26(),
-            'license_27': self.read_license_27(),
+            'license_and_bus__26': self.read_license_and_bus__26(),
+            'license_and_bus__27': self.read_license_and_bus__27(),
                           }
         self.begins = {
             'license_1': 4,
@@ -65,17 +65,17 @@ class DataBase:
             'license_15': 6,
             'license_16': 3,
             'license_17': 4,
-            'license_18': ,
-            'license_19': ,
-            'license_20': 3,
-            'license_21': 3,
+            'license_and_bus__18': 7,
+            'license_and_bus__19': 5,
+            'license_and_bus__20': 3,
+            'license_and_bus__21': 3,
             'license_22_v': 2,
             'license_22_p': 3,
             'license_23': 2,
             'license_24': 2,
             'license_25': 7,
-            'license_26': 4,
-            'license_27': 2,
+            'license_and_bus__26': 4,
+            'license_and_bus__27': 2,
                        }
 
     def __task(self, request):
@@ -360,10 +360,30 @@ class DataBase:
 
 
 
-    def read_license_18(self):
-        pass
+    def read_license_and_bus__18(self):
+        status = self.row[1]
+        srm = self.row[2]
+        brand = self.row[3] # МАрка ТС
+        license_number = self.row[4]
+        vin = self.row[5]
+        region_of_smr = self.row[6]
+        date_of_manufacture = ':'.join(map(str, xldate(self.row[7], self.book.datemode)[:3:]))
+        date_of_creation = ':'.join(map(str, xldate(self.row[8], self.book.datemode)[:3:])) # Дата создания
+        model = self.row[9]
+        date_of_change = ':'.join(map(str, xldate(self.row[10], self.book.datemode)[:3:]))
+        owner_type = self.row[11]
+        company = self.row[12]
+        inn = self.row[13]
+        ogrn = self.row[14]
+        date_of_initial_activation = ':'.join(map(str, xldate(self.row[15], self.book.datemode)[:3:]))
+        ownership = self.row[16]
+        institute_name = self.row[17]
+        end_of_leasing = ':'.join(map(str, xldate(self.row[18], self.book.datemode)[:3:]))
+        serial = self.row[18] # Серия паспорта 
 
-    def read_license_19(self):
+
+
+    def read_license_and_bus__19(self):
         status = self.row[1]
         srm = self.row[2]
         region = self.row[3]
@@ -382,7 +402,7 @@ class DataBase:
         date_of_last_to = data_of_last_changes = ':'.join(map(str, xldate(self.row[16], self.book.datemode)[:3:]))
 
 
-    def read_license_20(self):
+    def read_license_and_bus__20(self):
         srm = self.row[0]
         data_of_last_changes = ':'.join(map(str, xldate(self.row[1], self.book.datemode)[:3:]))
         licensee = self.row[2]
@@ -396,7 +416,7 @@ class DataBase:
         term_of_the_lease_agreement = self.row[10]
         status = self.row[11]
         
-    def read_license_21(self):
+    def read_license_and_bus__21(self):
         srm = self.row[1]
         region_number = self.row[2]
         ts_brand = self.row[3] # Марка транспортного средства
@@ -471,7 +491,7 @@ class DataBase:
         added_risk_category = self.row[13] # Присвоенная категории риска
 
 
-    def read_license_26(self):
+    def read_license_and_bus__26(self):
         status = self.row[1]
         srm = self.row[2]
         number_of_region = self.row[3]
@@ -482,7 +502,7 @@ class DataBase:
         ogrn = self.row[8]
         uniq_owner_identificaator = self.row[9]
 
-    def read_license_27(self):
+    def read_license_and_bus__27(self):
         srm = self.row[0]
         data_of_last_changes = ':'.join(map(str, xldate(self.row[1], self.book.datemode)[:3:]))
         licensee = self.row[2]
