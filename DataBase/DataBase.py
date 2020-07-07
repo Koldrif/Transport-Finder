@@ -54,6 +54,14 @@ class DataBase:
             'bus_9': self.read_bus_9(),
             'license_and_bus_9': self.read_license_and_bus_9(),
             'bus_10': self.read_bus_10(),
+            'bus_13': self.read_bus_13(),
+            'license_and_bus_13': self.read_license_and_bus_13(),
+            'bus_15': self.read_bus_15(),
+            'bus_16': self.read_bus_16(),
+            'bus_17': self.read_bus_17(),
+            'bus_22': self.read_bus_22(),
+            'bus_23': self.read_bus_23(),
+            'bus_24': self.read_bus_24(),
 
                         }
         self.begins = {
@@ -96,7 +104,7 @@ class DataBase:
             'bus_17': 4,
             'bus_22': 3,
             'bus_23': 3,
-            'bus_24': 3
+            'bus_24': 3,
 
                        }
 
