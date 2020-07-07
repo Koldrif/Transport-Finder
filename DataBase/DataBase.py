@@ -20,7 +20,7 @@ class DataBase:
             charset=charset
         )
         self.functions = {
-            'license_1': self.read_license_1(),
+            'license_and_bus_1': self.read_license_and_bus_1(),
             'license_2': self.read_license_2(),
             'license_3': self.read_license_3(),
             'license_and_bus_5': self.read_license_and_bus_5(),
@@ -47,9 +47,17 @@ class DataBase:
             'license_25': self.read_license_25(),
             'license_26': self.read_license_26(),
             'license_27': self.read_license_27(),
-                          }
+            'bus_2': self.read_bus_2(),
+            'bus_4': self.read_bus_4(),
+            'bus_7': self.read_bus_7(),
+            'bus_8': self.read_bus_8(),
+            'bus_9': self.read_bus_9(),
+            'license_and_bus_9': self.read_license_and_bus_9(),
+            'bus_10': self.read_bus_10(),
+
+                        }
         self.begins = {
-            'license_1': 4,
+            'license_and_bus_1': 4,
             'license_2': 3,
             'license_4': 5,
             'license_and_bus_5': 7,
@@ -74,6 +82,22 @@ class DataBase:
             'license_25': 7,
             'license_26': 4,
             'license_27': 2,
+            'bus_2': 4,
+            'bus_4': 5,
+            'bus_7': 2,
+            'bus_8': 3,
+            'bus_9': 6,
+            'license_and_bus_9': 6,
+            'bus_10': 4,
+            'bus_13': 3,
+            'license_and_bus_13': 6,
+            'bus_15': 6,
+            'bus_16': 4,
+            'bus_17': 4,
+            'bus_22': 3,
+            'bus_23': 3,
+            'bus_24': 3
+
                        }
 
     def __task(self, request):
@@ -144,7 +168,7 @@ class DataBase:
             self.row = self.sheet.row_values(i_row)
             self.functions[type]()
 
-    def read_license_1(self):
+    def read_license_and_bus_1(self):
         date = ':'.join(map(str, xldate(self.row[2], self.book.datemode)[:3:]))
         srm = self.row[3]
         region = self.row[4]
@@ -477,4 +501,155 @@ class DataBase:
         ownership = self.row[9]
         term_of_the_lease_agreement = self.row[10]
         status = self.row[11]
+
+    def read_bus_2(self):
+        srm = self.row[0]
+        date = self.__reformat_date(self.row[1])
+        name_of_company = self.row[2]
+        number_of_license = self.row[3]
+        serial = number_of_license[:2:]
+        number = self.row[3::]
+        vin = self.row[7]
+        ownership = self.row[9]
+        status = self.row[11]
+
+    def read_bus_4(self):
+        srm = self.row[1]
+        code_of_region = self.row[2]
+        serial = self.row[3]
+        number = self.row[4]
+        name_of_company = self.row[5]
+        date = self.__reformat_date(self.row[6])
+
+    def read_bus_7(self):
+        srm = self.row[0]
+        date_of_last_issue = self.__reformat_date(self.row[1])
+        name_of_company = self.row[2]
+        license_number = self.row[4]
+        serial = license_number[:2:]
+        number = license_number[:3:]
+        date_of_license = self.__reformat_date(self.row[5])
+        vin = self.row[7]
+        ownership = self.row[9]
+        status = self.row[11]
+
+    def read_bus_8(self):
+        srm = self.row[0]
+        date_of_last_issue = self.row[1]
+        name_of_company = self.row[2]
+        license_number = self.row[3]
+        date_of_license = self.__reformat_date(self.row[5])
+        vin = self.row[6]
+        status = self.row[7]
+
+    def read_bus_9(self):
+        status = self.row[1]
+        srm = self.row[2]
+        code_of_region = self.row[3]
+        vin = self.row[5]
+        if vin == '':
+            vin = self.row[6]
+        license_number = self.row[12] + '-' + self.row[7]
+        date = self.__reformat_date(self.row[11])
+        ownership = self.row[14]
+        name_of_company = self.row[15]
+
+    def read_license_and_bus_9(self):
+        status = self.row[1]
+        srm = self.row[2]
+        code_of_region = self.row[3]
+        license_number = self.row[5] + '-' + self.row[6]
+        name_of_company = self.row[7]
+        inn = self.row[8]
+        ogrn = self.row[9]
+        brand = self.row[10]
+        date_of_license = self.row[12]
+        vin = self.row[13]
+
+    def read_bus_10(self):
+        name_of_company = self.row[1]
+        inn = self.row[2]
+        srm = self.row[3]
+        code_of_region = self.row[4]
+        vin = self.row[5]
+        if vin == '':
+            vin = self.row[6]
+        brand = self.row[7]
+        ownership = self.row[10]
+
+    def read_bus_13(self):
+        srm = self.row[0]
+        date_of_last_issue = self.row[1]
+        name_of_company = self.row[2]
+        license_number = self.row[4]
+        vin = self.row[7]
+        ownership = self.row[9]
+        status = self.row[11]
         
+    def read_license_and_bus_13(self):
+        srm = self.row[1]
+        brand = self.row[2]
+        license_number = self.row[4]
+        vin = self.row[5]
+        inn = self.row[10]
+        ogrn = self.row[11]
+        name_of_company = self.row[17]
+        if name_of_company == '  ':
+            name_of_company = self.row[12] + ' ' + self.row[13] + ' ' + self.row[14]
+        date_of_license = self.__reformat_date(self.row[19])
+
+    def read_bus_15(self):
+        srm = self.row[1]
+        code_of_region = self.row[2]
+        status = self.row[3]
+        brand = self.row[5]
+        license_number = self.row[6]
+        ownership = self.row[7]
+
+    def read_bus_16(self):
+        license_number = self.row[0]
+        date_of_license = self.__reformat_date(self.row[4])
+        name_of_company = self.row[2]
+        srm = self.row[3]
+
+    def read_bus_17(self):
+        status = self.row[1]
+        srm = self.row[2]
+        code_of_region = self.row[3]
+        date_of_issue = self.__reformat_date(self.row[4])
+        license_number = self.row[6] + '-' + self.row[5]
+        ownership = self.row[7]
+
+    def read_bus_22(self):
+        srm = self.row[0]
+        date_of_last_issue = self.__reformat_date(self.row[1])
+        name_of_company = self.row[2]
+        license_number = self.row[4]
+        date_of_license = self.__reformat_date(self.row[5])
+        vin = self.row[7]
+        ownership = self.row[9]
+        status = self.row[11]
+
+    def read_bus_23(self):
+        srm = self.row[0]
+        date_of_last_issue = self.__reformat_date(self.row[1])
+        name_of_company = self.row[2]
+        license_number = self.row[4]
+        date_of_license = self.__reformat_date(self.row[5])
+        vin = self.row[7]
+        ownership = self.row[9]
+        status = self.row[11]
+
+    def read_bus_24(self):
+        srm = self.row[0]
+        date_of_last_issue = self.row[1]
+        name_of_company = self.row[2]
+        date_if_license = self.row[5]
+        license_number = self.row[4]
+        vin = self.row[7]
+        ownership = self.row[9]
+        status = self.row[11]
+
+
+
+
