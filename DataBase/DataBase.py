@@ -108,45 +108,117 @@ class DataBase:
             'license_and_bus_27': self.read_license_and_bus_27,
         }
 
-    def __task(self, request):
+    def __task_get(self, request):
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request)
             rows = cursor.fetchall()
             return rows
 
-    def __task_insert(self, request):
+    def __task(self, request):
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request)
 
+    def __update_record(self, id, type, data):
+        if type == 'owners':
+            list_of_updates = ''
+            keywords = {
+                'INN': 'inn',
+                'OGRN': 'ogrn',
+                'Title': 'company',
+                'Registered_at_date': 'registred_at',
+                'License_number': 'license_number',
+                'Reg_address': 'reg_address',
+                'Implement_address': 'implement_address',
+                'Risk_category': 'risk_category',
+                'Starts_at': 'date_of_begin_inspect',
+                'Duration_hours': 'duration_inspect',
+                'Last_inspec': 'date_of_end_inspect',
+                'Purpose': 'purpose',
+                'other_reason': 'other_reasons',
+                'form_of_holding': 'holding_form',
+                'Performs_with': 'companion_inspects',
+                'Punishment': 'punishment',
+                'Description': 'description'
+            }
+            for key in keywords:
+                if key in data:
+                    list_of_updates += "`{key}` = '{value}', ".format(key, data[key])
+
+            request = """
+                UPDATE
+                    `transportfinder`.`owners`
+                SET
+                {list_of_updates}
+                WHERE
+                    (`Owner_id` = '{id}');
+            """.format(list_of_updates=list_of_updates, id=id)
+        elif type == 'transport':
+            list_of_updates = ''
+            keywords = {
+                'VIN': 'vin',
+                'State_Registr_Mark': 'srm',
+                'Region': 'region',
+                'Date_of_issue': 'date_of_issue',
+                'pass_ser': 'pass_ser',
+                'Ownership': 'ownership',
+                'brand': 'brand',
+                'type': 'type',
+                'Registred_at': 'date_of_registrate',
+                'License_number': 'license_number'
+            }
+            for key in keywords:
+                if key in data:
+                    list_of_updates += "`{key}` = '{value}', ".format(key, data[key])
+
+            request = """
+                UPDATE
+                    `transportfinder`.`transport`
+                SET
+                    {list_of_updates}
+                WHERE
+                    (`transport_id` = '{id}');
+            """.format(list_of_updates=list_of_updates, id=id)
+        else:
+            raise Exception('Error: wrong type of table')
+        self.__task(request)
+
     def __insert_database(self, **data):
-        request = '''SELECT `transport_id`, `License number` FROM transportfinder.transport WHERE `License number` = '{license_number}' '''.format(
-            license_number=data['license_number'])
-        rows = self.__task(request)
-        if (len(rows)):
-            id_ts = rows[0][0]
-        else:
-            self.__insert_transport(**data)
-            rows = self.__task(request)
-            id_ts = rows[0][0]
-
         request = '''
-        SELECT `Owner_id`, `License_number` FROM transportfinder.owners WHERE `License_number` = '{license_number}' 
+            SELECT `transport_id`, `License number` 
+            FROM transportfinder.transport WHERE `License number` = '{license_number}' 
         '''.format(license_number=data['license_number'])
-        rows = self.__task(request)
-        if (len(rows)):
+        rows = self.__task_get(request)
+        if len(rows) == 1:
+            id_ts = rows[0][0]
+            self.__update_record(id=id_ts, type='transport', data=data)
+        elif len(rows) == 0:
+            self.__insert_transport(**data)
+            rows = self.__task_get(request)
+            id_ts = rows[0][0]
+        else:
+            raise Exception('Database_error: few transports was find')
+        request = '''
+            SELECT `Owner_id`, `License_number` 
+            FROM transportfinder.owners WHERE `License_number` = '{license_number}' 
+        '''.format(license_number=data['license_number'])
+        rows = self.__task_get(request)
+        if len(rows) == 1:
+            id_own = rows[0][0]
+            self.__update_record(id=id_own, type='owners', data=data)
+        elif len(rows) == 0:
+            self.__insert_owner(**data)
+            rows = self.__task_get(request)
             id_own = rows[0][0]
         else:
-            self.__insert_owner(**data)
-            rows = self.__task(request)
-            id_own = rows[0][0]
-
+            raise Exception('Database_error: few owners was fins')
         request = '''
-        INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) VALUES ('{owner}', '{transport}')
+            INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) 
+            VALUES ('{owner}', '{transport}')
         '''.format(
             owner=id_own, transport=id_ts)
-        self.__task_insert(request)
+        self.__task(request)
 
     def __insert_transport(self, vin='Н/Д', state_registr_mark='Н/Д', region='Н/Д',
                            date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д',
@@ -735,7 +807,7 @@ class DataBase:
         name_of_company = self.row[17]
         if name_of_company == '  ':
             name_of_company = self.row[12] + ' ' + \
-                self.row[13] + ' ' + self.row[14]
+                              self.row[13] + ' ' + self.row[14]
         date_of_license = self.__reformat_date(self.row[19])
 
     def read_license_and_bus_18(self):
