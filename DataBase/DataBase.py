@@ -164,13 +164,15 @@ class DataBase:
                                           Registred_at=registred_at,
                                           License_number=license_number))
 
-    def __insert_owner(self, inn='Н/Д', title='Н/Д', registred_at='Н/Д', license_number='Н/Д', reg_address='Н/Д', implement_address='Н/Д', risk_category='Н/Д', **trash):
-        request = "INSERT INTO transportfinder.owners (INN, Title, Registred_at, License_number, Reg_address, " \
-                  "Implement_adress, Risk_category) VALUES ('{INN}', '{Title}', '{Registred_at}', '{License_number}', " \
-                  "'{Reg_address}', '{Implement_address}', '{Risk_category}'); "
+
+    # Функия вставки ИП или ФЛ в таблицу
+    def __insert_owner(self, inn='Н/Д', OGRN='Н/Д', title='Н/Д', registred_at='Н/Д', license_number='Н/Д', reg_address='Н/Д', implement_address='Н/Д', risk_category='Н/Д', **trash):
+        request = "INSERT INTO `transportfinder`.`owners` (`INN`, `OGRN`, `Title`, `Registred_at`, `License_number`, `Reg_address`, `Implement_address`, `Risk_category`) VALUES ('{Inn}', '{oGRN}', '{Title}', '{Registred_at}', '{License_number}', '{Reg_addres}', '{Risk_category}', '{Категория риска}');"
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request.format(INN=inn,
+                                          oGRN=OGRN,
+                                          
                                           Title=title,
                                           Registred_at=registred_at,
                                           License_number=license_number,
