@@ -149,10 +149,10 @@ class DataBase:
     def __insert_transport(self, vin='Н/Д', state_registr_mark='Н/Д', region='Н/Д',
                            date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д', brand='Н/Д', type='Н/Д',
                            registred_at='Н/Д', license_number='Н/Д', **trash):
-        request = "INSERT INTO transportfinder.transport " \
-                  "(VIN, State_Registr_Mark, Region, Date_of_issue, pass_ser, Ownership, brand, type, Registred_at, License number) " \
-                  "VALUES " \
-                  "('{INN}', '{Title}', '{Registred_at}', '{License_number}', '{Reg_address}', '{Implement_address}', '{Risk_category}');"
+    request = "INSERT INTO transportfinder.transport " \
+              "(VIN, State_Registr_Mark, Region, Date_of_issue, pass_ser, Ownership, brand, type, Registred_at, License number) " \
+              "VALUES " \
+              "('{INN}', '{Title}', '{Registred_at}', '{License_number}', '{Reg_address}', '{Implement_address}', '{Risk_category}');"
 
     with self.connect:
         cursor = self.connect.cursor()
