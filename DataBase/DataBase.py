@@ -171,8 +171,7 @@ class DataBase:
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request.format(INN=inn,
-                                          oGRN=OGRN,
-                                          
+                                          oGRN=OGRN,                                          
                                           Title=title,
                                           Registred_at=registred_at,
                                           License_number=license_number,
