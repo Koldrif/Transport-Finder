@@ -63,61 +63,90 @@ class DataBase:
             db=db,
             charset=charset
         )
-    self.functions = {
-        'license_2': self.read_license_2(),
-        'license_3': self.read_license_3(),
-        'license_7': self.read_license_7(),
-        'license_8': self.read_license_8(),
-        'license_9': self.read_license_9(),
-        'license_10': self.read_license_10(),
-        'license_13': self.read_license_13(),
-        'license_14': self.read_license_14(),
-        'license_15': self.read_license_15(),
-        'license_16': self.read_license_16(),
-        'license_17': self.read_license_17(),
-        'license_22_v': self.read_license_22_vologodsk(),
-        'license_22_p': self.read_license_22_pskov(),
-        'license_23': self.read_license_23(),
-        'license_24': self.read_license_24(),
-        'license_25': self.read_license_25(),
-        'bus_2': self.read_bus_2(),
-        'bus_4': self.read_bus_4(),
-        'bus_7': self.read_bus_7(),
-        'bus_8': self.read_bus_8(),
-        'bus_9': self.read_bus_9(),
-        'bus_10': self.read_bus_10(),
-        'bus_13': self.read_bus_13(),
-        'bus_15': self.read_bus_15(),
-        'bus_16': self.read_bus_16(),
-        'bus_17': self.read_bus_17(),
-        'bus_22': self.read_bus_22(),
-        'bus_23': self.read_bus_23(),
-        'bus_24': self.read_bus_24(),
-        'license_and_bus_1': self.read_license_and_bus_1(),
-        'license_and_bus_5': self.read_license_and_bus_5(),
-        'license_and_bus_6': self.read_license_and_bus_6(),
-        'license_and_bus_9': self.read_license_and_bus_9(),
-        'license_and_bus_11': self.read_license_and_bus_11(),
-        'license_and_bus_12': self.read_license_and_bus_12(),
-        'license_and_bus_13': self.read_license_and_bus_13(),
-        'license_and_bus_18': self.read_license_and_bus_18(),
-        'license_and_bus_19': self.read_license_and_bus_19(),
-        'license_and_bus_20': self.read_license_and_bus_20(),
-        'license_and_bus_21': self.read_license_and_bus_21(),
-        'license_and_bus_26': self.read_license_and_bus_26(),
-        'license_and_bus_27': self.read_license_and_bus_27(),
+        self.functions = {
+            'license_2': self.read_license_2,
+            'license_3': self.read_license_3,
+            'license_7': self.read_license_7,
+            'license_8': self.read_license_8,
+            'license_9': self.read_license_9,
+            'license_10': self.read_license_10,
+            'license_13': self.read_license_13,
+            'license_14': self.read_license_14,
+            'license_15': self.read_license_15,
+            'license_16': self.read_license_16,
+            'license_17': self.read_license_17,
+            'license_22_v': self.read_license_22_vologodsk,
+            'license_22_p': self.read_license_22_pskov,
+            'license_23': self.read_license_23,
+            'license_24': self.read_license_24,
+            'license_25': self.read_license_25,
+            'bus_2': self.read_bus_2,
+            'bus_4': self.read_bus_4,
+            'bus_7': self.read_bus_7,
+            'bus_8': self.read_bus_8,
+            'bus_9': self.read_bus_9,
+            'bus_10': self.read_bus_10,
+            'bus_13': self.read_bus_13,
+            'bus_15': self.read_bus_15,
+            'bus_16': self.read_bus_16,
+            'bus_17': self.read_bus_17,
+            'bus_22': self.read_bus_22,
+            'bus_23': self.read_bus_23,
+            'bus_24': self.read_bus_24,
+            'license_and_bus_1': self.read_license_and_bus_1,
+            'license_and_bus_5': self.read_license_and_bus_5,
+            'license_and_bus_6': self.read_license_and_bus_6,
+            'license_and_bus_9': self.read_license_and_bus_9,
+            'license_and_bus_11': self.read_license_and_bus_11,
+            'license_and_bus_12': self.read_license_and_bus_12,
+            'license_and_bus_13': self.read_license_and_bus_13,
+            'license_and_bus_18': self.read_license_and_bus_18,
+            'license_and_bus_19': self.read_license_and_bus_19,
+            'license_and_bus_20': self.read_license_and_bus_20,
+            'license_and_bus_21': self.read_license_and_bus_21,
+            'license_and_bus_26': self.read_license_and_bus_26,
+            'license_and_bus_27': self.read_license_and_bus_27,
+    
+        }
 
-    }
-
-    def __task(self, request):
+    def task(self, request):
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request)
             rows = cursor.fetchall()
             return rows
 
-    def insert_transport(self, vin, state_registr_mark, region,
-                         date_of_issue, pass_ser, ownership, brand, ttype, registred_at, license_number):
+    def __task_insert(self, request):
+        with self.connect:
+            cursor = self.connect.cursor()
+            cursor.execute(request)        
+
+    def __insert_data_(self, license_number=None, **data):
+        request = '''SELECT `transport_id`, `License number`, `State_Registr_Mark` FROM transportfinder.transport WHERE `License number` = '{license_number}' '''.format(license_number=license_number)
+        rows = self.__task(request)
+        if (len(rows)):
+            id_ts = rows[0][0]
+        else: 
+            self.__insert_transport(**data)
+            rows = self.__task(request)
+            id_ts = rows[0][0]
+
+        request = ''' SELECT `Owner_id`, `License_number` FROM transportfinder.owners WHERE `License_number` = '{license_number}' '''.format(license_number=license_number)
+        rows = self.__task(request)
+        if (len(rows)):
+            id_own = rows[0][0]
+        else: 
+            self.__insert_owner(**data)
+            rows = self.__task(request)
+            id_own = rows[0][0]
+
+        request = '''INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) VALUES ('{owner}', '{transport}')'''.format(owner=id_own, transport=id_ts)
+        self.__task_insert(request)
+
+        
+
+    def __insert_transport(self, vin='Н/Д', state_registr_mark='Н/Д', region='Н/Д',
+                         date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д', brand='Н/Д', ttype='Н/Д', registred_at='Н/Д', license_number='Н/Д', **trash):
         request = "INSERT INTO transportfinder.transport (VIN, State_Registr_Mark, Region, Date_of_issue, pass_ser, " \
                   "Ownership, brand, type, Registred_at, License number) VALUES ('{VIN}', '{SRM}', '{Region}', '{DateOfIssue}', '{Serial}', " \
                   "'{Ownership}', '{Brand}', '{TType}', '{Registred_at}', '{License_number}') "
@@ -134,7 +163,7 @@ class DataBase:
                                           Registred_at=registred_at,
                                           License_number=license_number))
 
-    def insert_owner(self, inn, title, registred_at, license_number, reg_address, implement_address, risk_category):
+    def __insert_owner(self, inn='Н/Д', title='Н/Д', registred_at='Н/Д', license_number='Н/Д', reg_address='Н/Д', implement_address='Н/Д', risk_category='Н/Д', **trash):
         request = "INSERT INTO transportfinder.owners (INN, Title, Registred_at, License_number, Reg_address, " \
                   "Implement_adress, Risk_category) VALUES ('{INN}', '{Title}', '{Registred_at}', '{License_number}', " \
                   "'{Reg_address}', '{Implement_address}', '{Risk_category}'); "
@@ -148,8 +177,8 @@ class DataBase:
                                           Implement_address=implement_address,
                                           Risk_category=risk_category))
 
-    def insert_prosecutor_inspects(self, starts_at, duration_hours, purpose, other_reason, form_of_holding, performs_with,
-                                   risk_category):
+    def __insert_prosecutor_inspects(self, starts_at='Н/Д', duration_hours='Н/Д', purpose='Н/Д', other_reason='Н/Д', form_of_holding='Н/Д', performs_with='Н/Д',
+                                   risk_category='Н/Д', **trash):
         request = "INSERT INTO transportfinder.prosec_inspecs (Starts_at, Duration_hours, Purpose, other_reason, " \
                   "form_of_holding, Performs_with, Risk_category) VALUES ('{Starts_at}', '{Duration_hours}', " \
                   "'{Purpose}', '{Other_reason}', '{Form_of_holding}', '{Performs_with}', '{Risk_category}'); "
