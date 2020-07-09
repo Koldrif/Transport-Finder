@@ -109,7 +109,7 @@ class DataBase:
     
         }
 
-    def task(self, request):
+    def __task(self, request):
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request)
@@ -177,19 +177,18 @@ class DataBase:
                                           Implement_address=implement_address,
                                           Risk_category=risk_category))
 
-    def __insert_prosecutor_inspects(self, starts_at='Н/Д', duration_hours='Н/Д', purpose='Н/Д', other_reason='Н/Д', form_of_holding='Н/Д', performs_with='Н/Д',
-                                   risk_category='Н/Д', **trash):
-        request = "INSERT INTO transportfinder.prosec_inspecs (Starts_at, Duration_hours, Purpose, other_reason, " \
-                  "form_of_holding, Performs_with, Risk_category) VALUES ('{Starts_at}', '{Duration_hours}', " \
-                  "'{Purpose}', '{Other_reason}', '{Form_of_holding}', '{Performs_with}', '{Risk_category}'); "
+    def __insert_prosecutor_inspects(self, starts_at='Н/Д', duration_hours='Н/Д', last_was_at='Н/Д', purpose='Н/Д', other_reason='Н/Д', form_of_holding='Н/Д', performs_with='Н/Д', punishment='Н/Д', risk_category='Н/Д', **trash):
+        request = "INSERT INTO `transportfinder`.`prosec_inspecs` (`Starts_at`, `Duration_hours`, `Last inspec`, `Purpose`, `other_reason`, `form_of_holding`, `Performs_with`, `Punishment`, `Risk_category`) VALUES ('{Starts_at}', '{Duration_hours}', '{Last_was_at}', '{Purpose}', '{Other_reason}', '{Form_of_holding}', '{Performs_with}', '{Punishment}', '{Risk_category}');"
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request.format(Starts_at=starts_at,
                                           Duration_hours=duration_hours,
+                                          Last_was_at=last_was_at,
                                           Purpose=purpose,
                                           Other_reason=other_reason,
                                           Form_of_holding=form_of_holding,
                                           Performs_with=performs_with,
+                                          Punishment=punishment,
                                           Risk_category=risk_category
                                           ))
 
@@ -227,6 +226,8 @@ class DataBase:
         number_of_blank = self.row[16]
         date_of_reestr = self.row[17]
         info_of_prosecutor_check = self.row[20]
+        self.__insert_data_(license_number=number_of_license, inn=inn, title=company, registred_at=date_of_registration, reg_address=company_address, implement_address=actual_address)
+        
 
     def read_license_3(self):
         #todo: ask about this fucking shit
