@@ -190,9 +190,9 @@ class DataBase:
         id_own = -1
         if 'srm' in data:
             request = '''
-                SELECT `transport_id`, `License number` 
-                FROM transportfinder.transport WHERE `License number` = '{license_number}' 
-            '''.format(license_number=data['srm'])
+                SELECT `transport_id`, `State_Registr_Mark` 
+                FROM transportfinder.transport WHERE `State_Registr_Mark` = '{srm}' 
+            '''.format(srm=data['srm'])
             rows = self.__task_get(request)
             if len(rows) == 1:
                 id_ts = rows[0][0]
