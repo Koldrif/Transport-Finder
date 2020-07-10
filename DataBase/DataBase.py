@@ -394,7 +394,7 @@ VALUES
                 self.functions[type]()
             except Exception as e:
                 print('Error:', 'data:', self.row, 'description:', e)
-        self.book.close()
+        self.book.release_resources()
 
     def read_license_2(self):
         date_of_registration = self.__reformat_date(self.row[3])
