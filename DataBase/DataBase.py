@@ -151,9 +151,8 @@ class DataBase:
                     `transportfinder`.`owners`
                 SET
                 {list_of_updates}
-                WHERE
-                    (`Owner_id` = '{id}');
-            """.format(list_of_updates=list_of_updates, id=id)
+                WHERE (`Owner_id` = '{id}');
+                """.format(list_of_updates=list_of_updates, id=id)
         elif type == 'transport':
             list_of_updates = ''
             keywords = {
@@ -258,7 +257,7 @@ VALUES
         '{VIN}',
         '{SRM}',
         '{Region}',
-        '{Dateofissue}',
+        '{DateOfIssue}',
         '{Serial}',
         '{Ownership}',
         '{End_date_of_ownership}',
@@ -380,7 +379,7 @@ VALUES
             cursor.execute(request)
 
     def __reformat_date(self, date_old_format):
-        return ':'.join(map(str, xldate(self.row[3], self.book.datemode)[:3:]))
+        return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:]))
 
     def read_license_and_bus(self, document_name, type):
         print('reading transport...')
@@ -390,10 +389,10 @@ VALUES
         ncols = self.sheet.ncols
         for i_row in range(self.begins[type], nrows):
             self.row = self.sheet.row_values(i_row)
-            try:
-                self.functions[type]()
-            except Exception as e:
-                print('Error:', 'data:', self.row, 'description:', e)
+            # try:
+            self.functions[type]()
+            # except Exception as e:
+            #     print('Error:', 'data:', self.row, 'description:', e)
         self.book.release_resources()
 
     def read_license_2(self):
@@ -1082,7 +1081,8 @@ VALUES
         create_date = self.__reformat_date(self.row[13])
         model = self.row[14]
         company = self.row[15]
-        date_of_last_to = data_of_last_changes = self.__reformat_date(self.row[16])
+        date_of_last_to = data_of_last_changes = self.__reformat_date(
+            self.row[16])
 
     def read_license_and_bus_20(self):
         srm = self.row[0]
@@ -1093,7 +1093,8 @@ VALUES
         date_of_license_issue = self.__reformat_date(self.row[5])
         date_of_inclusion_in_the_register = self.__reformat_date(self.row[6])
         vin = self.row[7]
-        date_of_the_last_technical_inspection = self.__reformat_date(self.row[8])
+        date_of_the_last_technical_inspection = self.__reformat_date(
+            self.row[8])
         ownership = self.row[9]
         term_of_the_lease_agreement = self.row[10]
         status = self.row[11]
@@ -1136,7 +1137,8 @@ VALUES
         date_of_license_issue = self.__reformat_date(self.row[5])
         date_of_inclusion_in_the_register = self.__reformat_date(self.row[6])
         vin = self.row[7]
-        date_of_the_last_technical_inspection = self.__reformat_date(self.row[8])
+        date_of_the_last_technical_inspection = self.__reformat_date(
+            self.row[8])
         ownership = self.row[9]
         term_of_the_lease_agreement = self.row[10]
         status = self.row[11]
