@@ -233,7 +233,7 @@ class DataBase:
                     `model`,
                     `type`,
                     `Registred_at`,
-                    `License number`,
+                    `License_number`,
                     `Status`,
                     `Action_with_vehicle`,
                     `Categorized`,

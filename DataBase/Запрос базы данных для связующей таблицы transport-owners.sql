@@ -12,8 +12,7 @@ FROM
 	join transport_owners on transport.transport_id = transport_owners.transport_id
 	join owners on owners.Owner_id = transport_owners.Owner_id
 WHERE
-	owners.INN = '7802519724';
-
+	`transport`.`State_Registr_Mark` = 'B855CT178'
 UPDATE
 	`transportfinder`.`transport`
 SET
