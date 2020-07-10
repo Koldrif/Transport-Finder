@@ -121,12 +121,13 @@ class DataBase:
 
     def __update_record(self, id, type, data):
         if type == 'owners':
+            list_of_updates = ''
             keywords = {
                 'INN': 'inn',
                 'OGRN': 'ogrn',
                 'Title': 'company',
                 'Registered_at_date': 'registred_at',
-                # 'License_number': 'license_number',
+                'License_number': 'license_number',
                 'Reg_address': 'reg_address',
                 'Implement_address': 'implement_address',
                 'Risk_category': 'risk_category',
@@ -140,17 +141,23 @@ class DataBase:
                 'Punishment': 'punishment',
                 'Description': 'description'
             }
+            for key in keywords:
+                if keywords[key] in data:
+                    list_of_updates += "`{key}` = '{value}', ".format(
+                        key=key, value=data[keywords[key]])
+
             request = """
                 UPDATE
                     `transportfinder`.`owners`
                 SET
                 {list_of_updates}
                 WHERE (`Owner_id` = '{id}');
-                """
+                """.format(list_of_updates=list_of_updates, id=id)
         elif type == 'transport':
+            list_of_updates = ''
             keywords = {
                 'VIN': 'vin',
-                # 'State_Registr_Mark': 'srm',
+                'State_Registr_Mark': 'srm',
                 'Region': 'region',
                 'Date_of_issue': 'date_of_issue',
                 'pass_ser': 'pass_ser',
@@ -160,6 +167,11 @@ class DataBase:
                 'Registred_at': 'date_of_registrate',
                 'License_number': 'license_number'
             }
+            for key in keywords:
+                if keywords[key] in data:
+                    list_of_updates += "`{key}` = '{value}', ".format(
+                        key=key, value=data[keywords[key]])
+
             request = """
                 UPDATE
                     `transportfinder`.`transport`
@@ -167,15 +179,10 @@ class DataBase:
                     {list_of_updates}
                 WHERE
                     (`transport_id` = '{id}');
-            """
+            """.format(list_of_updates=list_of_updates[:-2:], id=id)
         else:
             raise Exception('Error: wrong type of table')
-        list_of_updates = ""
-        for key in keywords:
-            if keywords[key] in data:
-                list_of_updates += "`{key}` = '{value}', ".format(
-                    key=key, value=data[keywords[key]])
-        request = request.format(list_of_updates=list_of_updates[:-2:], id=id)
+        print(request)
         self.__task(request)
 
     def __insert_database(self, **data):
@@ -220,45 +227,44 @@ class DataBase:
             self.__task(request)
 
     def __insert_transport(self, vin='Н/Д', srm='Н/Д', region='Н/Д', date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д', end_of_ownership='Н/Д', model='Н/Д', brand='Н/Д', ttype='Н/Д', registred_at='Н/Д', license_number='Н/Д', status='Н/Д', action_with_vehicle='Н/Д', categorized='Н/Д', number_of_cat_reg='Н/Д', date_in_cat_reg='Н/Д', atp='Н/Д', model_from_cat_reg='Н/Д', owner_from_cat_reg='Н/Д', purpose_into_cat_reg='Н/Д', category='Н/Д', date_of_cat_reg='Н/Д', **trash):
-        request = '''
-            INSERT INTO `transportfinder`.`transport` (
-                    `VIN`,
-                    `State_Registr_Mark`,
-                    `Region`,
-                    `Date_of_issue`,
-                    `pass_ser`,
-                    `Ownership`,
-                    `End_date_of_ownership`,
-                    `brand`,
-                    `model`,
-                    `type`,
-                    `Registred_at`,
-                    `License number`,
-                    `Status`,
-                    `Action_with_vehicle`,
-                    `Categorized`,
-                    `Number_of_cat_reg`,
-                    `Data_in_cat_reg`,
-                    `ATP`,
-                    `Model_from_cat_reg`,
-                    `Owner_from_cat_reg`,
-                    `Purpose_into_cat_reg`,
-                    `Category`,
-                    `Date_of_cat_reg`
-                )
-            VALUES
-                (
-                    '{}', '{}',             '{}', '{}', 
-                    '{}', '{}',             '{}', '{}', 
-                    
-                    
-                                   '{}', 
-                          '{}', '{}', '{}', '{}', 
-                    '{}', '{}',             '{}', '{}', 
-                    '{}', '{}',             '{}', '{}', 
-                    '{}',                         '{}'
-                );
-            '''.format(
+        request = '''INSERT INTO
+    `transportfinder`.`transport` (
+        `VIN`,
+        `State_Registr_Mark`,
+        `Region`,
+        `Date_of_issue`,
+        `pass_ser`,
+        `Ownership`,
+        `End_date_of_ownership`,
+        `brand`,
+        `model`,
+        `type`,
+        `Registred_at`,
+        `License number`,
+        `Status`,
+        `Action_with_vehicle`,
+        `Categorized`,
+        `Number_of_cat_reg`,
+        `Data_in_cat_reg`,
+        `ATP`,
+        `Model_from_cat_reg`,
+        `Owner_from_cat_reg`,
+        `Purpose_into_cat_reg`,
+        `Category`,
+        `Date_of_cat_reg`
+    )
+VALUES
+    (
+        '{}', '{}',             '{}', '{}', 
+        '{}', '{}',             '{}', '{}', 
+        
+        
+                       '{}', 
+              '{}', '{}', '{}', '{}', 
+        '{}', '{}',             '{}', '{}', 
+        '{}', '{}',             '{}', '{}', 
+        '{}',                         '{}'
+    );'''.format(
             vin,
             srm,
             region,
@@ -601,15 +607,13 @@ class DataBase:
         srm = self.row[0]
         date = self.__reformat_date(self.row[1])
         name_of_company = self.row[2]
-        region = self.row[3]
-        number_of_license = self.row[4]
+        number_of_license = self.row[3]
         vin = self.row[7]
         ownership = self.row[9]
         status = self.row[11]
         self.__insert_database(srm=srm,
                                registred_at=date,
                                company=name_of_company,
-                               region=region,
                                license_number=number_of_license,
                                vin=vin,
                                ownership=ownership,
