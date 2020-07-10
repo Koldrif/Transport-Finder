@@ -118,7 +118,7 @@ class DataBase:
     def __task(self, request):
         with self.connect:
             cursor = self.connect.cursor()
-            cursor.execute(request.replace("'", "\\'"))
+            cursor.execute(request)
 
     def __update_record(self, id, type, data):
         if type == 'owners':
