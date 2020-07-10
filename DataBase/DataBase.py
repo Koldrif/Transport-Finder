@@ -142,9 +142,9 @@ class DataBase:
                 'Description': 'description'
             }
             for key in keywords:
-                if key in data:
+                if keywords[key] in data:
                     list_of_updates += "`{key}` = '{value}', ".format(
-                        key, data[key])
+                        key=key, value=data[keywords[key]])
 
             request = """
                 UPDATE
@@ -168,9 +168,9 @@ class DataBase:
                 'License_number': 'license_number'
             }
             for key in keywords:
-                if key in data:
+                if keywords[key] in data:
                     list_of_updates += "`{key}` = '{value}', ".format(
-                        key, data[key])
+                        key=key, value=data[keywords[key]])
 
             request = """
                 UPDATE
@@ -182,6 +182,7 @@ class DataBase:
             """.format(list_of_updates=list_of_updates[:-2:], id=id)
         else:
             raise Exception('Error: wrong type of table')
+        print(request)
         self.__task(request)
 
     def __insert_database(self, **data):
