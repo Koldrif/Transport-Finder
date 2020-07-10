@@ -118,7 +118,7 @@ class DataBase:
     def __task(self, request):
         with self.connect:
             cursor = self.connect.cursor()
-            cursor.execute(request)
+            cursor.execute(request.replace("'", "\\'"))
 
     def __update_record(self, id, type, data):
         if type == 'owners':
@@ -126,18 +126,18 @@ class DataBase:
                 'INN': 'inn',
                 'OGRN': 'ogrn',
                 'Title': 'company',
-                'Registered_at_date': 'registred_at',
-                # 'License_number': 'license_number',
+                'Registered_at_date': 'registered_at',
+                'License_number': 'license_number',
                 'Reg_address': 'reg_address',
                 'Implement_address': 'implement_address',
                 'Risk_category': 'risk_category',
-                'Starts_at': 'date_of_begin_inspect',
-                'Duration_hours': 'duration_inspect',
-                'Last_inspec': 'date_of_end_inspect',
-                'Purpose': 'purpose',
-                'other_reason': 'other_reasons',
-                'form_of_holding': 'holding_form',
-                'Performs_with': 'companion_inspects',
+                'Starts_at': 'inspect_start',
+                'Duration_hours': 'inspect_duration',
+                'Last_inspect': 'last_inspect',
+                'Purpose': 'purpose_of_inspect',
+                'other_reason': 'other_reason_of_inspect',
+                'form_of_holding': 'form_of_holding_inspect',
+                'Performs_with': 'inspect_perform',
                 'Punishment': 'punishment',
                 'Description': 'description'
             }
@@ -151,15 +151,28 @@ class DataBase:
         elif type == 'transport':
             keywords = {
                 'VIN': 'vin',
-                # 'State_Registr_Mark': 'srm',
+                'State_Registr_Mark': 'srm',
                 'Region': 'region',
                 'Date_of_issue': 'date_of_issue',
                 'pass_ser': 'pass_ser',
                 'Ownership': 'ownership',
+                'End_date_of_ownership': 'end_of_ownership',
                 'brand': 'brand',
-                'type': 'type',
-                'Registred_at': 'date_of_registrate',
-                'License_number': 'license_number'
+                'model': 'model',
+                'type': 'ttype',
+                'Registred_at': 'registred_at',
+                'License_number': 'license_number',
+                'Status': 'status',
+                'Action_with_vehicle': 'action_with_vehicle',
+                'Categorized': 'categorized',
+                'Number_of_cat_reg': 'number_of_cat_reg',
+                'Data_in_cat_reg': 'date_in_cat_reg',
+                'ATP': 'atp',
+                'Model_from_cat_reg': 'model_from_cat_reg',
+                'Owner_from_cat_reg': 'owner_from_cat_reg',
+                'Purpose_into_cat_reg': 'purpose_into_cat_reg',
+                'Category': 'category',
+                'Date_of_cat_reg': 'date_of_cat_reg'
             }
             request = """
                 UPDATE
@@ -284,9 +297,7 @@ class DataBase:
             category,
             date_of_cat_reg,
         )
-        with self.connect:
-            cursor = self.connect.cursor()
-            cursor.execute(request)
+        self.__task(request)
 
     def __insert_owner(self,
                        inn='Н/Д',
@@ -356,9 +367,7 @@ class DataBase:
             punishment,
             description
         )
-        with self.connect:
-            cursor = self.connect.cursor()
-            cursor.execute(request)
+        self.__task(request)
 
     def __reformat_date(self, date_old_format):
         return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:]))
@@ -372,10 +381,11 @@ class DataBase:
         ncols = self.sheet.ncols
         for i_row in range(self.begins[type], nrows):
             self.row = self.sheet.row_values(i_row)
-            # try:
-            self.functions[type]()
-            # except Exception as e:
-            #     print('Error:', 'data:', self.row, 'description:', e)
+            try:
+                self.functions[type]()
+            except Exception as e:
+                print('Error:', '\ndata:', self.row, '\ndescription:',
+                      e, '\nFile name:', document_name)
         self.book.release_resources()
         print('book was read by {} seconds'.format(time.process_time()-a))
 
