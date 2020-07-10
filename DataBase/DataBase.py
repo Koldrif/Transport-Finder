@@ -180,7 +180,7 @@ class DataBase:
                     {list_of_updates}
                 WHERE
                     (`transport_id` = '{id}');
-            """.format(list_of_updates=list_of_updates, id=id)
+            """.format(list_of_updates=list_of_updates[:-2:], id=id)
         else:
             raise Exception('Error: wrong type of table')
         self.__task(request)
