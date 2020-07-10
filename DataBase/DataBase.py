@@ -185,40 +185,45 @@ class DataBase:
         self.__task(request)
 
     def __insert_database(self, **data):
-        request = '''
-            SELECT `transport_id`, `License number` 
-            FROM transportfinder.transport WHERE `License number` = '{license_number}' 
-        '''.format(license_number=data['license_number'])
-        rows = self.__task_get(request)
-        if len(rows) == 1:
-            id_ts = rows[0][0]
-            self.__update_record(id=id_ts, type='transport', data=data)
-        elif len(rows) == 0:
-            self.__insert_transport(**data)
+        id_ts = -1
+        id_own = -1
+        if 'srm' in data:
+            request = '''
+                SELECT `transport_id`, `License number` 
+                FROM transportfinder.transport WHERE `License number` = '{license_number}' 
+            '''.format(license_number=data['srm'])
             rows = self.__task_get(request)
-            id_ts = rows[0][0]
-        else:
-            raise Exception('Database_error: few transports was find')
-        request = '''
-            SELECT `Owner_id`, `License_number` 
-            FROM transportfinder.owners WHERE `License_number` = '{license_number}' 
-        '''.format(license_number=data['license_number'])
-        rows = self.__task_get(request)
-        if len(rows) == 1:
-            id_own = rows[0][0]
-            self.__update_record(id=id_own, type='owners', data=data)
-        elif len(rows) == 0:
-            self.__insert_owner(**data)
+            if len(rows) == 1:
+                id_ts = rows[0][0]
+                self.__update_record(id=id_ts, type='transport', data=data)
+            elif len(rows) == 0:
+                self.__insert_transport(**data)
+                rows = self.__task_get(request)
+                id_ts = rows[0][0]
+            else:
+                raise Exception('Database_error: few transports was find')
+        if 'license_number' in data:
+            request = '''
+                SELECT `Owner_id`, `License_number` 
+                FROM transportfinder.owners WHERE `License_number` = '{license_number}' 
+            '''.format(license_number=data['license_number'])
             rows = self.__task_get(request)
-            id_own = rows[0][0]
-        else:
-            raise Exception('Database_error: few owners was fins')
-        request = '''
-            INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) 
-            VALUES ('{owner}', '{transport}')
-        '''.format(
-            owner=id_own, transport=id_ts)
-        self.__task(request)
+            if len(rows) == 1:
+                id_own = rows[0][0]
+                self.__update_record(id=id_own, type='owners', data=data)
+            elif len(rows) == 0:
+                self.__insert_owner(**data)
+                rows = self.__task_get(request)
+                id_own = rows[0][0]
+            else:
+                raise Exception('Database_error: few owners was fins')
+        if id_ts != -1 and id_own != -1:
+            request = '''
+                INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) 
+                VALUES ('{owner}', '{transport}')
+            '''.format(
+                owner=id_own, transport=id_ts)
+            self.__task(request)
 
     def __insert_transport(self, vin='Н/Д', state_registr_mark='Н/Д', region='Н/Д',
                            date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д',
@@ -537,7 +542,6 @@ class DataBase:
         ownership = self.row[9]
         status = self.row[11]
         self.__insert_database(srm=srm,
-                               date_of_issue=date_of_last_issue,
                                company=name_of_company,
                                license_number=license_number,
                                registred_at=date_of_license,
@@ -554,7 +558,6 @@ class DataBase:
         vin = self.row[6]
         status = self.row[7]
         self.__insert_database(srm=srm,
-                               date_of_issue=date_of_last_issue,
                                company=name_of_company,
                                license_number=license_number,
                                registred_at=date_of_license,
@@ -607,7 +610,6 @@ class DataBase:
         ownership = self.row[9]
         status = self.row[11]
         self.__insert_database(srm=srm,
-                               date_of_issue=date_of_last_issue,
                                company=name_of_company,
                                license_number=license_number,
                                vin=vin,
@@ -659,7 +661,6 @@ class DataBase:
         ownership = self.row[9]
         status = self.row[11]
         self.__insert_database(srm=srm,
-                               date_of_issue=date_of_last_issue,
                                company=name_of_company,
                                license_number=license_number,
                                registred_at=date_of_license,
@@ -677,7 +678,6 @@ class DataBase:
         ownership = self.row[9]
         status = self.row[11]
         self.__insert_database(srm=srm,
-                               date_of_issue=date_of_last_issue,
                                company=name_of_company,
                                license_number=license_number,
                                registred_at=date_of_license,
@@ -695,7 +695,6 @@ class DataBase:
         ownership = self.row[9]
         status = self.row[11]
         self.__insert_database(srm=srm,
-                               date_of_issue=date_of_last_issue,
                                company=name_of_company,
                                registred_at=date_of_license,
                                license_number=license_number,
@@ -729,7 +728,11 @@ class DataBase:
         ownership = self.row[9]
         status = self.row[11]
         self.__insert_database(srm=srm,
-                               date_of_issue=date_of_last_issue,)
+                               company=name_of_company,
+                               license_number=license_number,
+                               vin=vin,
+                               ownership=ownership,
+                               status=status)
 
     def read_bus_15(self):
         srm = self.row[1]
@@ -738,12 +741,21 @@ class DataBase:
         brand = self.row[5]
         license_number = self.row[6]
         ownership = self.row[7]
+        self.__insert_database(srm=srm,
+                               status=status,
+                               brand=brand,
+                               license_number=license_number,
+                               ownership=ownership)
 
     def read_bus_16(self):
         license_number = self.row[0]
         date_of_license = self.__reformat_date(self.row[4])
         name_of_company = self.row[2]
         srm = self.row[3]
+        self.__insert_database(license_number=license_number,
+                               registred_at=date_of_license,
+                               company=name_of_company,
+                               srm=srm)
 
     def read_bus_17(self):
         status = self.row[1]
@@ -752,6 +764,10 @@ class DataBase:
         date_of_issue = self.__reformat_date(self.row[4])
         license_number = self.row[6] + '-' + self.row[5]
         ownership = self.row[7]
+        self.__insert_database(status=status,
+                               srm=srm,
+                               license_number=license_number,
+                               ownership=ownership)
 
     def read_bus_22(self):
         srm = self.row[0]
@@ -762,6 +778,13 @@ class DataBase:
         vin = self.row[7]
         ownership = self.row[9]
         status = self.row[11]
+        self.__insert_database(srm=srm,
+                               company=name_of_company,
+                               license_number=license_number,
+                               registred_at=date_of_license,
+                               vin=vin,
+                               ownership=ownership,
+                               status=status)
 
     def read_bus_23(self):
         srm = self.row[0]
@@ -772,6 +795,13 @@ class DataBase:
         vin = self.row[7]
         ownership = self.row[9]
         status = self.row[11]
+        self.__insert_database(srm=srm,
+                               company=name_of_company,
+                               license_number=license_number,
+                               registred_at=date_of_license,
+                               vin=vin,
+                               ownership=ownership,
+                               status=status)
 
     def read_bus_24(self):
         srm = self.row[0]
@@ -782,6 +812,13 @@ class DataBase:
         vin = self.row[7]
         ownership = self.row[9]
         status = self.row[11]
+        self.__insert_database(srm=srm,
+                               company=name_of_company,
+                               registred_at=date_if_license,
+                               license_number=license_number,
+                               vin=vin,
+                               ownership=ownership,
+                               status=status)
 
     def read_license_and_bus_1(self):
         date = self.__reformat_date(self.row[2])
@@ -1033,6 +1070,12 @@ class DataBase:
             punishment = self.row[16]
             activity_category = self.row[17]
             danger = self.row[18]
+            self.__insert_database(company=name_of_company,
+                                   reg_address=address,
+                                   implement_address=activity_place,
+                                   ogrn=ogrn,
+                                   inn=inn,
+                                   )
 
     def read_category_register(self, document_name):
         print('reading category registr...')
@@ -1057,3 +1100,10 @@ class DataBase:
                     date_of_category = self.row[11]
                     date_of_ending = self.row[13]
                     reason_of_ending = self.row[14]
+                    self.__insert_database(atp=index_in_registr,
+                                           registred_at=date_of_record,
+                                           type=type_of_transport,
+                                           brand=brand,
+                                           vin=vin,
+                                           reg_address=address,
+                                           )
