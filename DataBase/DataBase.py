@@ -226,10 +226,7 @@ class DataBase:
                 owner=id_own, transport=id_ts)
             self.__task(request)
 
-    def __insert_transport(self, vin='Н/Д', state_registr_mark='Н/Д', region='Н/Д',
-                           date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д',
-                           brand='Н/Д', ttype='Н/Д', registred_at='Н/Д', license_number='Н/Д',
-                           **trash):
+    def __insert_transport(self, vin='Н/Д', srm='Н/Д', region='Н/Д', date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д', end_of_ownership='Н/Д', model='Н/Д', brand='Н/Д', ttype='Н/Д', registred_at='Н/Д', license_number='Н/Д', status='Н/Д', action_with_vehicle='Н/Д', categorized='Н/Д', number_of_cat_reg='Н/Д', date_in_cat_reg='Н/Д', atp='Н/Д', model_from_cat_reg='Н/Д', owner_from_cat_reg='Н/Д', purpose_into_cat_reg='Н/Д', category='Н/Д', date_of_cat_reg='Н/Д', **trash):
         request = '''INSERT INTO
     `transportfinder`.`transport` (
         `VIN`,
@@ -258,40 +255,54 @@ class DataBase:
     )
 VALUES
     (
-        'VIN',
-        'SRM',
-        'Region',
-        'Date_of_issue',
-        'Pass_ser',
-        'Ownership',
-        'End_date_of_ownership',
-        'Brand',
-        'Model',
-        'Type',
-        'Registred_at',
-        'License_number',
-        'Status',
-        'Action_with_vehicle',
-        'Categorized',
-        'Number_of_cat_reg',
-        'Data_in_cat_reg',
-        'ATP',
-        'Model_from_cat_reg',
-        'Ower_from_cat_reg',
-        'Purpose_into_cat_reg',
-        'Category',
-        'Date_of_cat_reg'
-    );''' \
-                  "".format(VIN=vin,
-                            SRM=state_registr_mark,
-                            Region=region,
-                            DateOfIssue=date_of_issue,
-                            Serial=pass_ser,
-                            Ownership=ownership,
-                            Brand=brand,
-                            TType=ttype,
-                            Registred_at=registred_at,
-                            License_number=license_number)
+        '{VIN}',
+        '{SRM}',
+        '{Region}',
+        '{Dateofissue}',
+        '{Serial}',
+        '{Ownership}',
+        '{End_date_of_ownership}',
+        '{Brand}',
+        '{Model}',
+        '{Type}',
+        '{Registred_at}',
+        '{License_number}',
+        '{Status}',
+        '{Action_with_vehicle}',
+        '{Categorized}',
+        '{Number_of_cat_reg}',
+        '{Data_in_cat_reg}',
+        '{ATP}',
+        '{Model_from_cat_reg}',
+        '{Owner_from_cat_reg}',
+        '{Purpose_into_cat_reg}',
+        '{Category}',
+        '{Date_of_cat_reg}'
+    );'''.format(
+            VIN=vin,
+            SRM=srm,
+            Region=region,
+            DateOfIssue=date_of_issue,
+            Serial=pass_ser,
+            Ownership=ownership,
+            End_date_of_ownership=end_of_ownership,
+            Brand=brand,
+            Model=model,
+            Type=ttype,
+            Registred_at=registred_at,
+            License_number=license_number,
+            Status=status,
+            Action_with_vehicle=action_with_vehicle,
+            Categorized=categorized,
+            Number_of_cat_reg=number_of_cat_reg,
+            Data_in_cat_reg=date_in_cat_reg,
+            ATP=atp,
+            Model_from_cat_reg=model_from_cat_reg,
+            Owner_from_cat_reg=owner_from_cat_reg,
+            Purpose_into_cat_reg=purpose_into_cat_reg,
+            Category=category,
+            Date_of_cat_reg=date_of_cat_reg,
+        )
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request)
