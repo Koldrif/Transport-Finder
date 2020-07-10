@@ -10,6 +10,18 @@ ALTER TABLE
 SET
     SQL_SAFE_UPDATES = 0;
 
+SET
+    SQL_SAFE_UPDATES = 0;
+
+DELETE FROM
+    transport;
+
+ALTER TABLE
+    transport AUTO_INCREMENT = 0;
+
+SET
+    SQL_SAFE_UPDATES = 0;
+
 INSERT INTO
     `transportfinder`.`owners` (
         `INN`,
