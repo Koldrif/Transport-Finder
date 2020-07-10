@@ -121,7 +121,6 @@ class DataBase:
 
     def __update_record(self, id, type, data):
         if type == 'owners':
-            list_of_updates = ''
             keywords = {
                 'INN': 'inn',
                 'OGRN': 'ogrn',
@@ -141,20 +140,14 @@ class DataBase:
                 'Punishment': 'punishment',
                 'Description': 'description'
             }
-            for key in keywords:
-                if key in data:
-                    list_of_updates += "`{key}` = '{value}', ".format(
-                        key, data[key])
-
             request = """
                 UPDATE
                     `transportfinder`.`owners`
                 SET
                 {list_of_updates}
                 WHERE (`Owner_id` = '{id}');
-                """.format(list_of_updates=list_of_updates, id=id)
+                """
         elif type == 'transport':
-            list_of_updates = ''
             keywords = {
                 'VIN': 'vin',
                 'State_Registr_Mark': 'srm',
@@ -167,11 +160,6 @@ class DataBase:
                 'Registred_at': 'date_of_registrate',
                 'License_number': 'license_number'
             }
-            for key in keywords:
-                if key in data:
-                    list_of_updates += "`{key}` = '{value}', ".format(
-                        key, data[key])
-
             request = """
                 UPDATE
                     `transportfinder`.`transport`
@@ -179,9 +167,15 @@ class DataBase:
                     {list_of_updates}
                 WHERE
                     (`transport_id` = '{id}');
-            """.format(list_of_updates=list_of_updates[:-2:], id=id)
+            """
         else:
             raise Exception('Error: wrong type of table')
+        list_of_updates = ""
+        for key in keywords:
+            if key in data:
+                list_of_updates += "`{key}` = '{value}', ".format(
+                    key, data[key])
+        request = request.format(list_of_updates=list_of_updates[:-2:], id=id)
         self.__task(request)
 
     def __insert_database(self, **data):
@@ -226,44 +220,45 @@ class DataBase:
             self.__task(request)
 
     def __insert_transport(self, vin='Н/Д', srm='Н/Д', region='Н/Д', date_of_issue='Н/Д', pass_ser='Н/Д', ownership='Н/Д', end_of_ownership='Н/Д', model='Н/Д', brand='Н/Д', ttype='Н/Д', registred_at='Н/Д', license_number='Н/Д', status='Н/Д', action_with_vehicle='Н/Д', categorized='Н/Д', number_of_cat_reg='Н/Д', date_in_cat_reg='Н/Д', atp='Н/Д', model_from_cat_reg='Н/Д', owner_from_cat_reg='Н/Д', purpose_into_cat_reg='Н/Д', category='Н/Д', date_of_cat_reg='Н/Д', **trash):
-        request = '''INSERT INTO
-    `transportfinder`.`transport` (
-        `VIN`,
-        `State_Registr_Mark`,
-        `Region`,
-        `Date_of_issue`,
-        `pass_ser`,
-        `Ownership`,
-        `End_date_of_ownership`,
-        `brand`,
-        `model`,
-        `type`,
-        `Registred_at`,
-        `License number`,
-        `Status`,
-        `Action_with_vehicle`,
-        `Categorized`,
-        `Number_of_cat_reg`,
-        `Data_in_cat_reg`,
-        `ATP`,
-        `Model_from_cat_reg`,
-        `Owner_from_cat_reg`,
-        `Purpose_into_cat_reg`,
-        `Category`,
-        `Date_of_cat_reg`
-    )
-VALUES
-    (
-        '{}', '{}',             '{}', '{}', 
-        '{}', '{}',             '{}', '{}', 
-        
-        
-                       '{}', 
-              '{}', '{}', '{}', '{}', 
-        '{}', '{}',             '{}', '{}', 
-        '{}', '{}',             '{}', '{}', 
-        '{}',                         '{}'
-    );'''.format(
+        request = '''
+            INSERT INTO `transportfinder`.`transport` (
+                    `VIN`,
+                    `State_Registr_Mark`,
+                    `Region`,
+                    `Date_of_issue`,
+                    `pass_ser`,
+                    `Ownership`,
+                    `End_date_of_ownership`,
+                    `brand`,
+                    `model`,
+                    `type`,
+                    `Registred_at`,
+                    `License number`,
+                    `Status`,
+                    `Action_with_vehicle`,
+                    `Categorized`,
+                    `Number_of_cat_reg`,
+                    `Data_in_cat_reg`,
+                    `ATP`,
+                    `Model_from_cat_reg`,
+                    `Owner_from_cat_reg`,
+                    `Purpose_into_cat_reg`,
+                    `Category`,
+                    `Date_of_cat_reg`
+                )
+            VALUES
+                (
+                    '{}', '{}',             '{}', '{}', 
+                    '{}', '{}',             '{}', '{}', 
+                    
+                    
+                                   '{}', 
+                          '{}', '{}', '{}', '{}', 
+                    '{}', '{}',             '{}', '{}', 
+                    '{}', '{}',             '{}', '{}', 
+                    '{}',                         '{}'
+                );
+            '''.format(
             vin,
             srm,
             region,
