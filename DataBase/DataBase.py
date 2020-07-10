@@ -7,10 +7,9 @@ LOGIN = u'server'
 PASSWORD = u'secret'
 DATABASE = u'transportfinder'
 CHARSET = u'utf8'
-
+TEST = 'ASD'
 
 class DataBase:
-
     def __init__(self, host=DB_SERVER, user=LOGIN, password=PASSWORD, db=DATABASE, charset=CHARSET):
         self.begins = {
             'license_2': 3,
