@@ -331,7 +331,7 @@ class DataBase:
                     `Risk_category`,
                     `Starts_at`,
                     `Duration_hours`,
-                    `Last inspec`,
+                    `Last_inspect`,
                     `Purpose`,
                     `other_reason`,
                     `form_of_holding`,
