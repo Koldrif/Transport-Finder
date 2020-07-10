@@ -7,8 +7,6 @@ LOGIN = u'server'
 PASSWORD = u'secret'
 DATABASE = u'transportfinder'
 CHARSET = u'utf8'
-TEST = 'asd'
-dsfdsfsf = "a"
 
 
 class DataBase:
