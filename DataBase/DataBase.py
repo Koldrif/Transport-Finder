@@ -1,6 +1,7 @@
 import pymysql as pms
 import xlrd
 from xlrd.xldate import xldate_as_tuple as xldate
+import time
 
 DB_SERVER = 'localhost'
 LOGIN = u'server'
@@ -363,7 +364,8 @@ class DataBase:
         return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:]))
 
     def read_license_and_bus(self, document_name, type):
-        print('reading transport...')
+        print('reading license or bus...')
+        a = time.process_time()
         self.book = xlrd.open_workbook(document_name)
         self.sheet = self.book.sheet_by_index(0)
         nrows = self.sheet.nrows
@@ -375,6 +377,7 @@ class DataBase:
             # except Exception as e:
             #     print('Error:', 'data:', self.row, 'description:', e)
         self.book.release_resources()
+        print('book was read by {} seconds'.format(time.process_time()-a))
 
     def read_license_2(self):
         date_of_registration = self.__reformat_date(self.row[3])
