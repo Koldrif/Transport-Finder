@@ -8,6 +8,8 @@ PASSWORD = u'secret'
 DATABASE = u'transportfinder'
 CHARSET = u'utf8'
 TEST = 'asd'
+dsfdsfsf = "a"
+
 
 class DataBase:
     def __init__(self, host=DB_SERVER, user=LOGIN, password=PASSWORD, db=DATABASE, charset=CHARSET):
@@ -143,7 +145,8 @@ class DataBase:
             }
             for key in keywords:
                 if key in data:
-                    list_of_updates += "`{key}` = '{value}', ".format(key, data[key])
+                    list_of_updates += "`{key}` = '{value}', ".format(
+                        key, data[key])
 
             request = """
                 UPDATE
@@ -169,7 +172,8 @@ class DataBase:
             }
             for key in keywords:
                 if key in data:
-                    list_of_updates += "`{key}` = '{value}', ".format(key, data[key])
+                    list_of_updates += "`{key}` = '{value}', ".format(
+                        key, data[key])
 
             request = """
                 UPDATE
@@ -929,7 +933,7 @@ class DataBase:
         name_of_company = self.row[17]
         if name_of_company == '  ':
             name_of_company = self.row[12] + ' ' + \
-                              self.row[13] + ' ' + self.row[14]
+                self.row[13] + ' ' + self.row[14]
         date_of_license = self.__reformat_date(self.row[19])
 
     def read_license_and_bus_18(self):
