@@ -296,22 +296,74 @@ VALUES
             cursor = self.connect.cursor()
             cursor.execute(request)
 
-    def __insert_owner(self, inn='Н/Д', ogrn='Н/Д', title='Н/Д',
-                       registred_at='Н/Д', license_number='Н/Д', reg_address='Н/Д',
-                       implement_address='Н/Д', risk_category='Н/Д',
+    def __insert_owner(self,
+                       inn='Н/Д',
+                       ogrn='Н/Д',
+                       company='Н/Д',
+                       registered_at='Н/Д',
+                       license_number='Н/Д',
+                       reg_address='Н/Д',
+                       implement_address='Н/Д',
+                       risk_category='Н/Д',
+                       inspect_start='Н/Д',
+                       inspect_duration='Н/Д',
+                       last_inspect='Н/Д',
+                       purpose_of_inspect='Н/Д',
+                       other_reason_of_inspect='Н/Д',
+                       form_of_holding_inspect='Н/Д',
+                       inspect_perform='Н/Д',
+                       punishment='Н/Д',
+                       description='Н/Д',
                        **trash):
-        request = "INSERT INTO `transportfinder`.`owners` " \
-                  "(`INN`, `OGRN`, `Title`, `Registred_at`, `License_number`, `Reg_address`, `Implement_address`, `Risk_category`) " \
-                  "VALUES " \
-                  "('{INN}', '{OGRN}', '{Title}', '{Registred_at}', '{License_number}', '{Reg_address}', '{Implement_address}','{Risk_category}');" \
-                  "".format(INN=inn,
-                            OGRN=ogrn,
-                            Title=title,
-                            Registred_at=registred_at,
-                            License_number=license_number,
-                            Reg_address=reg_address,
-                            Implement_address=implement_address,
-                            Risk_category=risk_category)
+        request = """
+            INSERT INTO
+                `transportfinder`.`owners` (
+                    `INN`,
+                    `OGRN`,
+                    `Title`,
+                    `Registered_at_date`,
+                    `License_number`,
+                    `Reg_address`,
+                    `Implement_address`,
+                    `Risk_category`,
+                    `Starts_at`,
+                    `Duration_hours`,
+                    `Last inspec`,
+                    `Purpose`,
+                    `other_reason`,
+                    `form_of_holding`,
+                    `Performs_with`,
+                    `Punishment`,
+                    `Description`
+                )
+            VALUES
+                (
+                    '{}', '{}',             '{}', '{}', 
+                    '{}', '{}',             '{}', '{}',
+                    
+                    
+                    '{}', '{}', '{}', '{}', '{}', '{}', 
+                             '{}', '{}', '{}'
+                );
+        """.format(
+            inn,
+            ogrn,
+            company,
+            registered_at,
+            license_number,
+            reg_address,
+            implement_address,
+            risk_category,
+            inspect_start,
+            inspect_duration,
+            last_inspect,
+            purpose_of_inspect,
+            other_reason_of_inspect,
+            form_of_holding_inspect,
+            inspect_perform,
+            punishment,
+            description
+        )
         with self.connect:
             cursor = self.connect.cursor()
             cursor.execute(request)
@@ -345,7 +397,7 @@ VALUES
         self.__insert_database(license_number=reg_number,
                                inn=inn,
                                ogrn=ogrn,
-                               title=company,
+                               company=company,
                                registred_at=date_of_registration,
                                reg_address=company_address,
                                implement_address=actual_address)
@@ -361,7 +413,7 @@ VALUES
         ogrn = self.row[5]
         date_of_begin = self.row[8]
         self.__insert_database(license_number=license_number,
-                               title=company,
+                               company=company,
                                inn=inn,
                                ogrn=ogrn,
                                registred_at=date_of_begin)
@@ -989,31 +1041,25 @@ VALUES
         license_number = self.row[4]
         vin = self.row[5]
         region_of_smr = self.row[6]
-        date_of_manufacture = ':'.join(
-            map(str, xldate(self.row[7], self.book.datemode)[:3:]))
-        date_of_creation = ':'.join(
-            map(str, xldate(self.row[8], self.book.datemode)[:3:]))  # Дата создания
+        date_of_manufacture = self.__reformat_date(self.row[7])
+        date_of_creation = self.__reformat_date(self.row[8])  # Дата создания
         model = self.row[9]
-        date_of_change = ':'.join(
-            map(str, xldate(self.row[10], self.book.datemode)[:3:]))
+        date_of_change = self.__reformat_date(self.row[10])
         owner_type = self.row[11]
         company = self.row[12]
         inn = self.row[13]
         ogrn = self.row[14]
-        date_of_initial_activation = ':'.join(
-            map(str, xldate(self.row[15], self.book.datemode)[:3:]))
+        date_of_initial_activation = self.__reformat_date(self.row[15])
         ownership = self.row[16]
         institute_name = self.row[17]
-        end_of_leasing = ':'.join(
-            map(str, xldate(self.row[18], self.book.datemode)[:3:]))
+        end_of_leasing = self.__reformat_date(self.row[18])
         serial = self.row[18]  # Серия паспорта
 
     def read_license_and_bus_19(self):
         status = self.row[1]
         srm = self.row[2]
         region = self.row[3]
-        manufacture_date = ':'.join(
-            map(str, xldate(self.row[4], self.book.datemode)[:3:]))
+        manufacture_date = self.__reformat_date(self.row[4])
         vin = self.row[5]
         license_number = self.row[6]
         owner_type = self.row[7]
@@ -1022,27 +1068,21 @@ VALUES
         inn_owner = self.row[10]
         ogrn_owner = self.row[11]
         brand = self.row[12]
-        create_date = ':'.join(
-            map(str, xldate(self.row[13], self.book.datemode)[:3:]))
+        create_date = self.__reformat_date(self.row[13])
         model = self.row[14]
         company = self.row[15]
-        date_of_last_to = data_of_last_changes = ':'.join(
-            map(str, xldate(self.row[16], self.book.datemode)[:3:]))
+        date_of_last_to = data_of_last_changes = self.__reformat_date(self.row[16])
 
     def read_license_and_bus_20(self):
         srm = self.row[0]
-        data_of_last_changes = ':'.join(
-            map(str, xldate(self.row[1], self.book.datemode)[:3:]))
+        data_of_last_changes = self.__reformat_date(self.row[1])
         licensee = self.row[2]
         administration = self.row[3]
         number_of_license = self.row[4]
-        date_of_license_issue = ':'.join(
-            map(str, xldate(self.row[5], self.book.datemode)[:3:]))
-        date_of_inclusion_in_the_register = ':'.join(
-            map(str, xldate(self.row[6], self.book.datemode)[:3:]))
+        date_of_license_issue = self.__reformat_date(self.row[5])
+        date_of_inclusion_in_the_register = self.__reformat_date(self.row[6])
         vin = self.row[7]
-        date_of_the_last_technical_inspection = ':'.join(
-            map(str, xldate(self.row[8], self.book.datemode)[:3:]))
+        date_of_the_last_technical_inspection = self.__reformat_date(self.row[8])
         ownership = self.row[9]
         term_of_the_lease_agreement = self.row[10]
         status = self.row[11]
@@ -1061,10 +1101,8 @@ VALUES
         ogrn = self.row[10]
         company = self.row[11]
         ownership = self.row[12]
-        end_of_contract = ':'.join(
-            map(str, xldate(self.row[13], self.book.datemode)[:3:]))
-        date_of_inclusion_in_the_register = ':'.join(
-            map(str, xldate(self.row[14], self.book.datemode)[:3:]))
+        end_of_contract = self.__reformat_date(self.row[13])
+        date_of_inclusion_in_the_register = self.__reformat_date(self.row[14])
         inclusion_number = self.row[15]
 
     def read_license_and_bus_26(self):
@@ -1080,18 +1118,14 @@ VALUES
 
     def read_license_and_bus_27(self):
         srm = self.row[0]
-        data_of_last_changes = ':'.join(
-            map(str, xldate(self.row[1], self.book.datemode)[:3:]))
+        data_of_last_changes = self.__reformat_date(self.row[1])
         licensee = self.row[2]
         administration = self.row[3]
         number_of_license = self.row[4]
-        date_of_license_issue = ':'.join(
-            map(str, xldate(self.row[5], self.book.datemode)[:3:]))
-        date_of_inclusion_in_the_register = ':'.join(
-            map(str, xldate(self.row[6], self.book.datemode)[:3:]))
+        date_of_license_issue = self.__reformat_date(self.row[5])
+        date_of_inclusion_in_the_register = self.__reformat_date(self.row[6])
         vin = self.row[7]
-        date_of_the_last_technical_inspection = ':'.join(
-            map(str, xldate(self.row[8], self.book.datemode)[:3:]))
+        date_of_the_last_technical_inspection = self.__reformat_date(self.row[8])
         ownership = self.row[9]
         term_of_the_lease_agreement = self.row[10]
         status = self.row[11]
