@@ -377,7 +377,10 @@ class DataBase:
         self.__task(request)
 
     def __reformat_date(self, date_old_format):
-        return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:]))
+        if type(date_old_format) == float:
+            return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:]))
+        else:
+            return date_old_format
 
     def read_license_and_bus(self, document_name, type, sheets=[0], log=sys.stdout):
         print('reading {}...'.format(type))
