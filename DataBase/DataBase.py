@@ -832,7 +832,7 @@ class DataBase:
                                inn=inn,
                                brand=brand,
                                pass_ser=serial,
-                               date_of_end_rend=date_of_end_rent)
+                               end_of_ownership=date_of_end_rent)
 
     def read_license_and_bus_5(self):
         srm = self.row[2]
@@ -871,35 +871,83 @@ class DataBase:
         production_year = self.row[14]
         ownership = self.row[15]
         name_of_licensing_authority = self.row[16]
+        self.__insert_database(srm=srm,
+                               date_of_issue=date_of_manufacture,
+                               vin=vin,
+                               pass_ser=pass_ser,
+                               license_number=license_number,
+                               company=name_of_company,
+                               inn=inn,
+                               ogrn=ogrn,
+                               brand=brand,
+                               model=model,
+                               region=code_of_region,
+                               registred_at=date_of_license,
+                               end_of_ownership=end_of_ownership)
 
     def read_license_and_bus_9(self):
         status = self.row[1]
         srm = self.row[2]
         code_of_region = self.row[3]
+        date_of_manufacture = self.__reformat_date(self.row[4])
+        pass_ser = self.row[5]
         license_number = self.row[5] + '-' + self.row[6]
         name_of_company = self.row[7]
         inn = self.row[8]
         ogrn = self.row[9]
         brand = self.row[10]
+        model = self.row[11]
         date_of_license = self.row[12]
         vin = self.row[13]
+        end_of_ownership = self.__reformat_date(self.row[15])
+        self.__insert_database(srm=srm,
+                               date_of_issue=date_of_manufacture,
+                               vin=vin,
+                               pass_ser=pass_ser,
+                               license_number=license_number,
+                               company=name_of_company,
+                               inn=inn,
+                               ogrn=ogrn,
+                               brand=brand,
+                               model=model,
+                               region=code_of_region,
+                               registred_at=date_of_license,
+                               end_of_ownership=end_of_ownership,
+                               status=status)
 
     def read_license_and_bus_11(self):
+        status = self.row[1]
         srm = self.row[2]
         brand = self.row[3]
         vin = self.row[4]
         date = self.__reformat_date(self.row[5])
         inn = self.row[6]
+        date_of_manufacture = self.__reformat_date(self.row[7])
         ownership = self.row[8]
         name_of_company = self.row[9]
         region = self.row[10]
-        number = self.row[11]
+        license_number = self.row[11]
         if vin == '':
             vin = self.row[18]
+        end_of_ownership = self.row[16]
+        self.__insert_database(registred_at=date,
+                               srm=srm,
+                               date_of_issue=date_of_manufacture,
+                               vin=vin,
+                               license_number=license_number,
+                               ownership=ownership,
+                               company=name_of_company,
+                               inn=inn,
+                               brand=brand,
+                               region=region,
+                               end_of_ownership=end_of_ownership,
+                               status=status)
 
     def read_license_and_bus_12(self):
+        status = self.row[1]
         srm = self.row[2]
         region = self.row[3]
+        date_of_issue = self.row[4]
         vin = self.row[5]
         if vin == '':
             vin = self.row[6]
@@ -908,6 +956,16 @@ class DataBase:
         inn = self.row[12]
         ogrn = self.row[13]
         name_of_company = self.row[11]
+        self.__insert_database(srm=srm,
+                               vin=vin,
+                               date_of_issue=date_of_issue,
+                               license_number=number_of_license,
+                               ownership=ownership,
+                               company=name_of_company,
+                               inn=inn,
+                               ogrn=ogrn,
+                               status=status,
+                               region=region)
 
     def read_license_and_bus_13(self):
         srm = self.row[1]
@@ -916,11 +974,19 @@ class DataBase:
         vin = self.row[5]
         inn = self.row[10]
         ogrn = self.row[11]
-        name_of_company = self.row[17]
+        name_of_company = self.row[18]
         if name_of_company == '  ':
             name_of_company = self.row[12] + ' ' + \
                 self.row[13] + ' ' + self.row[14]
         date_of_license = self.__reformat_date(self.row[19])
+        self.__insert_database(srm=srm,
+                               vin=vin,
+                               license_number=license_number,
+                               company=name_of_company,
+                               inn=inn,
+                               ogrn=ogrn,
+                               brand=brand,
+                               registred_at=date_of_license)
 
     def read_license_and_bus_18(self):
         status = self.row[1]
@@ -942,6 +1008,21 @@ class DataBase:
         institute_name = self.row[17]
         end_of_leasing = self.__reformat_date(self.row[18])
         serial = self.row[18]  # Серия паспорта
+        self.__insert_database(registred_at=date_of_creation,  # Под вопросом
+                               srm=srm,
+                               date_of_issue=date_of_manufacture,
+                               vin=vin,
+                               license_number=license_number,
+                               ownership=ownership,
+                               company=company,
+                               inn=inn,
+                               ogrn=ogrn,
+                               brand=brand,
+                               region=region_of_smr,
+                               model=model,
+                               end_of_ownership=end_of_leasing,
+                               pass_ser=serial,
+                               status=status)
 
     def read_license_and_bus_19(self):
         status = self.row[1]
@@ -961,6 +1042,18 @@ class DataBase:
         company = self.row[15]
         date_of_last_to = data_of_last_changes = self.__reformat_date(
             self.row[16])
+        self.__insert_database(registred_at=create_date,  # Но это не точно
+                               region=region,
+                               srm=srm,
+                               date_of_issue=manufacture_date,
+                               vin=vin,
+                               license_number=license_number,
+                               company=company,
+                               inn=inn_owner,
+                               ogrn=ogrn_owner,
+                               brand=brand,
+                               model=model,
+                               status=status)
 
     def read_license_and_bus_20(self):
         srm = self.row[0]
@@ -974,8 +1067,16 @@ class DataBase:
         date_of_the_last_technical_inspection = self.__reformat_date(
             self.row[8])
         ownership = self.row[9]
-        term_of_the_lease_agreement = self.row[10]
+        term_of_the_lease_agreement = self.__reformat_date(self.row[10])
         status = self.row[11]
+        self.__insert_database(registred_at=date_of_inclusion_in_the_register,
+                               srm=srm,
+                               vin=vin,
+                               license_number=number_of_license,
+                               ownership=ownership,
+                               company=licensee,
+                               end_of_ownership=term_of_the_lease_agreement,
+                               status=status)
 
     def read_license_and_bus_21(self):
         srm = self.row[1]
@@ -994,6 +1095,18 @@ class DataBase:
         end_of_contract = self.__reformat_date(self.row[13])
         date_of_inclusion_in_the_register = self.__reformat_date(self.row[14])
         inclusion_number = self.row[15]
+        self.__insert_database(registred_at=date_of_inclusion_in_the_register,
+                               srm=srm,
+                               date_of_issue=manufacture_year,
+                               vin=vin,
+                               license_number=license_number,
+                               ownership=ownership,
+                               company=company,
+                               inn=inn,
+                               ogrn=ogrn,
+                               brand=ts_brand,
+                               model=model_of_ts,
+                               end_of_ownership=end_of_contract)
 
     def read_license_and_bus_26(self):
         status = self.row[1]
@@ -1005,6 +1118,13 @@ class DataBase:
         inn = self.row[7]
         ogrn = self.row[8]
         uniq_owner_identificaator = self.row[9]
+        self.__insert_database(srm=srm,
+                               date_of_issue=year_of_manufacture,
+                               vin=vin,
+                               license_number=number_of_license,
+                               inn=inn,
+                               ogrn=ogrn,
+                               status=status)
 
     def read_license_and_bus_27(self):
         srm = self.row[0]
@@ -1018,8 +1138,16 @@ class DataBase:
         date_of_the_last_technical_inspection = self.__reformat_date(
             self.row[8])
         ownership = self.row[9]
-        term_of_the_lease_agreement = self.row[10]
+        date_of_end_rent = self.__reformat_date(self.row[10])
         status = self.row[11]
+        self.__insert_database(registred_at=date_of_inclusion_in_the_register,  # Что именно из date_of_license_issue или date_of_inclusion_in_the_register, я хз
+                               srm=srm,
+                               vin=vin,
+                               license_number=number_of_license,
+                               ownership=ownership,
+                               company=licensee,
+                               end_of_ownership=date_of_end_rent,
+                               status=status)
 
     def read_prosecutors_check(self, document_name):
         print('reading prosecutors check...')
