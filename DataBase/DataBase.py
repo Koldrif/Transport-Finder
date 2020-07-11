@@ -66,48 +66,48 @@ class DataBase:
             charset=charset
         )
         self.functions = {
-            'license_2': self.read_license_2,
-            'license_3': self.read_license_3,
-            'license_7': self.read_license_7,
-            'license_8': self.read_license_8,
-            'license_9': self.read_license_9,
-            'license_10': self.read_license_10,
-            'license_13': self.read_license_13,
-            'license_14': self.read_license_14,
-            'license_15': self.read_license_15,
-            'license_16': self.read_license_16,
-            'license_17': self.read_license_17,
-            'license_22_v': self.read_license_22_vologodsk,
-            'license_22_p': self.read_license_22_pskov,
-            'license_23': self.read_license_23,
-            'license_24': self.read_license_24,
-            'license_25': self.read_license_25,
-            'bus_2': self.read_bus_2,
-            'bus_4': self.read_bus_4,
-            'bus_7': self.read_bus_7,
-            'bus_8': self.read_bus_8,
-            'bus_9': self.read_bus_9,
-            'bus_10': self.read_bus_10,
-            'bus_13': self.read_bus_13,
-            'bus_15': self.read_bus_15,
-            'bus_16': self.read_bus_16,
-            'bus_17': self.read_bus_17,
-            'bus_22': self.read_bus_22,
-            'bus_23': self.read_bus_23,
-            'bus_24': self.read_bus_24,
-            'license_and_bus_1': self.read_license_and_bus_1,
-            'license_and_bus_5': self.read_license_and_bus_5,
-            'license_and_bus_6': self.read_license_and_bus_6,
-            'license_and_bus_9': self.read_license_and_bus_9,
-            'license_and_bus_11': self.read_license_and_bus_11,
-            'license_and_bus_12': self.read_license_and_bus_12,
-            'license_and_bus_13': self.read_license_and_bus_13,
-            'license_and_bus_18': self.read_license_and_bus_18,
-            'license_and_bus_19': self.read_license_and_bus_19,
-            'license_and_bus_20': self.read_license_and_bus_20,
-            'license_and_bus_21': self.read_license_and_bus_21,
-            'license_and_bus_26': self.read_license_and_bus_26,
-            'license_and_bus_27': self.read_license_and_bus_27,
+            'license_2': self.__read_license_2,
+            'license_3': self.__read_license_3,
+            'license_7': self.__read_license_7,
+            'license_8': self.__read_license_8,
+            'license_9': self.__read_license_9,
+            'license_10': self.__read_license_10,
+            'license_13': self.__read_license_13,
+            'license_14': self.__read_license_14,
+            'license_15': self.__read_license_15,
+            'license_16': self.__read_license_16,
+            'license_17': self.__read_license_17,
+            'license_22_v': self.__read_license_22_vologodsk,
+            'license_22_p': self.__read_license_22_pskov,
+            'license_23': self.__read_license_23,
+            'license_24': self.__read_license_24,
+            'license_25': self.__read_license_25,
+            'bus_2': self.__read_bus_2,
+            'bus_4': self.__read_bus_4,
+            'bus_7': self.__read_bus_7,
+            'bus_8': self.__read_bus_8,
+            'bus_9': self.__read_bus_9,
+            'bus_10': self.__read_bus_10,
+            'bus_13': self.__read_bus_13,
+            'bus_15': self.__read_bus_15,
+            'bus_16': self.__read_bus_16,
+            'bus_17': self.__read_bus_17,
+            'bus_22': self.__read_bus_22,
+            'bus_23': self.__read_bus_23,
+            'bus_24': self.__read_bus_24,
+            'license_and_bus_1': self.__read_license_and_bus_1,
+            'license_and_bus_5': self.__read_license_and_bus_5,
+            'license_and_bus_6': self.__read_license_and_bus_6,
+            'license_and_bus_9': self.__read_license_and_bus_9,
+            'license_and_bus_11': self.__read_license_and_bus_11,
+            'license_and_bus_12': self.__read_license_and_bus_12,
+            'license_and_bus_13': self.__read_license_and_bus_13,
+            'license_and_bus_18': self.__read_license_and_bus_18,
+            'license_and_bus_19': self.__read_license_and_bus_19,
+            'license_and_bus_20': self.__read_license_and_bus_20,
+            'license_and_bus_21': self.__read_license_and_bus_21,
+            'license_and_bus_26': self.__read_license_and_bus_26,
+            'license_and_bus_27': self.__read_license_and_bus_27,
         }
 
     def __task_get(self, request):
@@ -382,24 +382,7 @@ class DataBase:
         else:
             return date_old_format
 
-    def read_license_and_bus(self, document_name, type, sheets=[0], log=sys.stdout):
-        print('reading {}...'.format(type))
-        a = time.process_time()
-        self.book = xlrd.open_workbook(document_name)
-        for i_sheet in sheets:
-            self.sheet = self.book.sheet_by_index(i_sheet)
-            nrows = self.sheet.nrows
-            for i_row in range(self.begins[type], nrows):
-                self.row = self.sheet.row_values(i_row)
-                try:
-                    self.functions[type]()
-                except Exception as e:
-                    print('Error:', '\ndata:', self.row, '\ndescription:',
-                          e, '\nFile name:', document_name, file=log)
-            self.book.release_resources()
-            print('book was read by {} seconds'.format(time.process_time() - a))
-
-    def read_license_2(self):
+    def __read_license_2(self):
         date_of_registration = self.__reformat_date(self.row[3])
         reg_number = self.row[4]
         duration_of_license = self.row[5]
@@ -418,11 +401,11 @@ class DataBase:
             implement_address=actual_address,
         )
 
-    def read_license_3(self):
+    def __read_license_3(self):
         # todo: ask about this fucking shit
         pass
 
-    def read_license_4(self):
+    def __read_license_4(self):
         license_number = self.row[1] + '-' + self.row[2]
         company = self.row[3]
         inn = self.row[4]
@@ -436,7 +419,7 @@ class DataBase:
             registered_at=date_of_begin
         )
 
-    def read_license_7(self):
+    def __read_license_7(self):
         date_of_license = self.__reformat_date(self.row[3])
         number_of_license = self.row[4]
         duration_of_license = self.row[5]
@@ -455,7 +438,7 @@ class DataBase:
             ogrn=ogrn
         )
 
-    def read_license_8(self):
+    def __read_license_8(self):
         date_of_license = self.__reformat_date(self.row[1])
         reg_number_license = self.row[2]
         name_of_company = self.row[5]
@@ -473,7 +456,7 @@ class DataBase:
             ogrn=ogrn
         )
 
-    def read_license_9(self):
+    def __read_license_9(self):
         inn = self.row[2]
         ogrn = self.row[3]
         company = self.row[4]
@@ -489,7 +472,7 @@ class DataBase:
             reg_address=address
         )
 
-    def read_license_10(self):
+    def __read_license_10(self):
         name_of_company = self.row[2]
         address = self.row[3]
         inn = self.row[4]
@@ -505,7 +488,7 @@ class DataBase:
             registered_at=date_of_license
         )
 
-    def read_license_13(self):
+    def __read_license_13(self):
         date = self.__reformat_date(self.row[3])
         reg_number = self.row[4]
         duration_of_license = self.row[5]
@@ -524,7 +507,7 @@ class DataBase:
             ogrn=ogrn
         )
 
-    def read_license_14(self):
+    def __read_license_14(self):
         name_of_company = self.row[1]
         inn = self.row[2]
         ogrn = self.row[3]
@@ -540,7 +523,7 @@ class DataBase:
             registered_at=date_of_license
         )
 
-    def read_license_15(self):
+    def __read_license_15(self):
         name_of_company = self.row[1]
         inn = self.row[2]
         ogrn = self.row[3]
@@ -555,7 +538,7 @@ class DataBase:
             registered_at=date_license
         )
 
-    def read_license_16(self):
+    def __read_license_16(self):
         date_of_license = self.__reformat_date(self.row[3])
         reg_number = self.row[4]
         name_of_company = self.row[7]
@@ -573,7 +556,7 @@ class DataBase:
             ogrn=ogrn
         )
 
-    def read_license_17(self):
+    def __read_license_17(self):
         inn = self.row[1]
         ogrn = self.row[2]
         name_of_company = self.row[3]
@@ -589,7 +572,7 @@ class DataBase:
             reg_address=address
         )
 
-    def read_license_22_vologodsk(self):
+    def __read_license_22_vologodsk(self):
         company = self.row[0]
         inn = self.row[1]
         ogrn = self.row[2]
@@ -603,7 +586,7 @@ class DataBase:
             registered_at=license_reg_date
         )
 
-    def read_license_22_pskov(self):
+    def __read_license_22_pskov(self):
         date = self.__reformat_date(self.row[0])  # Дата
         license_number = self.row[1]
         inn = self.row[6]
@@ -615,7 +598,7 @@ class DataBase:
             company=company
         )
 
-    def read_license_23(self):
+    def __read_license_23(self):
         company = self.row[0]
         inn = self.row[1]
         ogrn = self.row[2]
@@ -629,7 +612,7 @@ class DataBase:
             registered_at=license_reg_date
         )
 
-    def read_license_24(self):
+    def __read_license_24(self):
         company = self.row[0]
         inn = self.row[1]
         ogrn = self.row[2]
@@ -643,7 +626,7 @@ class DataBase:
             registered_at=license_reg_date
         )
 
-    def read_license_25(self):
+    def __read_license_25(self):
         inn = self.row[2]
         ogrn = self.row[3]
         company = self.row[4]
@@ -659,7 +642,7 @@ class DataBase:
             reg_address=company_address
         )
 
-    def read_bus_2(self):
+    def __read_bus_2(self):
         srm = self.row[0]
         name_of_company = self.row[2]
         region = self.row[3]
@@ -681,7 +664,7 @@ class DataBase:
             status=status
         )
 
-    def read_bus_4(self):
+    def __read_bus_4(self):
         srm = self.row[1]
         code_of_region = self.row[2]
         number_of_license = self.row[3] + '-' + self.row[4]
@@ -693,7 +676,7 @@ class DataBase:
                                company=name_of_company,
                                registered_at=date)
 
-    def read_bus_7(self):
+    def __read_bus_7(self):
         srm = self.row[0]
         date_of_last_issue = self.__reformat_date(self.row[1])
         name_of_company = self.row[2]
@@ -714,7 +697,7 @@ class DataBase:
                                end_of_ownership=end_of_license,
                                status=status)
 
-    def read_bus_8(self):
+    def __read_bus_8(self):
         srm = self.row[0]
         date_of_last_issue = self.row[1]
         name_of_company = self.row[2]
@@ -729,7 +712,7 @@ class DataBase:
                                vin=vin,
                                status=status)
 
-    def read_bus_9(self):
+    def __read_bus_9(self):
         status = self.row[1]
         srm = self.row[2]
         region = self.row[3]
@@ -753,7 +736,7 @@ class DataBase:
                                ownership=ownership
                                )
 
-    def read_bus_10(self):
+    def __read_bus_10(self):
         name_of_company = self.row[1]
         inn = self.row[2]
         srm = self.row[3]
@@ -778,7 +761,7 @@ class DataBase:
                                end_of_ownership=date_of_end
                                )
 
-    def read_bus_13(self):
+    def __read_bus_13(self):
         srm = self.row[0]
         date_of_last_issue = self.row[1]
         name_of_company = self.row[2]
@@ -799,7 +782,7 @@ class DataBase:
                                end_of_ownership=end_of_ownership,
                                status=status)
 
-    def read_bus_15(self):
+    def __read_bus_15(self):
         srm = self.row[1]
         code_of_region = self.row[2]
         status = self.row[3]
@@ -815,7 +798,7 @@ class DataBase:
                                license_number=license_number,
                                ownership=ownership)
 
-    def read_bus_16(self):
+    def __read_bus_16(self):
         license_number = self.row[0]
         date_of_license = self.__reformat_date(self.row[4])
         name_of_company = self.row[2]
@@ -827,7 +810,7 @@ class DataBase:
                                srm=srm,
                                registred_at=date_of_license)
 
-    def read_bus_17(self):
+    def __read_bus_17(self):
         status = self.row[1]
         srm = self.row[2]
         code_of_region = self.row[3]
@@ -842,7 +825,7 @@ class DataBase:
                                ownership=ownership,
                                end_of_ownership=end_of_license)
 
-    def read_bus_22(self):
+    def __read_bus_22(self):
         srm = self.row[0]
         date_of_last_issue = self.__reformat_date(self.row[1])
         name_of_company = self.row[2]
@@ -863,7 +846,7 @@ class DataBase:
                                end_of_ownership=end_of_license,
                                status=status)
 
-    def read_bus_23(self):
+    def __read_bus_23(self):
         srm = self.row[0]
         date_of_last_issue = self.__reformat_date(self.row[1])
         name_of_company = self.row[2]
@@ -884,7 +867,7 @@ class DataBase:
                                end_of_ownership=date_of_end_license,
                                status=status)
 
-    def read_bus_24(self):
+    def __read_bus_24(self):
         srm = self.row[0]
         date_of_last_issue = self.row[1]
         name_of_company = self.row[2]
@@ -905,7 +888,7 @@ class DataBase:
                                end_of_ownership=end_of_ownership,
                                status=status)
 
-    def read_license_and_bus_1(self):
+    def __read_license_and_bus_1(self):
         status = self.row[1]
         date = self.__reformat_date(self.row[2])
         srm = self.row[3]
@@ -936,7 +919,7 @@ class DataBase:
             inn=inn
         )
 
-    def read_license_and_bus_5(self):
+    def __read_license_and_bus_5(self):
         status = self.row[1]
         srm = self.row[2]
         region_transport = self.row[3]
@@ -970,7 +953,7 @@ class DataBase:
             registered_at=date_of_first_license
         )
 
-    def read_license_and_bus_6(self):
+    def __read_license_and_bus_6(self):
         srm = self.row[1]
         region_srm = self.row[2]
         brand = self.row[3]
@@ -1003,7 +986,7 @@ class DataBase:
             end_of_ownership=end_of_ownership
         )
 
-    def read_license_and_bus_9(self):
+    def __read_license_and_bus_9(self):
         status = self.row[1]
         srm = self.row[2]
         code_of_region = self.row[3]
@@ -1033,7 +1016,7 @@ class DataBase:
             end_of_ownership=end_of_rent,
         )
 
-    def read_license_and_bus_11(self):
+    def __read_license_and_bus_11(self):
         status = self.row[1]
         srm = self.row[2]
         brand = self.row[3]
@@ -1063,7 +1046,7 @@ class DataBase:
             end_of_ownership=date_of_end_rent
         )
 
-    def read_license_and_bus_12(self):
+    def __read_license_and_bus_12(self):
         status = self.row[1]
         srm = self.row[2]
         region = self.row[3]
@@ -1087,7 +1070,7 @@ class DataBase:
                                status=status,
                                region=region)
 
-    def read_license_and_bus_13(self):
+    def __read_license_and_bus_13(self):
         srm = self.row[1]
         brand = self.row[2]
         license_number = self.row[4]
@@ -1108,7 +1091,7 @@ class DataBase:
                                brand=brand,
                                registred_at=date_of_license)
 
-    def read_license_and_bus_18(self):
+    def __read_license_and_bus_18(self):
         status = self.row[1]
         srm = self.row[2]
         brand = self.row[3]  # МАрка ТС
@@ -1144,7 +1127,7 @@ class DataBase:
                                pass_ser=serial,
                                status=status)
 
-    def read_license_and_bus_19(self):
+    def __read_license_and_bus_19(self):
         status = self.row[1]
         srm = self.row[2]
         region = self.row[3]
@@ -1175,7 +1158,7 @@ class DataBase:
                                model=model,
                                status=status)
 
-    def read_license_and_bus_20(self):
+    def __read_license_and_bus_20(self):
         srm = self.row[0]
         data_of_last_changes = self.__reformat_date(self.row[1])
         licensee = self.row[2]
@@ -1198,7 +1181,7 @@ class DataBase:
                                end_of_ownership=term_of_the_lease_agreement,
                                status=status)
 
-    def read_license_and_bus_21(self):
+    def __read_license_and_bus_21(self):
         srm = self.row[1]
         region_number = self.row[2]
         ts_brand = self.row[3]  # Марка транспортного средства
@@ -1228,7 +1211,7 @@ class DataBase:
                                model=model_of_ts,
                                end_of_ownership=end_of_contract)
 
-    def read_license_and_bus_26(self):
+    def __read_license_and_bus_26(self):
         status = self.row[1]
         srm = self.row[2]
         number_of_region = self.row[3]
@@ -1246,7 +1229,7 @@ class DataBase:
                                ogrn=ogrn,
                                status=status)
 
-    def read_license_and_bus_27(self):
+    def __read_license_and_bus_27(self):
         srm = self.row[0]
         data_of_last_changes = self.__reformat_date(self.row[1])
         licensee = self.row[2]
@@ -1269,8 +1252,27 @@ class DataBase:
                                end_of_ownership=date_of_end_rent,
                                status=status)
 
+
+    def read_license_and_bus(self, document_name, type, sheets=[0], log=sys.stdout):
+        print('reading {}...'.format(type))
+        a = time.process_time()
+        self.book = xlrd.open_workbook(document_name)
+        for i_sheet in sheets:
+            self.sheet = self.book.sheet_by_index(i_sheet)
+            nrows = self.sheet.nrows
+            for i_row in range(self.begins[type], nrows):
+                self.row = self.sheet.row_values(i_row)
+                try:
+                    self.functions[type]()
+                except Exception as e:
+                    print('Error:', '\ndata:', self.row, '\ndescription:',
+                          e, '\nFile name:', document_name, file=log)
+            self.book.release_resources()
+            print('book was read by {} seconds'.format(time.process_time() - a))
+
     def read_prosecutors_check(self, document_name):
         print('reading prosecutors check...')
+        a = time.process_time()
         self.book = xlrd.open_workbook(document_name)
         self.sheet = self.book.sheet_by_index(0)
         nrows = self.sheet.nrows
@@ -1308,6 +1310,7 @@ class DataBase:
                 punishment=punishment,
                 risk_category=danger
             )
+        print('book was read by {} seconds'.format())
 
     def read_category_register(self, document_name):
         print('reading category registr...')
