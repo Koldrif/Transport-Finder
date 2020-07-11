@@ -1020,7 +1020,7 @@ class DataBase:
             region=code_of_region,
             date_of_issue=date_of_issue,
             license_number=license_number,
-            name_of_company=name_of_company,
+            company=name_of_company,
             inn=inn,
             ogrn=ogrn,
             brand=brand,
