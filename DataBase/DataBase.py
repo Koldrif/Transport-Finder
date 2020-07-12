@@ -1299,7 +1299,12 @@ class DataBase:
                     print('Error:', '\ndata:', self.row, '\ndescription:',
                           e, '\nFile name:', document_name, file=log)
             self.book.release_resources()
-            print('book was read by {} seconds'.format(time.process_time() - a))
+            try:
+                print('book was read by {} seconds'.format(
+                    time.process_time() - a))
+
+            except:
+                pass
 
     def read_prosecutors_check(self, document_name, log=sys.stdout):
         print('reading prosecutors check...')
@@ -1344,10 +1349,16 @@ class DataBase:
                     risk_category=danger
                 )
             except Exception as e:
-                print('Data:', self.row, file=log)
-                print('File:', document_name, file=log)
-                print('Error:', e, file=log)
-        print('book was read by {} seconds'.format())
+                try:
+                    print('Data:', self.row, file=log)
+                    print('File:', document_name, file=log)
+                    print('Error:', e, file=log)
+                except:
+                    pass
+        try:
+            print('book was read by {} seconds'.format())
+        except:
+            pass
 
     def read_category_register(self, document_name, log=sys.stdout):
         print('reading category registr...')
@@ -1361,13 +1372,16 @@ class DataBase:
                     if self.row[1] == '':
                         cat_reg = str(self.row[0]).replace('\'', '\\\'')
                     if self.row[1] != '':
-                        index_in_registr = str(self.row[0]).replace('\'', '\\\'')
+                        index_in_registr = str(
+                            self.row[0]).replace('\'', '\\\'')
                         date_of_record = self.__reformat_date(self.row[1])
-                        type_of_transport = str(self.row[2]).replace('\'', '\\\'')
+                        type_of_transport = str(
+                            self.row[2]).replace('\'', '\\\'')
                         brand = str(self.row[3]).replace('\'', '\\\'')
                         vin = str(self.row[4]).replace('\'', '\\\'')
                         address = str(self.row[5]).replace('\'', '\\\'')
-                        implement_address = str(self.row[6]).replace('\'', '\\\'')
+                        implement_address = str(
+                            self.row[6]).replace('\'', '\\\'')
                         # организационно правовая   форма
                         form_of_fact = str(self.row[7]).replace('\'', '\\\'')
                         reg_number = str(self.row[8]).replace('\'', '\\\'')
@@ -1375,7 +1389,8 @@ class DataBase:
                         date_of_ogrn = self.__reformat_date(self.row[11])
                         date_of_ending = self.__reformat_date(
                             self.row[13])
-                        reason_of_ending = str(self.row[14]).replace('\'', '\\\'')
+                        reason_of_ending = str(
+                            self.row[14]).replace('\'', '\\\'')
                         self.__insert_database(
                             atp=index_in_registr,
                             date_in_cat_reg=date_of_record,
@@ -1390,7 +1405,10 @@ class DataBase:
                             owner_from_cat_reg=cat_reg
                         )
                 except Exception as e:
-                    print('Data:', self.row, file=log)
-                    print('File:', document_name, file=log)
-                    print('Error:', e, file=log)
+                    try:
 
+                        print('Data:', self.row, file=log)
+                        print('File:', document_name, file=log)
+                        print('Error:', e, file=log)
+                    except:
+                        pass
