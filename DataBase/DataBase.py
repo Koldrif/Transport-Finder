@@ -1301,7 +1301,7 @@ class DataBase:
             self.book.release_resources()
             print('book was read by {} seconds'.format(time.process_time() - a))
 
-    def read_prosecutors_check(self, document_name):
+    def read_prosecutors_check(self, document_name, log=sys.stdout):
         print('reading prosecutors check...')
         a = time.process_time()
         self.book = xlrd.open_workbook(document_name)
@@ -1344,9 +1344,9 @@ class DataBase:
                     risk_category=danger
                 )
             except Exception as e:
-                print('Data:', self.row)
-                print('File:', document_name)
-                print('Error:', e)
+                print('Data:', self.row, file=log)
+                print('File:', document_name, file=log)
+                print('Error:', e, file=log)
         print('book was read by {} seconds'.format())
 
     def read_category_register(self, document_name, log=sys.stdout):
@@ -1390,7 +1390,7 @@ class DataBase:
                             owner_from_cat_reg=cat_reg
                         )
                 except Exception as e:
-                    print('Data:', self.row)
-                    print('File:', document_name)
-                    print('Error:', e)
+                    print('Data:', self.row, file=log)
+                    print('File:', document_name, file=log)
+                    print('Error:', e, file=log)
 
