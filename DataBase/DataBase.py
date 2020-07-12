@@ -1309,81 +1309,88 @@ class DataBase:
         nrows = self.sheet.nrows
         ncols = self.sheet.ncols
         for i_row in range(24, nrows):
-            self.row = self.sheet.row_values(i_row)
-            name_of_company = str(self.row[1]).replace('\'', '\\\'')
-            address = str(self.row[2]).replace('\'', '\\\'')
-            activity_place = str(self.row[3]).replace('\'', '\\\'')
-            ogrn = str(self.row[5]).replace('\'', '\\\'')
-            inn = str(self.row[6]).replace('\'', '\\\'')
-            mission = str(self.row[7]).replace('\'', '\\\'')
-            date_of_ogrn = self.__reformat_date(self.row[8])
-            date_of_check = self.__reformat_date(self.row[9])
-            other_reason = str(self.row[11]).replace('\'', '\\\'')
-            amount_of_time = str(self.row[13]).replace('\'', '\\\'')
-            form_of_check = str(self.row[14]).replace('\'', '\\\'')
-            name_of_addititional_subject = str(
-                self.row[15]).replace('\'', '\\\'')
-            punishment = str(self.row[16]).replace('\'', '\\\'')
-            activity_category = str(self.row[17]).replace('\'', '\\\'')
-            danger = str(self.row[18]).replace('\'', '\\\'')
-            self.__insert_database(
-                company=name_of_company,
-                reg_address=address,
-                implement_address=activity_place,
-                ogrn=ogrn,
-                inn=inn,
-                purpose_of_inspect=mission,
-                registred_at=date_of_ogrn,
-                inspect_start=date_of_check,
-                other_reason_of_inpect=other_reason,
-                inspect_duration=amount_of_time,
-                form_of_holding_inspect=form_of_check,
-                inspect_perform=name_of_addititional_subject,
-                punishment=punishment,
-                risk_category=danger
-            )
+            try:
+                self.row = self.sheet.row_values(i_row)
+                name_of_company = str(self.row[1]).replace('\'', '\\\'')
+                address = str(self.row[2]).replace('\'', '\\\'')
+                activity_place = str(self.row[3]).replace('\'', '\\\'')
+                ogrn = str(self.row[5]).replace('\'', '\\\'')
+                inn = str(self.row[6]).replace('\'', '\\\'')
+                mission = str(self.row[7]).replace('\'', '\\\'')
+                date_of_ogrn = self.__reformat_date(self.row[8])
+                date_of_check = self.__reformat_date(self.row[9])
+                other_reason = str(self.row[11]).replace('\'', '\\\'')
+                amount_of_time = str(self.row[13]).replace('\'', '\\\'')
+                form_of_check = str(self.row[14]).replace('\'', '\\\'')
+                name_of_addititional_subject = str(
+                    self.row[15]).replace('\'', '\\\'')
+                punishment = str(self.row[16]).replace('\'', '\\\'')
+                activity_category = str(self.row[17]).replace('\'', '\\\'')
+                danger = str(self.row[18]).replace('\'', '\\\'')
+                self.__insert_database(
+                    company=name_of_company,
+                    reg_address=address,
+                    implement_address=activity_place,
+                    ogrn=ogrn,
+                    inn=inn,
+                    purpose_of_inspect=mission,
+                    registred_at=date_of_ogrn,
+                    inspect_start=date_of_check,
+                    other_reason_of_inpect=other_reason,
+                    inspect_duration=amount_of_time,
+                    form_of_holding_inspect=form_of_check,
+                    inspect_perform=name_of_addititional_subject,
+                    punishment=punishment,
+                    risk_category=danger
+                )
+            except Exception as e:
+                print('Data:', self.row)
+                print('File:', document_name)
+                print('Error:', e)
         print('book was read by {} seconds'.format())
 
-    def read_category_register(self, document_name):
+    def read_category_register(self, document_name, log=sys.stdout):
         print('reading category registr...')
         self.book = xlrd.open_workbook(document_name)
-        # try:
         for sheet in self.book.sheets():
             self.sheet = sheet
             nrows = self.sheet.nrows
             for i_row in range(4, nrows):
                 self.row = self.sheet.row_values(i_row)
-                if self.row[1] == '':
-                    cat_reg = str(self.row[0]).replace('\'', '\\\'')
-                if self.row[1] != '':
-                    index_in_registr = str(self.row[0]).replace('\'', '\\\'')
-                    date_of_record = self.__reformat_date(self.row[1])
-                    type_of_transport = str(self.row[2]).replace('\'', '\\\'')
-                    brand = str(self.row[3]).replace('\'', '\\\'')
-                    vin = str(self.row[4]).replace('\'', '\\\'')
-                    address = str(self.row[5]).replace('\'', '\\\'')
-                    implement_address = str(self.row[6]).replace('\'', '\\\'')
-                    # организационно правовая   форма
-                    form_of_fact = str(self.row[7]).replace('\'', '\\\'')
-                    reg_number = str(self.row[8]).replace('\'', '\\\'')
-                    category = str(self.row[10]).replace('\'', '\\\'')
-                    date_of_ogrn = self.__reformat_date(self.row[11])
-                    date_of_ending = self.__reformat_date(
-                        self.row[13])
-                    reason_of_ending = str(self.row[14]).replace('\'', '\\\'')
-                    self.__insert_database(
-                        atp=index_in_registr,
-                        date_in_cat_reg=date_of_record,
-                        ttype=type_of_transport,
-                        model_from_cat_reg=brand,
-                        vin=vin,
-                        reg_address=address,
-                        implement_address=implement_address,
-                        number_of_cat_reg=reg_number,
-                        category=category,
-                        purpose_into_cat_reg=reason_of_ending,
-                        owner_from_cat_reg=cat_reg
-                    )
+                try:
+                    if self.row[1] == '':
+                        cat_reg = str(self.row[0]).replace('\'', '\\\'')
+                    if self.row[1] != '':
+                        index_in_registr = str(self.row[0]).replace('\'', '\\\'')
+                        date_of_record = self.__reformat_date(self.row[1])
+                        type_of_transport = str(self.row[2]).replace('\'', '\\\'')
+                        brand = str(self.row[3]).replace('\'', '\\\'')
+                        vin = str(self.row[4]).replace('\'', '\\\'')
+                        address = str(self.row[5]).replace('\'', '\\\'')
+                        implement_address = str(self.row[6]).replace('\'', '\\\'')
+                        # организационно правовая   форма
+                        form_of_fact = str(self.row[7]).replace('\'', '\\\'')
+                        reg_number = str(self.row[8]).replace('\'', '\\\'')
+                        category = str(self.row[10]).replace('\'', '\\\'')
+                        date_of_ogrn = self.__reformat_date(self.row[11])
+                        date_of_ending = self.__reformat_date(
+                            self.row[13])
+                        reason_of_ending = str(self.row[14]).replace('\'', '\\\'')
+                        self.__insert_database(
+                            atp=index_in_registr,
+                            date_in_cat_reg=date_of_record,
+                            ttype=type_of_transport,
+                            model_from_cat_reg=brand,
+                            vin=vin,
+                            reg_address=address,
+                            implement_address=implement_address,
+                            number_of_cat_reg=reg_number,
+                            category=category,
+                            purpose_into_cat_reg=reason_of_ending,
+                            owner_from_cat_reg=cat_reg
+                        )
+                except Exception as e:
+                    print('Data:', self.row)
+                    print('File:', document_name)
+                    print('Error:', e)
 
-        # except Exception as e:
-        #    print(e, document_name)
