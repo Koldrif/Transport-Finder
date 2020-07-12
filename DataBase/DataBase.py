@@ -211,7 +211,39 @@ class DataBase:
                 rows = self.__task_get(request)
                 id_ts = rows[0][0]
             else:
-                raise Exception('Database_error: few transports was find')
+                raise Exception('Database_error: few transports was found')
+        if 'vin' in data:
+            request = '''
+                SELECT `transport_id`, `VIN` 
+                FROM transportfinder.transport WHERE `VIN` = '{vin}' 
+                '''.format(vin=data['vin'])
+            rows = self.__task_get(request)
+            if len(rows) == 1:
+                id_ts = rows[0][0]
+                self.__update_record(id=id_ts, type='transport', data=data)
+            elif len(rows) == 0:
+                self.__insert_transport(**data)
+                rows = self.__task_get(request)
+                id_own = rows[0][0]
+            else:
+                raise Exception('Database_error: few transport was found')
+
+        if 'inn' in data:
+            request = '''
+                SELECT `Owner_id`, `INN` 
+                FROM transportfinder.owners WHERE `INN` = '{inn}' 
+                '''.format(inn=data['inn'])
+            rows = self.__task_get(request)
+            if len(rows) == 1:
+                id_ts = rows[0][0]
+                self.__update_record(id=id_ts, type='owner', data=data)
+            elif len(rows) == 0:
+                self.__insert_owner(**data)
+                rows = self.__task_get(request)
+                id_own = rows[0][0]
+            else:
+                raise Exception('Database_error: few owners was found')
+
         if 'license_number' in data:
             request = '''
                 SELECT `Owner_id`, `License_number` 
@@ -226,7 +258,7 @@ class DataBase:
                 rows = self.__task_get(request)
                 id_own = rows[0][0]
             else:
-                raise Exception('Database_error: few owners was fins')
+                raise Exception('Database_error: few owners was found')
         if id_ts != -1 and id_own != -1:
             request = '''
                 INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) 
@@ -1251,7 +1283,6 @@ class DataBase:
                                company=licensee,
                                end_of_ownership=date_of_end_rent,
                                status=status)
-
 
     def read_license_and_bus(self, document_name, type, sheets=[0], log=sys.stdout):
         print('reading {}...'.format(type))
