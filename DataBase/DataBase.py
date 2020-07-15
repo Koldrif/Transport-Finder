@@ -1307,7 +1307,7 @@ class DataBase:
                 pass
 
     def read_prosecutors_check(self, document_name, log=sys.stdout):
-        print('reading prosecutors check...')
+        print('reading prosecutors check...', file=log)
         a = time.process_time()
         self.book = xlrd.open_workbook(document_name)
         self.sheet = self.book.sheet_by_index(0)
@@ -1355,13 +1355,10 @@ class DataBase:
                     print('Error:', e, file=log)
                 except:
                     pass
-        try:
-            print('book was read by {} seconds'.format())
-        except:
-            pass
+        print('Book was read...', file=log)
 
     def read_category_register(self, document_name, log=sys.stdout):
-        print('reading category registr...')
+        print('reading category registr...', file=log)
         self.book = xlrd.open_workbook(document_name)
         for sheet in self.book.sheets():
             self.sheet = sheet
@@ -1406,9 +1403,9 @@ class DataBase:
                         )
                 except Exception as e:
                     try:
-
                         print('Data:', self.row, file=log)
                         print('File:', document_name, file=log)
                         print('Error:', e, file=log)
                     except:
                         pass
+        print('Book was read...', file=log)
