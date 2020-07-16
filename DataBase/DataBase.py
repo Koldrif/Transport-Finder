@@ -1478,5 +1478,6 @@ class DataBase:
             else:
                 raise Exception('Custom Error: wrong format for given')
         request = request.format(list_of_given=list_of_given, list_of_taken=list_of_taken[:-2:])
+        
         return self.__task_get(request)
         
