@@ -1410,7 +1410,7 @@ class DataBase:
                         pass
         print('Book was read...', file=log)
 
-    def get_data(*taken, **given):
+    def get_data(self, *taken, **given):
         request = '''
             SELECT
                 {list_of_taken}
