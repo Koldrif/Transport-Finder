@@ -1405,7 +1405,7 @@ class DataBase:
                     try:
                         print('Data:', self.row, file=log)
                         print('File:', document_name, file=log)
-                        print('Error:', e, file=log)
+                        print('Error:', e, file=log)                        
                     except:
                         pass
         print('Book was read...', file=log)
@@ -1421,6 +1421,62 @@ class DataBase:
             WHERE
                 {list_of_given}
         '''
+
+        column_list = {
+            'inn': '`owners`.`INN`',
+            'ogrn': '`owners`.`OGRN`',
+            'company': '`owners`.`Title`',
+            'registered_at': '`owners`.`Registered_at`',
+            'license_number': '`owners`.`License_number`',
+            'reg_address': '`owners`.`Reg_address`',
+            'implement_address': '`owners`.`Implement_address`',
+            'risk_category': '`owners`.`Risk_category`',
+            'inspect_start': '`owners`.`Starts_at`',
+            'inspect_duration': '`owners`.`Duration_hours`',
+            'last_inspect': '`owners`.`Last_inspect`',
+            'purpose_of_inspect': '`owners`.`Purpose`',
+            'other_reason_of_inspect': '`owners`.`other_reason`',
+            'form_of_holding_inspect': '`owners`.`form_of_holding`',
+            'inspect_perform': '`owners`.`Performs_with`',
+            'punishment': '`owners`.`Punishment`',
+            'description': '`owners`.`Description`',
+            'vin': '`transport`.`VIN`',
+            'srm': '`transport`.`State_Registr_Mark`',
+            'region': '`transport`.`Region`',
+            'date_of_issue': '`transport`.`Date_of_issue`',
+            'pass_ser': '`transport`.`pass_ser`',
+            'ownership': '`transport`.`Ownership`',
+            'end_of_ownership': '`transport`.`End_date_of_ownership`',
+            'brand': '`transport`.`brand`',
+            'model': '`transport`.`model`',
+            'type': '`transport`.`type`',
+            'registered_at': '`transport`.`Registered_at`',
+            'license_number': '`transport`.`License_number`',
+            'status': '`transport`.`Status`',
+            'action_with_vehicle': '`transport`.`Action_with_vehicle`',
+            'categorized': '`transport`.`Categorized`',
+            'number_of_cat_reg': '`transport`.`Number_of_cat_reg`',
+            'date_in_cat_reg': '`transport`.`Data_in_cat_reg`',
+            'atp': '`transport`.`ATP`',
+            'model_from_cat_reg': '`transport`.`Model_from_cat_reg`',
+            'owner_from_cat_reg': '`transport`.`Owner_from_cat_reg`',
+            'purpose_into_cat_reg': '`transport`.`Purpose_into_cat_reg`',
+            'category': '`transport`.`Category`',
+            'date_of_cat_reg': '`transport`.`Date_of_cat_reg`'
+        }
+
         list_of_taken = ''
+        for argument in taken:
+            if argument in column_list:
+                list_of_taken += column_list[argument] + ', '
+            else:
+                raise Exception('Custom Error: wrong format for taken')
         list_of_given = ''
+        for argument in given:
+            if argument in column_list:
+                list_of_given += column_list[argument] + ' = ' + '\'{}\''.format(given[argument])
+            else:
+                raise Exception('Custom Error: wrong format for given')
+        request = request.format(list_of_given=list_of_given, list_of_taken=list_of_taken[:-2:])
+        return self.__task_get(request)
         
