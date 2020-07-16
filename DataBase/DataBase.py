@@ -1409,3 +1409,18 @@ class DataBase:
                     except:
                         pass
         print('Book was read...', file=log)
+
+    def get_data(*taken, **given):
+        request = '''
+            SELECT
+                {list_of_taken}
+            FROM
+                transport
+                join transport_owners on transport.transport_id = transport_owners.transport_id
+                join owners on owners.Owner_id = transport_owners.Owner_id
+            WHERE
+                {list_of_given}
+        '''
+        list_of_taken = ''
+        list_of_given = ''
+        
