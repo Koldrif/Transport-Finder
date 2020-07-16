@@ -1421,7 +1421,6 @@ class DataBase:
             WHERE
                 {list_of_given}
         '''
-
         column_list = {
             'inn': '`owners`.`INN`',
             'ogrn': '`owners`.`OGRN`',
