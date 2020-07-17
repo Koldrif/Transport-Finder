@@ -123,7 +123,7 @@ class DataBase:
             cursor.execute(request)
 
     def __update_record(self, id, type, data):
-        if type == 'owners':
+        if type == 'owner':
             keywords = {
                 'INN': 'inn',
                 'OGRN': 'ogrn',
@@ -149,7 +149,7 @@ class DataBase:
                 SET
                 {list_of_updates}
                 WHERE (`Owner_id` = '{id}');
-                """
+                """     
         elif type == 'transport':
             keywords = {
                 'VIN': 'vin',
@@ -252,7 +252,7 @@ class DataBase:
             rows = self.__task_get(request)
             if len(rows) == 1:
                 id_own = rows[0][0]
-                self.__update_record(id=id_own, type='owners', data=data)
+                self.__update_record(id=id_own, type='owner', data=data)
             elif len(rows) == 0:
                 self.__insert_owner(**data)
                 rows = self.__task_get(request)
@@ -1326,11 +1326,12 @@ class DataBase:
                 date_of_check = self.__reformat_date(self.row[9])
                 other_reason = str(self.row[11]).replace('\'', '\\\'')
                 amount_of_time = str(self.row[13]).replace('\'', '\\\'')
-                form_of_check = str(self.row[14]).replace('\'', '\\\'')
-                name_of_addititional_subject = str(self.row[15]).replace('\'', '\\\'')
-                punishment = str(self.row[16]).replace('\'', '\\\'')
-                activity_category = str(self.row[17]).replace('\'', '\\\'')
-                danger = str(self.row[18]).replace('\'', '\\\'')
+                form_of_check = str(self.row[15]).replace('\'', '\\\'')
+                name_of_addititional_subject = str(
+                    self.row[16]).replace('\'', '\\\'')
+                punishment = str(self.row[17]).replace('\'', '\\\'')
+                activity_category = str(self.row[18]).replace('\'', '\\\'')
+                #danger = str(self.row[19]).replace('\'', '\\\'')
                 self.__insert_database(
                     company=name_of_company,
                     reg_address=address,
@@ -1338,14 +1339,14 @@ class DataBase:
                     ogrn=ogrn,
                     inn=inn,
                     purpose_of_inspect=mission,
-                    registred_at=date_of_ogrn,
+                    registered_at=date_of_ogrn,
                     inspect_start=date_of_check,
-                    other_reason_of_inpect=other_reason,
+                    other_reason_of_inspect=other_reason,
                     inspect_duration=amount_of_time,
                     form_of_holding_inspect=form_of_check,
                     inspect_perform=name_of_addititional_subject,
-                    punishment=punishment,
-                    risk_category=danger
+                    punishment=punishment
+                    #risk_category=danger
                 )
             except Exception as e:
                 try:
@@ -1413,7 +1414,7 @@ class DataBase:
             'inn': '`owners`.`INN`',
             'ogrn': '`owners`.`OGRN`',
             'company': '`owners`.`Title`',
-            'registered_at': '`owners`.`Registered_at`',
+            'registered_at_o': '`owners`.`Registered_at`',
             'license_number': '`owners`.`License_number`',
             'reg_address': '`owners`.`Reg_address`',
             'implement_address': '`owners`.`Implement_address`',
@@ -1437,7 +1438,7 @@ class DataBase:
             'brand': '`transport`.`brand`',
             'model': '`transport`.`model`',
             'type': '`transport`.`type`',
-            'registered_at': '`transport`.`Registered_at`',
+            'registered_at_t': '`transport`.`Registered_at`',
             'license_number': '`transport`.`License_number`',
             'status': '`transport`.`Status`',
             'action_with_vehicle': '`transport`.`Action_with_vehicle`',
@@ -1451,19 +1452,25 @@ class DataBase:
             'category': '`transport`.`Category`',
             'date_of_cat_reg': '`transport`.`Date_of_cat_reg`'
         }
-
+        if not(len(taken)):
+            raise Exception('Custom Error: empty taken')
+        if not(len(given)):
+            raise Exception('Custom Error: empty given')
         list_of_taken = ''
         for argument in taken:
             if argument in column_list:
                 list_of_taken += column_list[argument] + ', '
             else:
-                raise Exception('Custom Error: wrong format for taken')
+                raise Exception('Custom Error: wrong format for taken : {}'.format(argument))
         list_of_given = ''
         for argument in given:
             if argument in column_list:
                 list_of_given += column_list[argument] + ' = ' + '\'{}\''.format(given[argument])
             else:
-                raise Exception('Custom Error: wrong format for given')
+                raise Exception('Custom Error: wrong format for given : {}'.format(argument))
+        
         request = request.format(list_of_given=list_of_given, list_of_taken=list_of_taken[:-2:])
+        print('Запроос: \n' + request)
+
         return self.__task_get(request)
         

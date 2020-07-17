@@ -1,5 +1,6 @@
 from DataBase.DataBase import DataBase as Database
+import Functions as funcs
 
-db = Database(host='localhost', user='root', password='6786')
+database = Database(host='localhost', user='root', password='6786')
 
-print(db.get_data('ogrn', 'vin', inn='222391520487'))
+funcs.old_format('222391520487', database)
