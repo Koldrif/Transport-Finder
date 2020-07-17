@@ -1384,6 +1384,7 @@ class DataBase:
                             date_in_cat_reg=date_of_record,
                             ttype=type_of_transport,
                             model_from_cat_reg=brand,
+                            owner_from_cat_reg=cat_reg,
                             vin=vin,
                             other_owner=other_owner,
                             purpose_into_cat_reg=purpose,
