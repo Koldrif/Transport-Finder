@@ -1,4 +1,5 @@
 import xlwt
+from openpyxl.utils import get_column_letter
 from openpyxl import Workbook
 ezxf = xlwt.easyxf
 
@@ -34,7 +35,7 @@ def old_format(inn, database):
     sheet1 = file_output.active
     sheet1.title = 'Company and vehicle information'
    # sheet1.
-
+    #sheet1.ColumnDimension(bestFit = True)
     sheet1.cell(0+1, 0+1, 'Информация о владельце')
     sheet1.cell(1+1, 0+1, 'ОГРН')
     sheet1.cell(2+1, 0+1, 'ИНН')
@@ -83,7 +84,24 @@ def old_format(inn, database):
             recomendation += 'Рекомендуется перекатегорировать транспорт с VIN {vin} перекатегорировать на собственника \r\n'.format(vin=data[i][0])
         if data[i][3] in '':
             recomendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
+
+    # column_widths = []
+    # for row in sheet1.iter_rows():
+    #     for i, cell in enumerate(row):
+    #         try:
+    #             column_widths[i] = max(column_widths[i], len(cell.value))
+    #         except IndexError:
+    #             column_widths.append(len(cell.value))
+
+    # for i, column_width in enumerate(column_widths):
+    #     sheet1.column_dimensions[get_column_letter(i + 1+1)].width = column_width
+
     file_output.save(save_file_name)
+
+
+
+
+
 #
 #    output_file = xlwt.Workbook()
 #    recomendation = ''
