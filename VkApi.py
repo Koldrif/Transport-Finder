@@ -34,9 +34,10 @@ class VkSession:
             id += 1
             yield id
 
-    def update(self):
+    def update(self, log=None):
         event = next(self.longpoll.listen())
         data = event.raw
+        print(data, file=log)
         if (data['type'] == 'message_new'):
             self.__new_message(data)
 
