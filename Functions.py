@@ -1,7 +1,7 @@
 import xlwt
 ezxf = xlwt.easyxf
 
-heading_xf = ezxf('font: bold on; align: wrap on, vert center, horiz center;')
+Owner_style = ezxf('pattern: back_colour gold; font: colour blue')
 
 def old_format(inn, database):
     data = database.get_data(
@@ -30,6 +30,7 @@ def old_format(inn, database):
     recomendation = ''
     output_sheet = output_file.add_sheet('Company information', cell_overwrite_ok=True)
     #'font: bold on; align: wrap on, vert centre, horiz center'
+
     #output_sheet.set_column(0,4,20)
     output_sheet.col(0).width = 6000
     output_sheet.col(1).width = 6000
