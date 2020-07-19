@@ -1,7 +1,11 @@
 import xlwt
+from openpyxl.utils import get_column_letter
+from openpyxl import Workbook
 ezxf = xlwt.easyxf
 
-heading_xf = ezxf('font: bold on; align: wrap on, vert center, horiz center;')
+Owner_style = ezxf('pattern: back_colour gold; font: colour blue')
+
+save_file_name = 'openPyxl.xlsx'
 
 def old_format(inn, database):
     filename = ''
@@ -27,72 +31,146 @@ def old_format(inn, database):
         'company',
         inn=inn
         )
-    output_file = xlwt.Workbook()
     recomendation = ''
-    output_sheet = output_file.add_sheet('Company information', cell_overwrite_ok=True)
-    #'font: bold on; align: wrap on, vert centre, horiz center'
-    #output_sheet.set_column(0,4,20)
-    output_sheet.col(0).width = 6000
-    output_sheet.col(1).width = 6000
-    output_sheet.col(2).width = 6000
-    output_sheet.col(3).width = 7500
-    output_sheet.col(4).width = 15000
-    output_sheet.col(5).width = 6000
-    output_sheet.col(7).width = 9000
-    output_sheet.col(8).width = 6000
-    output_sheet.col(9).width = 6000
-    output_sheet.col(10).width = 6000
-    output_sheet.col(11).width = 6000
-    output_sheet.col(12).width = 6000
-    output_sheet.write(0, 0, 'Информация о владельце')
-    output_sheet.write(1, 0, 'ОГРН')
-    output_sheet.write(2, 0, 'ИНН')
-    output_sheet.write(3, 0, 'Дата регистрации')
-    output_sheet.write(4, 0, 'Номер лицензии')
-    output_sheet.write(1, 1, data[0][13])
-    output_sheet.write(2, 1, inn)
-    output_sheet.write(3, 1, data[0][4])
-    output_sheet.write(4, 1, data[0][5])
-    output_sheet.write(1, 3, 'Дата проведения проверки')
-    output_sheet.write(2, 3, 'Форма проведения проверки')
-    output_sheet.write(3, 3, 'Цель проведения проверки')
-    output_sheet.write(4, 3, 'Другие причины проверки')
-    output_sheet.write(1, 4, data[0][14])
-    output_sheet.write(2, 4, data[0][15])
-    output_sheet.write(3, 4, data[0][16])
-    output_sheet.write(4, 4, data[0][17])
-    output_sheet.write(10, 1, 'Информация о транспорте')
-    output_sheet.write(11, 7, 'Данные из реестра категорирования')
-    output_sheet.write(12, 1, 'Бренд')
-    output_sheet.write(12, 2, 'VIN')
-    output_sheet.write(12, 3, 'ГРЗ')
-    output_sheet.write(12, 4, 'Тип владения')
-    output_sheet.write(12, 5, 'Дата окончания аренды')
-    output_sheet.write(12, 7, 'Номер реестра')
-    output_sheet.write(12, 8, 'Собственник')
-    output_sheet.write(12, 9, 'Модель')
-    output_sheet.write(12, 10, 'АТП')
-    output_sheet.write(12, 11, 'Категория транспорта')
-    output_sheet.write(12, 12, 'Тип транспорта')
+    file_output = Workbook()
+    sheet1 = file_output.active
+    sheet1.title = 'Company and vehicle information'
+   # sheet1.
+    #sheet1.ColumnDimension(bestFit = True)
+    sheet1.cell(0+1, 0+1, 'Информация о владельце')
+    sheet1.cell(1+1, 0+1, 'ОГРН')
+    sheet1.cell(2+1, 0+1, 'ИНН')
+    sheet1.cell(3+1, 0+1, 'Дата регистрации')
+    sheet1.cell(4+1, 0+1, 'Номер лицензии')
+    sheet1.cell(1+1, 1+1, data[0][13])
+    sheet1.cell(2+1, 1+1, inn)
+    sheet1.cell(3+1, 1+1, data[0][4])
+    sheet1.cell(4+1, 1+1, data[0][5])
+    sheet1.cell(1+1, 3+1, 'Дата проведения проверки')
+    sheet1.cell(2+1, 3+1, 'Форма проведения проверки')
+    sheet1.cell(3+1, 3+1, 'Цель проведения проверки')
+    sheet1.cell(4+1, 3+1, 'Другие причины проверки')
+    sheet1.cell(1+1, 4+1, data[0][14])
+    sheet1.cell(2+1, 4+1, data[0][15])
+    sheet1.cell(3+1, 4+1, data[0][16])
+    sheet1.cell(4+1, 4+1, data[0][17])
+    sheet1.cell(10+1, 1+1, 'Информация о транспорте')
+    sheet1.cell(11+1, 7+1, 'Данные из реестра категорирования')
+    sheet1.cell(12+1, 1+1, 'Бренд')
+    sheet1.cell(12+1, 2+1, 'VIN')
+    sheet1.cell(12+1, 3+1, 'ГРЗ')
+    sheet1.cell(12+1, 4+1, 'Тип владения')
+    sheet1.cell(12+1, 5+1, 'Дата окончания аренды')
+    sheet1.cell(12+1, 7+1, 'Номер реестра')
+    sheet1.cell(12+1, 8+1, 'Собственник')
+    sheet1.cell(12+1, 9+1, 'Модель')
+    sheet1.cell(12+1, 10+1, 'АТП')
+    sheet1.cell(12+1, 11+1, 'Категория транспорта')
+    sheet1.cell(12+1, 12+1, 'Тип транспорта')
     if data[0][14] in ['Н/Д', '']:
         recomendation += 'Прокурорская проверка будет проводится с {begin_date} по {end_date}\r\n'.format(begin_date=None, end_date=None)
     for i in range(len(data)):
-        output_sheet.write(i+13, 1, data[i][6])
-        output_sheet.write(i+13, 2, data[i][0])
-        output_sheet.write(i+13, 3, data[i][1])
-        output_sheet.write(i+13, 4, data[i][2])
-        output_sheet.write(i+13, 5, data[i][3])
-        output_sheet.write(i+13, 7, data[i][7])
-        output_sheet.write(i+13, 8, data[i][8])
-        output_sheet.write(i+13, 9, data[i][9])
-        output_sheet.write(i+13, 10, data[i][10])
-        output_sheet.write(i+13, 11, data[i][11])
-        output_sheet.write(i+13, 12, data[i][12])
+        sheet1.cell(i+13+1, 1+1, data[i][6])
+        sheet1.cell(i+13+1, 2+1, data[i][0])
+        sheet1.cell(i+13+1, 3+1, data[i][1])
+        sheet1.cell(i+13+1, 4+1, data[i][2])
+        sheet1.cell(i+13+1, 5+1, data[i][3])
+        sheet1.cell(i+13+1, 7+1, data[i][7])
+        sheet1.cell(i+13+1, 8+1, data[i][8])
+        sheet1.cell(i+13+1, 9+1, data[i][9])
+        sheet1.cell(i+13+1, 10+1, data[i][10])
+        sheet1.cell(i+13+1, 11+1, data[i][11])
+        sheet1.cell(i+13+1, 12+1, data[i][12])
         if data[i][18] not in data[i][8]:
             recomendation += 'Рекомендуется перекатегорировать транспорт с VIN {vin} перекатегорировать на собственника \r\n'.format(vin=data[i][0])
         if data[i][3] in '':
             recomendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
-    output_file.save('test.xls')
-    return filename, recomendation
-    #todo make this file variable and generate name for it
+
+    # column_widths = []
+    # for row in sheet1.iter_rows():
+    #     for i, cell in enumerate(row):
+    #         try:
+    #             column_widths[i] = max(column_widths[i], len(cell.value))
+    #         except IndexError:
+    #             column_widths.append(len(cell.value))
+
+    # for i, column_width in enumerate(column_widths):
+    #     sheet1.column_dimensions[get_column_letter(i + 1+1)].width = column_width
+
+    file_output.save(save_file_name)
+
+
+
+
+
+#
+#    output_file = xlwt.Workbook()
+#    recomendation = ''
+#    output_sheet = output_file.add_sheet('Company information', cell_overwrite_ok=True)
+#    #'font: bold on; align: wrap on, vert centre, horiz center'
+#
+#    #output_sheet.set_column(0,4,20)
+#    output_sheet.col(0).width = 6000
+#    output_sheet.col(1).width = 6000
+#    output_sheet.col(2).width = 6000
+#    output_sheet.col(3).width = 7500
+#    output_sheet.col(4).width = 15000
+#    output_sheet.col(5).width = 6000
+#    output_sheet.col(7).width = 9000
+#    output_sheet.col(8).width = 6000
+#    output_sheet.col(9).width = 6000
+#    output_sheet.col(10).width = 6000
+#    output_sheet.col(11).width = 6000
+#    output_sheet.col(12).width = 6000
+#    output_sheet.write(0, 0, 'Информация о владельце')
+#    output_sheet.write(1, 0, 'ОГРН')
+#    output_sheet.write(2, 0, 'ИНН')
+#    output_sheet.write(3, 0, 'Дата регистрации')
+#    output_sheet.write(4, 0, 'Номер лицензии')
+#    output_sheet.write(1, 1, data[0][13])
+#    output_sheet.write(2, 1, inn)
+#    output_sheet.write(3, 1, data[0][4])
+#    output_sheet.write(4, 1, data[0][5])
+#    output_sheet.write(1, 3, 'Дата проведения проверки')
+#    output_sheet.write(2, 3, 'Форма проведения проверки')
+#    output_sheet.write(3, 3, 'Цель проведения проверки')
+#    output_sheet.write(4, 3, 'Другие причины проверки')
+#    output_sheet.write(1, 4, data[0][14])
+#    output_sheet.write(2, 4, data[0][15])
+#    output_sheet.write(3, 4, data[0][16])
+#    output_sheet.write(4, 4, data[0][17])
+#    output_sheet.write(10, 1, 'Информация о транспорте')
+#    output_sheet.write(11, 7, 'Данные из реестра категорирования')
+#    output_sheet.write(12, 1, 'Бренд')
+#    output_sheet.write(12, 2, 'VIN')
+#    output_sheet.write(12, 3, 'ГРЗ')
+#    output_sheet.write(12, 4, 'Тип владения')
+#    output_sheet.write(12, 5, 'Дата окончания аренды')
+#    output_sheet.write(12, 7, 'Номер реестра')
+#    output_sheet.write(12, 8, 'Собственник')
+#    output_sheet.write(12, 9, 'Модель')
+#    output_sheet.write(12, 10, 'АТП')
+#    output_sheet.write(12, 11, 'Категория транспорта')
+#    output_sheet.write(12, 12, 'Тип транспорта')
+#    if data[0][14] in ['Н/Д', '']:
+#        recomendation += 'Прокурорская проверка будет проводится с {begin_date} по {end_date}\r\n'.format(begin_date=None, end_date=None)
+#    for i in range(len(data)):
+#        output_sheet.write(i+13, 1, data[i][6])
+#        output_sheet.write(i+13, 2, data[i][0])
+#        output_sheet.write(i+13, 3, data[i][1])
+#        output_sheet.write(i+13, 4, data[i][2])
+#        output_sheet.write(i+13, 5, data[i][3])
+#        output_sheet.write(i+13, 7, data[i][7])
+#        output_sheet.write(i+13, 8, data[i][8])
+#        output_sheet.write(i+13, 9, data[i][9])
+#        output_sheet.write(i+13, 10, data[i][10])
+#        output_sheet.write(i+13, 11, data[i][11])
+#        output_sheet.write(i+13, 12, data[i][12])
+#        if data[i][18] not in data[i][8]:
+#            recomendation += 'Рекомендуется перекатегорировать транспорт с VIN {vin} перекатегорировать на собственника \r\n'.format(vin=data[i][0])
+#        if data[i][3] in '':
+#            recomendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
+#    output_file.save('test.xls')
+#    #todo make this file variable and generate name for it
+#    return filename, recomendation
     
