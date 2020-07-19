@@ -2,6 +2,15 @@ from tokens import VK_API_TOKEN, VK_GROUP_ID
 from VkApi import VkSession
 from DataBase.DataBase import DataBase as Database
 
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello from Flask!'
+
+    
 def main():
     database = None #Database(host='localhost', user='root', password='6786')
     vk_session = VkSession(database, token=VK_API_TOKEN, vkgroup=VK_GROUP_ID, users_filename='users.txt', administrators_filename='administrators.txt')
