@@ -139,6 +139,8 @@ class VkSession:
             self.__add_new_user(message, from_id)
         elif 'добавить нового администратора' in message.lower():
             self.__add_new_administrator(message, from_id)
+        elif 'test' in message.lower():
+            self.__online_log('Test passed')
 
     def __new_message(self, data):
         peer_id = data['object']['message']['peer_id']
