@@ -12,6 +12,7 @@ INFORMATION_ABOUT_BOT = '''
 
 class VkSession:
     def __init__(self, database, vkgroup=None, username=None, password=None, token=None, users_filename=None, administrators_filename=None):
+        self.__random_id = self.__random_id_generator(-9223372036854775800)
         self.database = database
         self.users = {}
         if users_filename != None:
@@ -24,7 +25,7 @@ class VkSession:
                     words = line.split()
                     email = words[0]
                     self.users[email] = []
-                    for account in words:
+                    for account in words[1::]:
                         self.users[email].append(account)
         else:
             self.users_filename = 'users.txt'
@@ -38,7 +39,7 @@ class VkSession:
                 for line in file:
                     line = line.replace('\r', '').replace('\n', '')
                     words = line.split()
-                    for word in words:
+                    for word in words[::]:
                         self.administrators.append(word)
         else:
             self.administrators_filename = 'administrators.txt'
@@ -67,19 +68,21 @@ class VkSession:
         else:
             raise Exception('Custom Error: non exist user')
 
+    def __random_id_generator(self, id):
+        while id < 9223372036854775800:
+            id += 1
+            yield id
+
     def __messages_send(self, **data):
         attachment = {}
         for key in data:
             attachment[key] = data[key]
         try:
-            random_id = next(self.__random_id_gen())
+            random_id = next(self.__random_id)
             attachment['random_id'] = random_id
         except:
-            raise Exception('Custom Error: Random ids was ended, session needs to be upload')
-        try:
-            self.vk.method('messages.send', attachment)
-        except Exception as e:
-            raise Exception('Custom Error: can`t send message : ', e)
+            raise Exception('Custom Error: Random ids was ended, session needs in reload')
+        print('Answer: ', self.vk.method('messages.send', attachment))
 
     def __online_log(self, *elements):
         text = ' '
@@ -95,7 +98,6 @@ class VkSession:
         id = self.__users_get(new_user)
         self.new_user(email,  id)
         self.__online_log('Добавлен пользователь: email - "'+email+'", user - "'+str(id)+'"')
-        self.__messages_send(message='Добавлен', peer_id=from_id)
 
     def __add_new_administrator(self, message, from_id):
         new_administrator = message[30::].strip()
@@ -104,7 +106,6 @@ class VkSession:
         id = self.__users_get(new_administrator)
         self.new_administrator(id)
         self.__online_log('Добавлен администратор: user - "'+str(id)+'"')
-        self.__messages_send(message='Добавлен', peer_id=from_id)
         
     def __send_report(self, inn, peer_id):
         pass
@@ -117,48 +118,44 @@ class VkSession:
 
     def __user_action(self, email, data):
         message = data['object']['message']['text']
-        from_id = data['object']['message']['text']
+        from_id = data['object']['message']['from_id']
         if 'данные по инн' in message.lower():
             inn = int(message[13::])
             self.__send_report(inn, from_id)
         elif 'позвать администратора' in message.lower():
             self.__call_administrator(from_id)
+            self.__messages_send(message='Ожидайте', peer_id=from_id)
         else:
             self.__show_help(from_id)
 
     def __administrator_action(self, data):
         message = data['object']['message']['text']
-        from_id = data['object']['message']['text']
+        from_id = data['object']['message']['from_id']
         if 'добавить нового пользователя' in message.lower():
             self.__add_new_user(message, from_id)
         
     def __god_action(self, data):
         message = data['object']['message']['text']
-        from_id = data['object']['message']['text']
-        if 'добавить нового пользователя' in message.lower():
-            self.__add_new_user(message, from_id)
-        elif 'добавить нового администратора' in message.lower():
+        from_id = data['object']['message']['from_id']
+        if 'добавить нового администратора' in message.lower():
             self.__add_new_administrator(message, from_id)
         elif 'test' in message.lower():
             self.__online_log('Test passed')
+        else:
+            self.__administrator_action(data)
 
     def __new_message(self, data):
         peer_id = data['object']['message']['peer_id']
         from_id = data['object']['message']['from_id']
         if peer_id == 2000000001:
             self.__god_action(data)
-        elif from_id in self.administrators:
+        elif str(from_id) in self.administrators:
             self.__administrator_action(data)
-        for email in self.users:
-            if from_id in self.users[email]:
-                self.__user_action(email, data)
-                break
-
-    def __random_id_gen(self):
-        id = -9223372036854775807
-        while id < 9223372036854775808:
-            id += 1
-            yield id
+        else:
+            for email in self.users:
+                if str(from_id) in self.users[email]:
+                    self.__user_action(email, data)
+                    break
 
     def new_user(self, email, user):
         email = str(email)
@@ -192,6 +189,6 @@ class VkSession:
         except:
             raise Exception('Custom Error: cann`t take event')
         data = event.raw
-        print(data, file=log)
+        print('Message: ', data, file=log)
         if (data['type'] == 'message_new'):
             self.__new_message(data)
