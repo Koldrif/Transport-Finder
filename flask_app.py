@@ -1,8 +1,13 @@
 from tokens import VK_API_TOKEN, VK_GROUP_ID
 from VkApi import VkSession
+from DataBase.DataBase import DataBase as Database
 
-vk_session = VkSession(token=VK_API_TOKEN, vkgroup=VK_GROUP_ID)
-print('Бот запущен')
+def main():
+    database = None #Database(host='localhost', user='root', password='6786')
+    vk_session = VkSession(database, token=VK_API_TOKEN, vkgroup=VK_GROUP_ID, users_filename='users.txt', administrators_filename='administrators.txt')
+    print('Бот запущен')
+    while True:
+        vk_session.update()
 
-while True:
-    vk_session.update()
+if __name__ == '__main__':
+    main()

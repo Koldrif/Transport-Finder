@@ -4,6 +4,7 @@ ezxf = xlwt.easyxf
 heading_xf = ezxf('font: bold on; align: wrap on, vert center, horiz center;')
 
 def old_format(inn, database):
+    filename = ''
     data = database.get_data(
         'vin', 
         'srm', 
@@ -92,5 +93,6 @@ def old_format(inn, database):
         if data[i][3] in '':
             recomendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
     output_file.save('test.xls')
+    return filename, recomendation
     #todo make this file variable and generate name for it
     
