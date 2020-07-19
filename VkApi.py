@@ -86,24 +86,26 @@ class VkSession:
         text = text.join(map(str, elements))
         self.__messages_send(message=text, peer_id=LOG)
 
-    def __add_new_user(self, message):
+    def __add_new_user(self, message, from_id):
         new_user, email = message[28::].strip().split()
         if re.match(r'.+@.*\..*', new_user) and re.match(r'https://vk\.com/.+', email):
             new_user, email = email, new_user
         if not(re.match(r'.+@.*\..*', email) and re.match(r'https://vk\.com/.+', new_user)):
-            self.__online_log('Неправильно введенные данные: "'+email+'", "'+new_user+'"')
-            return
+            self.__messages_send(message='Неправильно введенные данные: "'+email+'", "'+new_user+'"', peer_id=from_id)
         id = self.__users_get(new_user)
         self.new_user(email,  id)
         self.__online_log('Добавлен пользователь: email - "'+email+'", user - "'+str(id)+'"')
+        self.__messages_send(message='Добавлен', peer_id=from_id)
 
-    def __add_new_administrator(self, message):
+    def __add_new_administrator(self, message, from_id):
         new_administrator = message[30::].strip()
         if not(re.match(r'https://vk\.com/.+', new_administrator)):
-            raise Exception('Неправильно введенные данные: "'+new_administrator+'"')
+            self.__messages_send(message='Неправильно введенные данные: "'+new_administrator+'"', peer_id=from_id)
         id = self.__users_get(new_administrator)
         self.new_administrator(id)
-
+        self.__online_log('Добавлен администратор: user - "'+str(id)+'"')
+        self.__messages_send(message='Добавлен', peer_id=from_id)
+        
     def __send_report(self, inn, peer_id):
         pass
 
@@ -128,30 +130,23 @@ class VkSession:
         message = data['object']['message']['text']
         from_id = data['object']['message']['text']
         if 'добавить нового пользователя' in message.lower():
-            self.__add_new_user(message)
-            self.__online_log('Добавлен администратор: user - "'+str(id)+'"')
-            self.__messages_send(message='Добавлен', peer_id=from_id)
-
+            self.__add_new_user(message, from_id)
+        
     def __god_action(self, data):
         message = data['object']['message']['text']
+        from_id = data['object']['message']['text']
         if 'добавить нового пользователя' in message.lower():
-            self.__add_new_user(message)
+            self.__add_new_user(message, from_id)
         elif 'добавить нового администратора' in message.lower():
-            self.__add_new_administrator(message)
+            self.__add_new_administrator(message, from_id)
 
     def __new_message(self, data):
         peer_id = data['object']['message']['peer_id']
         from_id = data['object']['message']['from_id']
         if peer_id == 2000000001:
-            try:
-                self.__god_action(data)
-            except Exception as e:
-                self.__online_log()
+            self.__god_action(data)
         elif from_id in self.administrators:
-            try:
-                self.__administrator_action(data)
-            except Exception as e:
-                self.__online_log()
+            self.__administrator_action(data)
         for email in self.users:
             if from_id in self.users[email]:
                 self.__user_action(email, data)
