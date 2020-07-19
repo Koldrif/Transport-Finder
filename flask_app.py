@@ -8,7 +8,10 @@ def main():
     vk_session = VkSession(database, token=VK_API_TOKEN, vkgroup=VK_GROUP_ID, users_filename='users.txt', administrators_filename='administrators.txt')
     print('Бот запущен')
     while True:
-        vk_session.update()
+        try:
+            vk_session.update()
+        except Exception as e:
+            print(e)
 
 if __name__ == '__main__':
     main()
