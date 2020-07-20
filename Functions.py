@@ -7,6 +7,11 @@ Owner_style = ezxf('pattern: back_colour gold; font: colour blue')
 
 save_file_name = 'openPyxl.xlsx'
 
+def as_text(value):
+    if value is None:
+        return ""
+    return str(value)
+
 def old_format(inn, database):
     data = database.get_data(
         'vin', 
@@ -85,16 +90,14 @@ def old_format(inn, database):
         if data[i][3] in '':
             recomendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
 
-    # column_widths = []
-    # for row in sheet1.iter_rows():
-    #     for i, cell in enumerate(row):
-    #         try:
-    #             column_widths[i] = max(column_widths[i], len(cell.value))
-    #         except IndexError:
-    #             column_widths.append(len(cell.value))
-
-    # for i, column_width in enumerate(column_widths):
-    #     sheet1.column_dimensions[get_column_letter(i + 1+1)].width = column_width
+    dims = {}
+    for row in sheet1.rows:
+        for cell in row:
+            if cell.value:
+                dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))    
+    for col, value in dims.items():
+        print(col, value, dims.items())
+        sheet1.column_dimensions[chr(col+64)].width = value + 5
 
     file_output.save(save_file_name)
 
