@@ -13,6 +13,7 @@ def as_text(value):
     return str(value)
 
 def old_format(inn, database):
+    filename = ''
     data = database.get_data(
         'vin', 
         'srm', 
@@ -174,4 +175,5 @@ def old_format(inn, database):
 #            recomendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
 #    output_file.save('test.xls')
 #    #todo make this file variable and generate name for it
+#    return filename, recomendation
     
