@@ -97,7 +97,6 @@ def old_format(inn, database):
             if cell.value:
                 dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))    
     for col, value in dims.items():
-        print(col, value, dims.items())
         sheet1.column_dimensions[chr(col+64)].width = value + 5
 
     file_output.save(save_file_name)
