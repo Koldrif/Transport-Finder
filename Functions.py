@@ -1,9 +1,15 @@
 import xlwt
 from openpyxl.utils import get_column_letter
 from openpyxl import Workbook
+from openpyxl.styles import colors
+from openpyxl.styles import Font, Color
+from openpyxl.styles import NamedStyle, Border, Side, PatternFill
 ezxf = xlwt.easyxf
 
-Owner_style = ezxf('pattern: back_colour gold; font: colour blue')
+#Owner_style = ezxf('pattern: back_colour gold; font: colour blue')
+border = Side(style='thin', color="000000")
+Owner_style = NamedStyle(name='Owner_style', fill=PatternFill('solid', fgColor='00c5d9f1'), border=Border(left=border, top=border, right=border, bottom=border))
+Prosecutor_chek_style = NamedStyle(name='Prosecutor_chek_style', fill=PatternFill('solid', fgColor='00ffff99'), border=Border(left=border, top=border, right=border, bottom=border))
 
 save_file_name = 'openPyxl.xlsx'
 
@@ -39,9 +45,25 @@ def old_format(inn, database):
     recomendation = ''
     file_output = Workbook()
     sheet1 = file_output.active
+
+    sheet1['A1'].style = Owner_style
+    sheet1['A2'].style = Owner_style
+    sheet1['A3'].style = Owner_style
+    sheet1['A4'].style = Owner_style
+    sheet1['A5'].style = Owner_style
+    sheet1['B2'].style = Owner_style
+    sheet1['B3'].style = Owner_style
+    sheet1['B4'].style = Owner_style
+    sheet1['B5'].style = Owner_style
+    sheet1['D2'].style = Prosecutor_chek_style
+    sheet1['D3'].style = Prosecutor_chek_style
+    sheet1['D4'].style = Prosecutor_chek_style
+    sheet1['D5'].style = Prosecutor_chek_style
+    sheet1['E3'].style = Prosecutor_chek_style
+    sheet1['E4'].style = Prosecutor_chek_style
+    sheet1['E5'].style = Prosecutor_chek_style
+
     sheet1.title = 'Company and vehicle information'
-   # sheet1.
-    #sheet1.ColumnDimension(bestFit = True)
     sheet1.cell(0+1, 0+1, 'Информация о владельце')
     sheet1.cell(1+1, 0+1, 'ОГРН')
     sheet1.cell(2+1, 0+1, 'ИНН')
