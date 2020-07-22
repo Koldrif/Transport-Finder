@@ -6,10 +6,44 @@ from openpyxl.styles import Font, Color
 from openpyxl.styles import NamedStyle, Border, Side, PatternFill
 ezxf = xlwt.easyxf
 
-#Owner_style = ezxf('pattern: back_colour gold; font: colour blue')
+#Owner_info_style = ezxf('pattern: back_colour gold; font: colour blue')
 border = Side(style='thin', color="000000")
-Owner_style = NamedStyle(name='Owner_style', fill=PatternFill('solid', fgColor='00c5d9f1'), border=Border(left=border, top=border, right=border, bottom=border))
-Prosecutor_chek_style = NamedStyle(name='Prosecutor_chek_style', fill=PatternFill('solid', fgColor='00ffff99'), border=Border(left=border, top=border, right=border, bottom=border))
+
+Owner_info_style = NamedStyle(name='Owner_info_style', 
+                              fill=PatternFill('solid', 
+                                               fgColor='00f2f2f2'), 
+
+                              border=Border(left=border, 
+                                            top=border, 
+                                            right=border, 
+                                            bottom=border))
+
+Header_info_style = NamedStyle(name='Header_info_style', 
+                              fill=PatternFill('solid', 
+                                               fgColor='0000ffff'), 
+
+                              border=Border(left=border, 
+                                            top=border, 
+                                            right=border, 
+                                            bottom=border))
+Prosecutor_check_style = NamedStyle(name='Prosecutor_check_style', 
+                                   fill=PatternFill('solid', 
+                                                    fgColor='00f2f2f2'), 
+
+                                   border=Border(left=border, 
+                                                 top=border, 
+                                                 right=border, 
+                                                 bottom=border))
+
+Prosecutor_info_check_style = NamedStyle(name='Prosecutor_info_check_style', 
+                                   fill=PatternFill('solid', 
+                                                    fgColor='0000ffff'), 
+
+                                   border=Border(left=border, 
+                                                 top=border, 
+                                                 right=border, 
+                                                 bottom=border))
+
 
 save_file_name = 'openPyxl.xlsx'
 
@@ -46,25 +80,27 @@ def old_format(inn, database):
     file_output = Workbook()
     sheet1 = file_output.active
 
-    sheet1['A1'].style = Owner_style
-    sheet1['A2'].style = Owner_style
-    sheet1['A3'].style = Owner_style
-    sheet1['A4'].style = Owner_style
-    sheet1['A5'].style = Owner_style
-    sheet1['B2'].style = Owner_style
-    sheet1['B3'].style = Owner_style
-    sheet1['B4'].style = Owner_style
-    sheet1['B5'].style = Owner_style
-    sheet1['D2'].style = Prosecutor_chek_style
-    sheet1['D3'].style = Prosecutor_chek_style
-    sheet1['D4'].style = Prosecutor_chek_style
-    sheet1['D5'].style = Prosecutor_chek_style
-    sheet1['E3'].style = Prosecutor_chek_style
-    sheet1['E4'].style = Prosecutor_chek_style
-    sheet1['E5'].style = Prosecutor_chek_style
+    sheet1['A1'].style = Owner_info_style
+    sheet1['A2'].style = Owner_info_style
+    sheet1['A3'].style = Owner_info_style
+    sheet1['A4'].style = Owner_info_style
+    sheet1['A5'].style = Owner_info_style
+    sheet1['B2'].style = Header_info_style
+    sheet1['B3'].style = Header_info_style
+    sheet1['B4'].style = Header_info_style
+    sheet1['B5'].style = Header_info_style
+    sheet1['D2'].style = Prosecutor_check_style
+    sheet1['D3'].style = Prosecutor_check_style
+    sheet1['D4'].style = Prosecutor_check_style
+    sheet1['D5'].style = Prosecutor_check_style
+    sheet1['E3'].style = Prosecutor_info_check_style
+    sheet1['E4'].style = Prosecutor_info_check_style
+    sheet1['E5'].style = Prosecutor_info_check_style
+    sheet1['G13'].style = Owner_info_style
 
     sheet1.title = 'Company and vehicle information'
     sheet1.cell(0+1, 0+1, 'Информация о владельце')
+    sheet1.cell(0+1, 0+1).style = Prosecutor_check_style
     sheet1.cell(1+1, 0+1, 'ОГРН')
     sheet1.cell(2+1, 0+1, 'ИНН')
     sheet1.cell(3+1, 0+1, 'Дата регистрации')
@@ -82,18 +118,31 @@ def old_format(inn, database):
     sheet1.cell(3+1, 4+1, data[0][16])
     sheet1.cell(4+1, 4+1, data[0][17])
     sheet1.cell(10+1, 1+1, 'Информация о транспорте')
+    sheet1.cell(10+1, 1+1).style = Owner_info_style
     sheet1.cell(11+1, 7+1, 'Данные из реестра категорирования')
+    sheet1.cell(11+1, 7+1).style = Owner_info_style
     sheet1.cell(12+1, 1+1, 'Бренд')
+    sheet1.cell(12+1, 1+1).style = Owner_info_style
     sheet1.cell(12+1, 2+1, 'VIN')
+    sheet1.cell(12+1, 2+1).style = Owner_info_style
     sheet1.cell(12+1, 3+1, 'ГРЗ')
+    sheet1.cell(12+1, 3+1).style = Owner_info_style
     sheet1.cell(12+1, 4+1, 'Тип владения')
+    sheet1.cell(12+1, 4+1).style = Owner_info_style
     sheet1.cell(12+1, 5+1, 'Дата окончания аренды')
+    sheet1.cell(12+1, 5+1).style = Owner_info_style
     sheet1.cell(12+1, 7+1, 'Номер реестра')
+    sheet1.cell(12+1, 7+1).style = Owner_info_style
     sheet1.cell(12+1, 8+1, 'Собственник')
+    sheet1.cell(12+1, 8+1).style = Owner_info_style
     sheet1.cell(12+1, 9+1, 'Модель')
+    sheet1.cell(12+1, 9+1).style = Owner_info_style
     sheet1.cell(12+1, 10+1, 'АТП')
+    sheet1.cell(12+1, 10+1).style = Owner_info_style
     sheet1.cell(12+1, 11+1, 'Категория транспорта')
+    sheet1.cell(12+1, 11+1).style = Owner_info_style
     sheet1.cell(12+1, 12+1, 'Тип транспорта')
+    sheet1.cell(12+1, 12+1).style = Owner_info_style
     if data[0][14] in ['Н/Д', '']:
         recomendation += 'Прокурорская проверка будет проводится с {begin_date} по {end_date}\r\n'.format(begin_date=None, end_date=None)
     for i in range(len(data)):
@@ -101,7 +150,7 @@ def old_format(inn, database):
         sheet1.cell(i+13+1, 2+1, data[i][0])
         sheet1.cell(i+13+1, 3+1, data[i][1])
         sheet1.cell(i+13+1, 4+1, data[i][2])
-        sheet1.cell(i+13+1, 5+1, data[i][3])
+        sheet1.cell(i+13+1, 5+1, data[i][3]) #Дата окончания аренды
         sheet1.cell(i+13+1, 7+1, data[i][7])
         sheet1.cell(i+13+1, 8+1, data[i][8])
         sheet1.cell(i+13+1, 9+1, data[i][9])
