@@ -10,6 +10,8 @@ def main():
     while True:
         try:
             vk_session.update()
+        except KeyboardInterrupt:
+            raise SystemExit
         except Exception as e:
             print(e)
 

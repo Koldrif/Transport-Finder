@@ -108,7 +108,9 @@ class VkSession:
         self.__online_log('Добавлен администратор: user - "'+str(id)+'"')
         
     def __send_report(self, inn, peer_id):
-        pass
+        file = open('test.xls', 'rb')
+        self.vk.document_message(file, title='test_file', tags=None, peer_id=peer_id)
+        self.__messages_send(peer_if=peer_id, message='test_recomendation')
 
     def __call_administrator(self, id):
         self.__online_log('Пользователь https://vk.com/id' + str(id), 'желает поговорить')
@@ -125,7 +127,7 @@ class VkSession:
         elif 'позвать администратора' in message.lower():
             self.__call_administrator(from_id)
             self.__messages_send(message='Ожидайте', peer_id=from_id)
-        else:
+        elif 'помощь' in message.lower():
             self.__show_help(from_id)
 
     def __administrator_action(self, data):
@@ -133,6 +135,8 @@ class VkSession:
         from_id = data['object']['message']['from_id']
         if 'добавить нового пользователя' in message.lower():
             self.__add_new_user(message, from_id)
+        else:
+            self.__user_action('god@god.ru', data)
         
     def __god_action(self, data):
         message = data['object']['message']['text']
@@ -186,6 +190,8 @@ class VkSession:
     def update(self, log=None):
         try:
             event = next(self.longpoll.listen())
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt()
         except:
             raise Exception('Custom Error: cann`t take event')
         data = event.raw
