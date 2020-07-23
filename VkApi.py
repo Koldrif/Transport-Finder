@@ -129,6 +129,7 @@ class VkSession:
     def __user_action(self, email, data):
         message = data['object']['message']['text']
         from_id = data['object']['message']['from_id']
+        print(message.lower())
         if 'данные по инн' in message.lower():
             inn = int(message[13::])
             self.__send_report(inn, from_id)
