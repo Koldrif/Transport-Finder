@@ -127,6 +127,7 @@ class VkSession:
         self.__messages_send(message=INFORMATION_ABOUT_BOT, peer_id=peer_id)
 
     def __user_action(self, email, data):
+        print('___________________user_action________________')
         message = data['object']['message']['text']
         from_id = data['object']['message']['from_id']
         print(message.lower())
@@ -140,6 +141,7 @@ class VkSession:
             self.__show_help(from_id)
 
     def __administrator_action(self, data):
+        print('________________administrator_action___________')
         message = data['object']['message']['text']
         from_id = data['object']['message']['from_id']
         if 'добавить нового пользователя' in message.lower():
@@ -148,6 +150,7 @@ class VkSession:
             self.__user_action('god@god.ru', data)
         
     def __god_action(self, data):
+        print('__________________god_action____________________')
         message = data['object']['message']['text']
         from_id = data['object']['message']['from_id']
         if 'добавить нового администратора' in message.lower():
@@ -158,6 +161,8 @@ class VkSession:
             self.__administrator_action(data)
 
     def __new_message(self, data):
+        print('___________________new_message__________________')
+        print('Message: ', data)
         peer_id = data['object']['message']['peer_id']
         from_id = data['object']['message']['from_id']
         if peer_id == 2000000001:
@@ -196,7 +201,7 @@ class VkSession:
             with open(self.administrators_filename, 'a') as file:
                 file.write(user+' ')
 
-    def update(self, log=None):
+    def update(self):
         try:
             event = next(self.longpoll.listen())
         except KeyboardInterrupt:
@@ -204,6 +209,5 @@ class VkSession:
         except:
             raise Exception('Custom Error: cann`t take event')
         data = event.raw
-        print('Message: ', data, file=log)
         if (data['type'] == 'message_new'):
             self.__new_message(data)
