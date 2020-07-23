@@ -1,5 +1,6 @@
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
+from vk_api.upload import VkUpload as Vkupload
 from random import randint
 import os.path as os
 import re
@@ -54,6 +55,7 @@ class VkSession:
                 self.vk = vk_api.VkApi(login=username, password=password)
         except:
             raise Exception('Custom Error: authorization failed')
+        self.upload = Vkupload(self.vk)
         if vkgroup == None:
             raise Exception('Custom Error: Failed access into longpoll')
         else:
@@ -109,8 +111,12 @@ class VkSession:
         
     def __send_report(self, inn, peer_id):
         file = open('test.xls', 'rb')
-        self.vk.document_message(file, title='test_file', tags=None, peer_id=peer_id)
-        self.__messages_send(peer_if=peer_id, message='test_recomendation')
+        answer = self.upload.document_message(file, title='test_file', tags=None, peer_id=peer_id)
+        type_doc = answer['type']
+        owner_id = answer['doc']['owner_id']
+        media_id = answer['doc']['id']
+        doc_url = '{type}{owner_id}_{media_id}'.format(type=type_doc, owner_id=owner_id, media_id=media_id)
+        self.__messages_send(peer_id=peer_id, message='test_recomendation ', attachment=doc_url)
 
     def __call_administrator(self, id):
         self.__online_log('Пользователь https://vk.com/id' + str(id), 'желает поговорить')
