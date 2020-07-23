@@ -110,6 +110,7 @@ class VkSession:
         self.__online_log('Добавлен администратор: user - "'+str(id)+'"')
         
     def __send_report(self, inn, peer_id):
+        print('send, test.xls')
         file = open('test.xls', 'rb')
         answer = self.upload.document_message(file, title='test_file', tags=None, peer_id=peer_id)
         type_doc = answer['type']
