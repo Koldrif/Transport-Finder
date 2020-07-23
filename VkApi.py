@@ -117,6 +117,7 @@ class VkSession:
         media_id = answer['doc']['id']
         doc_url = '{type}{owner_id}_{media_id}'.format(type=type_doc, owner_id=owner_id, media_id=media_id)
         self.__messages_send(peer_id=peer_id, message='test_recomendation ', attachment=doc_url)
+        file.close()
 
     def __call_administrator(self, id):
         self.__online_log('Пользователь https://vk.com/id' + str(id), 'желает поговорить')
