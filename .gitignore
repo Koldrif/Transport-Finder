@@ -10,3 +10,5 @@ Find equances/*
 Реестры и т.д/*
 test_Igor.py
 __pycache__/*
+flask_app.py
+log.txt

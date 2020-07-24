@@ -115,7 +115,7 @@ class VkSession:
         print('send, file')
         filename, recomendation = old_format(inn, self.database)
         file = open(filename, 'rb')
-        answer = self.upload.document_message(file, title='analytical help for '+str(inn), tags=None, peer_id=peer_id)
+        answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(inn), tags=None, peer_id=peer_id)
         type_doc = answer['type']
         owner_id = answer['doc']['owner_id']
         media_id = answer['doc']['id']
