@@ -39,6 +39,7 @@ def as_text(value):
     return str(value)
 
 def old_format(inn, database):
+    inn = str(inn)
     filename = ''
     data = database.get_data(
         'vin',                           # 0
@@ -277,6 +278,7 @@ def old_format(inn, database):
     sheet1.column_dimensions['A'].width = 25 + 5
 
     file_output.save(save_file_name)
+    return save_file_name, recomendations
 
 
 
