@@ -3,7 +3,8 @@ from openpyxl.utils import get_column_letter
 from openpyxl import Workbook
 from openpyxl.styles import colors
 from openpyxl.styles import Font, Color
-from openpyxl.styles import NamedStyle, Border, Side, PatternFill
+from openpyxl.styles import NamedStyle, Border, Side, PatternFill, Alignment
+from openpyxl.drawing.image import Image
 ezxf = xlwt.easyxf
 
 #Header_info_style = ezxf('pattern: back_colour gold; font: colour blue')
@@ -11,9 +12,36 @@ border = Side(style='thin', color="000000")
 
 #Style_1 - первые четыре клетки по памятке А:11 - А:14
 
+Bold_Font_header = NamedStyle(name='Bold_Font_header', 
+                    #    border=Border(left=border, 
+                    #                  top=border, 
+                    #                  right=border, 
+                    #                  bottom=border),
+                         font=Font(name='Arial', bold=True, size=14, vertAlign='baseline'),
+                         alignment=Alignment(horizontal='center')) # , vertical='center'))
+
+Bold_Font_subhead = NamedStyle(name='Bold_Font_subhead', 
+                    #    border=Border(left=border, 
+                    #                  top=border, 
+                    #                  right=border, 
+                    #                  bottom=border),
+                       font=Font(name='Arial', bold=True, size=10 ))
+
+Attention_Style = NamedStyle(name='Attention_Style', 
+                    fill=PatternFill('solid', 
+                                     fgColor='ff6666'),
+                    border=Border(left=border, 
+                                  top=border, 
+                                  right=border, 
+                                  bottom=border),
+                    font=Font(name='Arial', bold=False, size=10 )) 
+
+Ok_Style = NamedStyle(name='Ok_Style', 
+                    font=Font(name='Arial', bold=False, size=10 ))                                          
+
 Style_1 = NamedStyle(name='Style_1', 
                     fill=PatternFill('solid', 
-                                     fgColor='0000ffff'),
+                                     fgColor='ccffff'),
                     border=Border(left=border, 
                                   top=border, 
                                   right=border, 
@@ -29,8 +57,9 @@ Style_2 = NamedStyle(name='Style_2',
                                             right=border, 
                                             bottom=border))
 
-
-
+imgLogo = Image('src\Images\Logo.png')
+imgLogo.width = 160
+imgLogo.height = 55
 save_file_name = 'openPyxl.xlsx'
 
 def as_text(value):
@@ -69,7 +98,7 @@ def old_format(inn, database):
     sheet1 = file_output.active
 
     sheet1.merge_cells('A1:B1')
-    sheet1.merge_cells('D1:I1')
+    sheet1.merge_cells('C1:I1')
     sheet1.merge_cells('A2:I2')
     sheet1.merge_cells('A3:E3')
     sheet1.merge_cells('F3:I3')
@@ -102,7 +131,7 @@ def old_format(inn, database):
     sheet1.merge_cells('A31:C32')
     sheet1.merge_cells('D31:H32')
     sheet1.merge_cells('I31:N32')
-
+    sheet1.add_image(imgLogo, 'A1')
     sheet1['A1'].style = Style_1
     sheet1['B1'].style = Style_1
     sheet1['C1'].style = Style_1
@@ -131,7 +160,8 @@ def old_format(inn, database):
 
     sheet1.title = 'Company and vehicle information'
     sheet1['C1'] = 'ЗАЩИТА ИНТЕРЕСОВ БИЗНЕСА ПО ВСЕЙ РОССИИ'
-    sheet1['A3'] = 'Аналитическая справка по ИНН'
+    sheet1['A3'] = 'Аналитическая справка по ИНН' #TODO Жирный шрифт заголовков и подзаголовок, добавить контакты, дата начала прокурорской проверки, автоматически заполнять "ТРЕБУЕТСЯ СДЕЛАТЬ", выделить что требуется сделать
+    sheet1['A3'].style = Bold_Font_header
     sheet1['A4'] = 'Для Компании'
     sheet1['B4'] = data[0][18]
     sheet1['A5'] = 'ИНН'
@@ -143,6 +173,7 @@ def old_format(inn, database):
     sheet1['A8'] = 'Дата Лицензии'
     sheet1['B8'] = data[0][4]
     sheet1['A10'] = 'ПАМЯТКА ПЕРЕВОЗЧИКУ:'
+    sheet1['A10'].style = Bold_Font_header
     sheet1['A11'] = '1. Не требуется делать Категорирование, Оценку уязвимости, План безопасности транспортного средства:'
     sheet1['A12'] = '- Если Вы перевозите учащихся от места проживания к месту обучения и обратно на безвозмездной основе.'
     sheet1['A13'] = '- Если Вы осуществляете перевозки в целях оказания ритуальных услуг.'
@@ -154,116 +185,89 @@ def old_format(inn, database):
     sheet1['A19'] = '6. Исправить данные в Реестре требуется когда Росавтодор ввел некорректные данные.'
     sheet1['A20'] = '7. Обязательно исключать из Реестра транспорт который продан!'
     sheet1['A22'] = 'ПЛАНОВАЯ ПРОВЕРКА БУДЕТ ПРОВЕДЕНА'
+    sheet1['A22'].style = Bold_Font_header
     sheet1['A23'] = 'Согласно ст. 27 Постановление Правительства РФ от 27.02.2019 N 195 "О лицензировании деятельности по перевозкам пассажиров и иных лиц автобусами"'
     sheet1['A24'] = 'Дата проведения проверки'
+    sheet1['A24'].style = Bold_Font_subhead
     sheet1['B24'] = 'с'
+    sheet1['B24'].style = Bold_Font_subhead
     sheet1['C24'] =  data[0][14] #? Как форматировать дату
+    sheet1['C24'].style = Bold_Font_subhead
     sheet1['D24'] =  'до' 
-    sheet1['E24'] =  'Указать дату' 
+    sheet1['D24'].style = Bold_Font_subhead
+    sheet1['E24'] =  '' #!
+    sheet1['E24'].style = Bold_Font_subhead
     sheet1['A26'] =  'ПРОКУРОРСКАЯ ПРОВЕРКА БУДЕТ ПРОВЕДЕНА' 
+    sheet1['A26'].style = Bold_Font_header
     sheet1['A27'] =   data[0][16]
     sheet1['A28'] =   'Месяц проведения проверки'
-    sheet1['A29'] =   'Месяц проведения проверки'
-    sheet1['C28'] =   'Рабочих дней'
-    sheet1['C29'] =   '' #! нужно заполнить
-    sheet1['D28'] =   'Рабочих часов'
-    sheet1['D29'] =   data[0][19]
-    sheet1['C28'] =   'Форма проведения проверки'
-    sheet1['C29'] =   data[0][15]
-    sheet1['D28'] =   'Другие причины проверки'
-    sheet1['D29'] =   data[0][17]
+    sheet1['A28'].style = Bold_Font_subhead 
+    sheet1['A29'] =   data[0][14]
+    sheet1['B28'] =   'Рабочих дней'
+    sheet1['B28'].style = Bold_Font_subhead
+    sheet1['B29'] =   data[0][14] #? нужно допилить
+    sheet1['C28'] =   'Рабочих часов'
+    sheet1['C28'].style = Bold_Font_subhead
+    sheet1['C29'] =   data[0][19]
+    sheet1['D28'] =   'Форма проведения проверки'
+    sheet1['D28'].style = Bold_Font_subhead
+    sheet1['D29'] =   data[0][15]
+    sheet1['E28'] =   'Другие причины проверки'
+    sheet1['E28'].style = Bold_Font_subhead
+    sheet1['E29'] =   data[0][17]
     sheet1['A31'] =   'ТРЕБУЕТСЯ СДЕЛАТЬ'
+    sheet1['A31'].style = Bold_Font_header
     sheet1['D31'] =   'НАЙДЕН ТРАНСПОРТ В РЕЕСТРЕ ЛИЦЕНЗИЙ'
+    sheet1['D31'].style = Bold_Font_header
     sheet1['I31'] =   'НАЙДЕН ТРАНСПОРТ В РЕЕСТРЕ КАТЕГОРИРОВАНИЯ'
+    sheet1['I31'].style = Bold_Font_header
     sheet1['A33'] =   'Категорирование'
+    sheet1['A33'].style = Bold_Font_subhead
     sheet1['B33'] =   'Оценка уязвимости'
+    sheet1['B33'].style = Bold_Font_subhead
     sheet1['C33'] =   'План безопасности'
+    sheet1['C33'].style = Bold_Font_subhead
     sheet1['D33'] =   'Модель по ПТС'
+    sheet1['D33'].style = Bold_Font_subhead
     sheet1['E33'] =   'Гос. рег. номер'
+    sheet1['E33'].style = Bold_Font_subhead
     sheet1['F33'] =   'VIN'
+    sheet1['F33'].style = Bold_Font_subhead
     sheet1['G33'] =   'Право владения'
+    sheet1['G33'].style = Bold_Font_subhead
     sheet1['H33'] =   'Статус'
+    sheet1['H33'].style = Bold_Font_subhead
     sheet1['I33'] =   '№ реестра'
+    sheet1['I33'].style = Bold_Font_subhead
     sheet1['J33'] =   'АТП №'
+    sheet1['J33'].style = Bold_Font_subhead
     sheet1['K33'] =   'Тип транспорта'
+    sheet1['K33'].style = Bold_Font_subhead
     sheet1['L33'] =   'Модель из Реестра'
+    sheet1['L33'].style = Bold_Font_subhead
     sheet1['M33'] =   'Собственник'
+    sheet1['M33'].style = Bold_Font_subhead
     sheet1['N33'] =   'Категория транспорта'
+    sheet1['N33'].style = Bold_Font_subhead
     for i in range(len(data)):
         #sheet1.cell(i+33, 3, data[i][]) #TODO Модель по АТП
-        sheet1.cell(i+33+1, 4, data[i][1]) # Гос рег номер
-        sheet1.cell(i+33+1, 5, data[i][0])
-        sheet1.cell(i+33+1, 6, data[i][2])
-        sheet1.cell(i+33+1, 7, data[i][3])
+        sheet1.cell(i+34, 5, data[i][1]) # Гос рег номер
+        sheet1.cell(i+34, 6, data[i][0])
+        sheet1.cell(i+34, 7, data[i][2])
+        sheet1.cell(i+34, 8, data[i][3])
         #sheet1.cell(i+33+1, 8, data[i][10]) #! Тут нужно имя файла
-        sheet1.cell(i+33+1, 9, data[i][10])
-        sheet1.cell(i+33+1, 10, data[i][12])
-        sheet1.cell(i+33+1, 11, data[i][9])
-        sheet1.cell(i+33+1, 12, data[i][8])
-        sheet1.cell(i+33+1, 13, data[i][11])
+        if ((data[i][10] == '' or data[i][10] == 'Н/Д' or data[i][12] == '' or data[i][12] == 'Н/Д' or data[i][9] == '' or  data[i][9] == 'Н/Д' or data[i][8] == '' or  data[i][8] == 'Н/Д' or data[i][11] == '' or data[i][11] == 'Н/Д')):
+            sheet1.cell(i+34, 1, 'Категарировать')
+            sheet1.cell(i+34, 1).style = Attention_Style
 
-
-    # sheet1.cell(0+1, 0+1).style = Prosecutor_check_style
-    # sheet1.cell(1+1, 0+1, 'ОГРН')
-    # sheet1.cell(2+1, 0+1, 'ИНН')
-    # sheet1.cell(3+1, 0+1, 'Дата регистрации')
-    # sheet1.cell(4+1, 0+1, 'Номер лицензии')
-    # sheet1.cell(1+1, 1+1, data[0][13])
-    # sheet1.cell(2+1, 1+1, inn)
-    # sheet1.cell(3+1, 1+1, data[0][4])
-    # sheet1.cell(4+1, 1+1, data[0][5])
-    # sheet1.cell(1+1, 3+1, 'Дата проведения проверки')
-    # sheet1.cell(2+1, 3+1, 'Форма проведения проверки')
-    # sheet1.cell(3+1, 3+1, 'Цель проведения проверки')
-    # sheet1.cell(4+1, 3+1, 'Другие причины проверки')
-    # sheet1.cell(1+1, 4+1, data[0][14])
-    # sheet1.cell(2+1, 4+1, data[0][15])
-    # sheet1.cell(3+1, 4+1, data[0][16])
-    # sheet1.cell(4+1, 4+1, data[0][17])
-    # sheet1.cell(10+1, 1+1, 'Информация о транспорте')
-    # sheet1.cell(10+1, 1+1).style = Header_info_style
-    # sheet1.cell(11+1, 7+1, 'Данные из реестра категорирования')
-    # sheet1.cell(11+1, 7+1).style = Header_info_style
-    # sheet1.cell(12+1, 1+1, 'Бренд')
-    # sheet1.cell(12+1, 1+1).style = Header_info_style
-    # sheet1.cell(12+1, 2+1, 'VIN')
-    # sheet1.cell(12+1, 2+1).style = Header_info_style
-    # sheet1.cell(12+1, 3+1, 'ГРЗ')
-    # sheet1.cell(12+1, 3+1).style = Header_info_style
-    # sheet1.cell(12+1, 4+1, 'Тип владения')
-    # sheet1.cell(12+1, 4+1).style = Header_info_style
-    # sheet1.cell(12+1, 5+1, 'Дата окончания аренды')
-    # sheet1.cell(12+1, 5+1).style = Header_info_style
-    # sheet1.cell(12+1, 7+1, 'Номер реестра')
-    # sheet1.cell(12+1, 7+1).style = Header_info_style
-    # sheet1.cell(12+1, 8+1, 'Собственник')
-    # sheet1.cell(12+1, 8+1).style = Header_info_style
-    # sheet1.cell(12+1, 9+1, 'Модель')
-    # sheet1.cell(12+1, 9+1).style = Header_info_style
-    # sheet1.cell(12+1, 10+1, 'АТП')
-    # sheet1.cell(12+1, 10+1).style = Header_info_style
-    # sheet1.cell(12+1, 11+1, 'Категория транспорта')
-    # sheet1.cell(12+1, 11+1).style = Header_info_style
-    # sheet1.cell(12+1, 12+1, 'Тип транспорта')
-    # sheet1.cell(12+1, 12+1).style = Header_info_style
-    # if data[0][14] in ['Н/Д', '']:
-    #     recommendation += 'Прокурорская проверка будет проводится с {begin_date} по {end_date}\r\n'.format(begin_date=None, end_date=None)
-    # for i in range(len(data)):
-    #     sheet1.cell(i+13+1, 1+1, data[i][6])
-    #     sheet1.cell(i+13+1, 2+1, data[i][0])
-    #     sheet1.cell(i+13+1, 3+1, data[i][1])
-    #     sheet1.cell(i+13+1, 4+1, data[i][2])
-    #     sheet1.cell(i+13+1, 5+1, data[i][3]) #Дата окончания аренды
-    #     sheet1.cell(i+13+1, 7+1, data[i][7])
-    #     sheet1.cell(i+13+1, 8+1, data[i][8])
-    #     sheet1.cell(i+13+1, 9+1, data[i][9])
-    #     sheet1.cell(i+13+1, 10+1, data[i][10])
-    #     sheet1.cell(i+13+1, 11+1, data[i][11])
-    #     sheet1.cell(i+13+1, 12+1, data[i][12])
-    #     if data[i][18] not in data[i][8]:
-    #         recommendation += 'Рекомендуется перекатегорировать транспорт с VIN {vin} перекатегорировать на собственника \r\n'.format(vin=data[i][0])
-    #     if data[i][3] in '':
-    #         recommendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
+        else:
+            sheet1.cell(i+34, 1, 'Не требуется') #? Под вопросом, нужно еще несколько условий, это просто для заполнения
+            sheet1.cell(i+34, 1).style = Ok_Style            
+        sheet1.cell(i+34, 10, data[i][10]) # АТП
+        sheet1.cell(i+34, 11, data[i][12])
+        sheet1.cell(i+34, 12, data[i][9])
+        sheet1.cell(i+34, 13, data[i][8])
+        sheet1.cell(i+34, 14, data[i][11])
 
     dims = {}
     for row in sheet1.rows:
@@ -275,83 +279,10 @@ def old_format(inn, database):
 
     print(data[0][14])
 
-    sheet1.column_dimensions['A'].width = 25 + 5
+    sheet1.column_dimensions['A'].width = 30
+    sheet1.row_dimensions[1].height = 40
 
     file_output.save(save_file_name)
-    return save_file_name, recomendations
+    return save_file_name, recommendation
 
-
-
-
-
-#
-#    output_file = xlwt.Workbook()
-#    recommendation = ''
-#    output_sheet = output_file.add_sheet('Company information', cell_overwrite_ok=True)
-#    #'font: bold on; align: wrap on, vert centre, horiz center'
-#
-#    #output_sheet.set_column(0,4,20)
-#    output_sheet.col(0).width = 6000
-#    output_sheet.col(1).width = 6000
-#    output_sheet.col(2).width = 6000
-#    output_sheet.col(3).width = 7500
-#    output_sheet.col(4).width = 15000
-#    output_sheet.col(5).width = 6000
-#    output_sheet.col(7).width = 9000
-#    output_sheet.col(8).width = 6000
-#    output_sheet.col(9).width = 6000
-#    output_sheet.col(10).width = 6000
-#    output_sheet.col(11).width = 6000
-#    output_sheet.col(12).width = 6000
-#    output_sheet.write(0, 0, 'Информация о владельце')
-#    output_sheet.write(1, 0, 'ОГРН')
-#    output_sheet.write(2, 0, 'ИНН')
-#    output_sheet.write(3, 0, 'Дата регистрации')
-#    output_sheet.write(4, 0, 'Номер лицензии')
-#    output_sheet.write(1, 1, data[0][13])
-#    output_sheet.write(2, 1, inn)
-#    output_sheet.write(3, 1, data[0][4])
-#    output_sheet.write(4, 1, data[0][5])
-#    output_sheet.write(1, 3, 'Дата проведения проверки')
-#    output_sheet.write(2, 3, 'Форма проведения проверки')
-#    output_sheet.write(3, 3, 'Цель проведения проверки')
-#    output_sheet.write(4, 3, 'Другие причины проверки')
-#    output_sheet.write(1, 4, data[0][14])
-#    output_sheet.write(2, 4, data[0][15])
-#    output_sheet.write(3, 4, data[0][16])
-#    output_sheet.write(4, 4, data[0][17])
-#    output_sheet.write(10, 1, 'Информация о транспорте')
-#    output_sheet.write(11, 7, 'Данные из реестра категорирования')
-#    output_sheet.write(12, 1, 'Бренд')
-#    output_sheet.write(12, 2, 'VIN')
-#    output_sheet.write(12, 3, 'ГРЗ')
-#    output_sheet.write(12, 4, 'Тип владения')
-#    output_sheet.write(12, 5, 'Дата окончания аренды')
-#    output_sheet.write(12, 7, 'Номер реестра')
-#    output_sheet.write(12, 8, 'Собственник')
-#    output_sheet.write(12, 9, 'Модель')
-#    output_sheet.write(12, 10, 'АТП')
-#    output_sheet.write(12, 11, 'Категория транспорта')
-#    output_sheet.write(12, 12, 'Тип транспорта')
-#    if data[0][14] in ['Н/Д', '']:
-#        recommendation += 'Прокурорская проверка будет проводится с {begin_date} по {end_date}\r\n'.format(begin_date=None, end_date=None)
-#    for i in range(len(data)):
-#        output_sheet.write(i+13, 1, data[i][6])
-#        output_sheet.write(i+13, 2, data[i][0])
-#        output_sheet.write(i+13, 3, data[i][1])
-#        output_sheet.write(i+13, 4, data[i][2])
-#        output_sheet.write(i+13, 5, data[i][3])
-#        output_sheet.write(i+13, 7, data[i][7])
-#        output_sheet.write(i+13, 8, data[i][8])
-#        output_sheet.write(i+13, 9, data[i][9])
-#        output_sheet.write(i+13, 10, data[i][10])
-#        output_sheet.write(i+13, 11, data[i][11])
-#        output_sheet.write(i+13, 12, data[i][12])
-#        if data[i][18] not in data[i][8]:
-#            recommendation += 'Рекомендуется перекатегорировать транспорт с VIN {vin} перекатегорировать на собственника \r\n'.format(vin=data[i][0])
-#        if data[i][3] in '':
-#            recommendation += 'Скоро закончится срок действия лицензии для машины с VIN {vin}\r\n'.format(vin=data[i][0])
-#    output_file.save('test.xls')
-#    #todo make this file variable and generate name for it
-#    return filename, recommendation
     
