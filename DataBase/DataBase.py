@@ -1299,12 +1299,12 @@ class DataBase:
                     print('Error:', '\ndata:', self.row, '\ndescription:',
                           e, '\nFile name:', document_name, file=log)
             self.book.release_resources()
-            try:
-                print('book was read by {} seconds'.format(
-                    time.process_time() - a))
+        try:
+            print('book was read by {} seconds'.format(
+                time.process_time() - a))
 
-            except:
-                pass
+        except:
+            pass
 
     def read_prosecutors_check(self, document_name, log=sys.stdout):
         print('reading prosecutors check...', file=log)
