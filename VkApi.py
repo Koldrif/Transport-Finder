@@ -5,6 +5,8 @@ from random import randint
 import os.path as os
 import re
 
+from Functions import old_format
+
 LOG = 2000000001
 INFORMATION_ABOUT_BOT = '''
 Приветствуем, бот находиться в стадии разработки, но вы можете воспользоваться командами:
@@ -110,14 +112,15 @@ class VkSession:
         self.__online_log('Добавлен администратор: user - "'+str(id)+'"')
         
     def __send_report(self, inn, peer_id):
-        print('send, test.xls')
-        file = open('test.xls', 'rb')
-        answer = self.upload.document_message(file, title='test_file', tags=None, peer_id=peer_id)
+        print('send, file')
+        filename, recomendation = old_format(inn, self.database)
+        file = open(filename, 'rb')
+        answer = self.upload.document_message(file, title='analytical help for '+str(inn), tags=None, peer_id=peer_id)
         type_doc = answer['type']
         owner_id = answer['doc']['owner_id']
         media_id = answer['doc']['id']
         doc_url = '{type}{owner_id}_{media_id}'.format(type=type_doc, owner_id=owner_id, media_id=media_id)
-        self.__messages_send(peer_id=peer_id, message='test_recomendation ', attachment=doc_url)
+        self.__messages_send(peer_id=peer_id, message=recomendation, attachment=doc_url)
         file.close()
 
     def __call_administrator(self, id):
