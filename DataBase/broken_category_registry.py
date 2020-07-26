@@ -16,7 +16,7 @@ def registry_3(self, document_name, log=None):
                 brand = str(self.row[2]).replace('\'', '\\\'').split()
                 vin = str(self.row[3]).replace('\'', '\\\'')
                 category = str(self.row[10]).replace('\'', '\\\'')
-                self.__insert_database(
+                self.insert_database(
                     atp=index_in_registr,
                     ttype=type_of_transport,
                     model_from_cat_reg=brand,
@@ -40,7 +40,7 @@ def registry_3(self, document_name, log=None):
                 cat_reg = str(self.row[0]).replace('\'', '\\\'')
             if self.row[1] != '':
                 index_in_registr = str(self.row[0]).replace('\'', '\\\'')
-                date_of_record = self.__reformat_date(self.row[1])
+                date_of_record = self.reformat_date(self.row[1])
                 type_of_transport = str(self.row[2]).replace('\'', '\\\'')
                 brand = str(self.row[3]).replace('\'', '\\\'')
                 vin = str(self.row[4]).replace('\'', '\\\'')
@@ -49,7 +49,7 @@ def registry_3(self, document_name, log=None):
                 reg_number = str(self.row[8]).replace('\'', '\\\'')
                 date_of_category = str(self.row[11]).replace('\'', '\\\'')
                 category = str(self.row[10]).replace('\'', '\\\'')
-                self.__insert_database(
+                self.insert_database(
                     atp=index_in_registr,
                     date_in_cat_reg=date_of_record,
                     ttype=type_of_transport,
@@ -78,7 +78,7 @@ def registry_3(self, document_name, log=None):
                 brand = str(self.row[2]).replace('\'', '\\\'')
                 vin = str(self.row[3]).replace('\'', '\\\'')
                 category = str(str(self.row[10]).replace('\'', '\\\''))
-                self.__insert_database(
+                self.insert_database(
                     ttype=ttype,
                     model_from_cat_reg=brand,
                     vin=vin,
@@ -100,7 +100,7 @@ def registry_3(self, document_name, log=None):
                 cat_reg = str(self.row[0]).replace('\'', '\\\'')
             if self.row[1] != '':
                 index_in_registr = str(self.row[0]).replace('\'', '\\\'')
-                date_of_record = self.__reformat_date(self.row[1])
+                date_of_record = self.reformat_date(self.row[1])
                 type_of_transport = str(self.row[2]).replace('\'', '\\\'')
                 brand = str(self.row[3]).replace('\'', '\\\'')
                 vin = str(self.row[4]).replace('\'', '\\\'')
@@ -109,7 +109,7 @@ def registry_3(self, document_name, log=None):
                 date_of_category_and_category = self.row[7].split()
                 date_of_category = date_of_category_and_category[0]
                 category = date_of_category_and_category[1]
-                self.__insert_database(
+                self.insert_database(
                     atp=index_in_registr,
                     date_in_cat_reg=date_of_record,
                     ttype=type_of_transport,

@@ -1,65 +1,12 @@
 import xlwt
-from openpyxl.utils import get_column_letter
 from openpyxl import Workbook
-from openpyxl.styles import colors
-from openpyxl.styles import Font, Color
-from openpyxl.styles import NamedStyle, Border, Side, PatternFill, Alignment
+from openpyxl.utils import get_column_letter
 from openpyxl.drawing.image import Image
-ezxf = xlwt.easyxf
+from src.Styles import Styles_Excel
 
-#Header_info_style = ezxf('pattern: back_colour gold; font: colour blue')
-border = Side(style='thin', color="000000")
-
-#Style_1 - первые четыре клетки по памятке А:11 - А:14
-
-Bold_Font_header = NamedStyle(name='Bold_Font_header', 
-                    #    border=Border(left=border, 
-                    #                  top=border, 
-                    #                  right=border, 
-                    #                  bottom=border),
-                         font=Font(name='Arial', bold=True, size=14, vertAlign='baseline'),
-                         alignment=Alignment(horizontal='center')) # , vertical='center'))
-
-Bold_Font_subhead = NamedStyle(name='Bold_Font_subhead', 
-                    #    border=Border(left=border, 
-                    #                  top=border, 
-                    #                  right=border, 
-                    #                  bottom=border),
-                       font=Font(name='Arial', bold=True, size=10 ))
-
-Attention_Style = NamedStyle(name='Attention_Style', 
-                    fill=PatternFill('solid', 
-                                     fgColor='ff6666'),
-                    border=Border(left=border, 
-                                  top=border, 
-                                  right=border, 
-                                  bottom=border),
-                    font=Font(name='Arial', bold=False, size=10 )) 
-
-Ok_Style = NamedStyle(name='Ok_Style', 
-                    font=Font(name='Arial', bold=False, size=10 ))                                          
-
-Style_1 = NamedStyle(name='Style_1', 
-                    fill=PatternFill('solid', 
-                                     fgColor='ccffff'),
-                    border=Border(left=border, 
-                                  top=border, 
-                                  right=border, 
-                                  bottom=border),
-                    font=Font(name='Arial', bold=True, size=14 ))
-
-Style_2 = NamedStyle(name='Style_2', 
-                              fill=PatternFill('solid', 
-                                               fgColor='00f4cccc'), 
-
-                              border=Border(left=border, 
-                                            top=border, 
-                                            right=border, 
-                                            bottom=border))
-
-imgLogo = Image('src\Images\Logo.png')
+imgLogo = Image('D:\Work\Transport-Finder\src\Images\Logo.png')
 imgLogo.width = 160
-imgLogo.height = 55
+imgLogo.height = 50
 save_file_name = 'openPyxl.xlsx'
 
 def as_text(value):
@@ -132,15 +79,15 @@ def old_format(inn, database):
     sheet1.merge_cells('D31:H32')
     sheet1.merge_cells('I31:N32')
     sheet1.add_image(imgLogo, 'A1')
-    sheet1['A1'].style = Style_1
-    sheet1['B1'].style = Style_1
-    sheet1['C1'].style = Style_1
-    sheet1['D1'].style = Style_1
-    sheet1['E1'].style = Style_1
-    sheet1['F1'].style = Style_1
-    sheet1['G1'].style = Style_1
-    sheet1['H1'].style = Style_1
-    sheet1['I1'].style = Style_1
+    sheet1['A1'].style = Styles_Excel.Style_1
+    sheet1['B1'].style = Styles_Excel.Style_1
+    sheet1['C1'].style = Styles_Excel.Style_1
+    sheet1['D1'].style = Styles_Excel.Style_1
+    sheet1['E1'].style = Styles_Excel.Style_1
+    sheet1['F1'].style = Styles_Excel.Style_1
+    sheet1['G1'].style = Styles_Excel.Style_1
+    sheet1['H1'].style = Styles_Excel.Style_1
+    sheet1['I1'].style = Styles_Excel.Style_1
     #sheet1['A2'].style = Header_info_style
     #sheet1['A3'].style = Header_info_style
     #sheet1['A4'].style = Header_info_style
@@ -160,8 +107,12 @@ def old_format(inn, database):
 
     sheet1.title = 'Company and vehicle information'
     sheet1['C1'] = 'ЗАЩИТА ИНТЕРЕСОВ БИЗНЕСА ПО ВСЕЙ РОССИИ'
-    sheet1['A3'] = 'Аналитическая справка по ИНН' #TODO Жирный шрифт заголовков и подзаголовок, добавить контакты, дата начала прокурорской проверки, автоматически заполнять "ТРЕБУЕТСЯ СДЕЛАТЬ", выделить что требуется сделать
-    sheet1['A3'].style = Bold_Font_header
+    sheet1['A3'] = 'Аналитическая справка по ИНН' #TODO добавить контакты, обновить стиль под файл из watsup
+    sheet1['A3'].style = Styles_Excel.Bold_Font_header
+    sheet1['B3'].style = Styles_Excel.Bold_Font_header
+    sheet1['C3'].style = Styles_Excel.Bold_Font_header
+    sheet1['D3'].style = Styles_Excel.Bold_Font_header
+    sheet1['E3'].style = Styles_Excel.Bold_Font_header
     sheet1['A4'] = 'Для Компании'
     sheet1['B4'] = data[0][18]
     sheet1['A5'] = 'ИНН'
@@ -173,7 +124,15 @@ def old_format(inn, database):
     sheet1['A8'] = 'Дата Лицензии'
     sheet1['B8'] = data[0][4]
     sheet1['A10'] = 'ПАМЯТКА ПЕРЕВОЗЧИКУ:'
-    sheet1['A10'].style = Bold_Font_header
+    sheet1['A10'].style = Styles_Excel.Bold_Font_header
+    sheet1['B10'].style = Styles_Excel.Bold_Font_header
+    sheet1['C10'].style = Styles_Excel.Bold_Font_header
+    sheet1['D10'].style = Styles_Excel.Bold_Font_header
+    sheet1['E10'].style = Styles_Excel.Bold_Font_header
+    sheet1['F10'].style = Styles_Excel.Bold_Font_header
+    sheet1['G10'].style = Styles_Excel.Bold_Font_header
+    sheet1['H10'].style = Styles_Excel.Bold_Font_header
+    sheet1['I10'].style = Styles_Excel.Bold_Font_header
     sheet1['A11'] = '1. Не требуется делать Категорирование, Оценку уязвимости, План безопасности транспортного средства:'
     sheet1['A12'] = '- Если Вы перевозите учащихся от места проживания к месту обучения и обратно на безвозмездной основе.'
     sheet1['A13'] = '- Если Вы осуществляете перевозки в целях оказания ритуальных услуг.'
@@ -185,70 +144,103 @@ def old_format(inn, database):
     sheet1['A19'] = '6. Исправить данные в Реестре требуется когда Росавтодор ввел некорректные данные.'
     sheet1['A20'] = '7. Обязательно исключать из Реестра транспорт который продан!'
     sheet1['A22'] = 'ПЛАНОВАЯ ПРОВЕРКА БУДЕТ ПРОВЕДЕНА'
-    sheet1['A22'].style = Bold_Font_header
+    sheet1['A22'].style = Styles_Excel.Bold_Font_header
+    sheet1['B22'].style = Styles_Excel.Bold_Font_header
+    sheet1['C22'].style = Styles_Excel.Bold_Font_header
+    sheet1['D22'].style = Styles_Excel.Bold_Font_header
+    sheet1['E22'].style = Styles_Excel.Bold_Font_header
     sheet1['A23'] = 'Согласно ст. 27 Постановление Правительства РФ от 27.02.2019 N 195 "О лицензировании деятельности по перевозкам пассажиров и иных лиц автобусами"'
     sheet1['A24'] = 'Дата проведения проверки'
-    sheet1['A24'].style = Bold_Font_subhead
+    sheet1['A24'].style = Styles_Excel.Bold_Font_subhead
     sheet1['B24'] = 'с'
-    sheet1['B24'].style = Bold_Font_subhead
+    sheet1['B24'].style = Styles_Excel.Bold_Font_subhead
     sheet1['C24'] =  data[0][14] #? Как форматировать дату
-    sheet1['C24'].style = Bold_Font_subhead
+    sheet1['C24'].style = Styles_Excel.Bold_Font_subhead
     sheet1['D24'] =  'до' 
-    sheet1['D24'].style = Bold_Font_subhead
+    sheet1['D24'].style = Styles_Excel.Bold_Font_subhead
     sheet1['E24'] =  '' #!
-    sheet1['E24'].style = Bold_Font_subhead
+    sheet1['E24'].style = Styles_Excel.Bold_Font_subhead
     sheet1['A26'] =  'ПРОКУРОРСКАЯ ПРОВЕРКА БУДЕТ ПРОВЕДЕНА' 
-    sheet1['A26'].style = Bold_Font_header
+    sheet1['A26'].style = Styles_Excel.Bold_Font_header
+    sheet1['B26'].style = Styles_Excel.Bold_Font_header
+    sheet1['C26'].style = Styles_Excel.Bold_Font_header
+    sheet1['D26'].style = Styles_Excel.Bold_Font_header
+    sheet1['E26'].style = Styles_Excel.Bold_Font_header
     sheet1['A27'] =   data[0][16]
     sheet1['A28'] =   'Месяц проведения проверки'
-    sheet1['A28'].style = Bold_Font_subhead 
+    sheet1['A28'].style = Styles_Excel.Bold_Font_subhead 
     sheet1['A29'] =   data[0][14]
     sheet1['B28'] =   'Рабочих дней'
-    sheet1['B28'].style = Bold_Font_subhead
+    sheet1['B28'].style = Styles_Excel.Bold_Font_subhead
     sheet1['B29'] =   data[0][14] #? нужно допилить
     sheet1['C28'] =   'Рабочих часов'
-    sheet1['C28'].style = Bold_Font_subhead
+    sheet1['C28'].style = Styles_Excel.Bold_Font_subhead
     sheet1['C29'] =   data[0][19]
     sheet1['D28'] =   'Форма проведения проверки'
-    sheet1['D28'].style = Bold_Font_subhead
+    sheet1['D28'].style = Styles_Excel.Bold_Font_subhead
     sheet1['D29'] =   data[0][15]
     sheet1['E28'] =   'Другие причины проверки'
-    sheet1['E28'].style = Bold_Font_subhead
+    sheet1['E28'].style = Styles_Excel.Bold_Font_subhead
     sheet1['E29'] =   data[0][17]
     sheet1['A31'] =   'ТРЕБУЕТСЯ СДЕЛАТЬ'
-    sheet1['A31'].style = Bold_Font_header
+    sheet1['A31'].style = Styles_Excel.Bold_Font_header
+    sheet1['A32'].style = Styles_Excel.Bold_Font_header
+    sheet1['B31'].style = Styles_Excel.Bold_Font_header
+    sheet1['B32'].style = Styles_Excel.Bold_Font_header
+    sheet1['C31'].style = Styles_Excel.Bold_Font_header
+    sheet1['C32'].style = Styles_Excel.Bold_Font_header
     sheet1['D31'] =   'НАЙДЕН ТРАНСПОРТ В РЕЕСТРЕ ЛИЦЕНЗИЙ'
-    sheet1['D31'].style = Bold_Font_header
+    sheet1['D31'].style = Styles_Excel.Bold_Font_header
+    sheet1['D32'].style = Styles_Excel.Bold_Font_header
+    sheet1['E31'].style = Styles_Excel.Bold_Font_header
+    sheet1['E32'].style = Styles_Excel.Bold_Font_header
+    sheet1['F31'].style = Styles_Excel.Bold_Font_header
+    sheet1['F32'].style = Styles_Excel.Bold_Font_header
+    sheet1['G31'].style = Styles_Excel.Bold_Font_header
+    sheet1['G32'].style = Styles_Excel.Bold_Font_header
+    sheet1['H31'].style = Styles_Excel.Bold_Font_header
+    sheet1['H32'].style = Styles_Excel.Bold_Font_header
     sheet1['I31'] =   'НАЙДЕН ТРАНСПОРТ В РЕЕСТРЕ КАТЕГОРИРОВАНИЯ'
-    sheet1['I31'].style = Bold_Font_header
+    sheet1['I31'].style = Styles_Excel.Bold_Font_header
+    sheet1['I32'].style = Styles_Excel.Bold_Font_header
+    sheet1['J31'].style = Styles_Excel.Bold_Font_header
+    sheet1['J32'].style = Styles_Excel.Bold_Font_header
+    sheet1['K31'].style = Styles_Excel.Bold_Font_header
+    sheet1['K32'].style = Styles_Excel.Bold_Font_header
+    sheet1['L31'].style = Styles_Excel.Bold_Font_header
+    sheet1['L32'].style = Styles_Excel.Bold_Font_header
+    sheet1['M31'].style = Styles_Excel.Bold_Font_header
+    sheet1['M32'].style = Styles_Excel.Bold_Font_header
+    sheet1['N31'].style = Styles_Excel.Bold_Font_header
+    sheet1['N32'].style = Styles_Excel.Bold_Font_header
     sheet1['A33'] =   'Категорирование'
-    sheet1['A33'].style = Bold_Font_subhead
+    sheet1['A33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['B33'] =   'Оценка уязвимости'
-    sheet1['B33'].style = Bold_Font_subhead
+    sheet1['B33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['C33'] =   'План безопасности'
-    sheet1['C33'].style = Bold_Font_subhead
+    sheet1['C33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['D33'] =   'Модель по ПТС'
-    sheet1['D33'].style = Bold_Font_subhead
+    sheet1['D33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['E33'] =   'Гос. рег. номер'
-    sheet1['E33'].style = Bold_Font_subhead
+    sheet1['E33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['F33'] =   'VIN'
-    sheet1['F33'].style = Bold_Font_subhead
+    sheet1['F33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['G33'] =   'Право владения'
-    sheet1['G33'].style = Bold_Font_subhead
+    sheet1['G33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['H33'] =   'Статус'
-    sheet1['H33'].style = Bold_Font_subhead
+    sheet1['H33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['I33'] =   '№ реестра'
-    sheet1['I33'].style = Bold_Font_subhead
+    sheet1['I33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['J33'] =   'АТП №'
-    sheet1['J33'].style = Bold_Font_subhead
+    sheet1['J33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['K33'] =   'Тип транспорта'
-    sheet1['K33'].style = Bold_Font_subhead
+    sheet1['K33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['L33'] =   'Модель из Реестра'
-    sheet1['L33'].style = Bold_Font_subhead
+    sheet1['L33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['M33'] =   'Собственник'
-    sheet1['M33'].style = Bold_Font_subhead
+    sheet1['M33'].style = Styles_Excel.Bold_Font_subhead
     sheet1['N33'] =   'Категория транспорта'
-    sheet1['N33'].style = Bold_Font_subhead
+    sheet1['N33'].style = Styles_Excel.Bold_Font_subhead
     for i in range(len(data)):
         #sheet1.cell(i+33, 3, data[i][]) #TODO Модель по АТП
         sheet1.cell(i+34, 5, data[i][1]) # Гос рег номер
@@ -257,12 +249,16 @@ def old_format(inn, database):
         sheet1.cell(i+34, 8, data[i][3])
         #sheet1.cell(i+33+1, 8, data[i][10]) #! Тут нужно имя файла
         if ((data[i][10] == '' or data[i][10] == 'Н/Д' or data[i][12] == '' or data[i][12] == 'Н/Д' or data[i][9] == '' or  data[i][9] == 'Н/Д' or data[i][8] == '' or  data[i][8] == 'Н/Д' or data[i][11] == '' or data[i][11] == 'Н/Д')):
-            sheet1.cell(i+34, 1, 'Категарировать')
-            sheet1.cell(i+34, 1).style = Attention_Style
+            sheet1.cell(i+34, 1, 'Категорировать')
+            sheet1.cell(i+34, 1).style = Styles_Excel.Attention_Style
+            sheet1.cell(i+34, 2, 'Требуется оценка уязвимости')
+            sheet1.cell(i+34, 2).style = Styles_Excel.Attention_Style
+            sheet1.cell(i+34, 3, 'Требуется план безопасности')
+            sheet1.cell(i+34, 3).style = Styles_Excel.Attention_Style
 
         else:
             sheet1.cell(i+34, 1, 'Не требуется') #? Под вопросом, нужно еще несколько условий, это просто для заполнения
-            sheet1.cell(i+34, 1).style = Ok_Style            
+            sheet1.cell(i+34, 1).style = Styles_Excel.Ok_Style                       
         sheet1.cell(i+34, 10, data[i][10]) # АТП
         sheet1.cell(i+34, 11, data[i][12])
         sheet1.cell(i+34, 12, data[i][9])
@@ -277,7 +273,6 @@ def old_format(inn, database):
     for col, value in dims.items():
         sheet1.column_dimensions[chr(col+64)].width = value + 5
 
-    print(data[0][14])
 
     sheet1.column_dimensions['A'].width = 30
     sheet1.row_dimensions[1].height = 40
