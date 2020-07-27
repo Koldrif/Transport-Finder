@@ -93,8 +93,24 @@ class VkSession:
         text = text.join(map(str, elements))
         self.__messages_send(message=text, peer_id=LOG)
 
+    def __delete_user(self, message, from_id):
+        user = message[20::].strip().split()
+        if not(re.match(r'https://vk\.com/.+', user)):
+            self.__messages_send(message='Неправильно введенные данные: "'+user+'"', peer_id=from_id)
+        id = self.__users_get(user)
+        self.delete_user(id)
+        self.__online_log('Удален пользователь: user - "'+str(id)+'"')
+    
+    def __delete_administrator(self, message, from_id):
+        user = message[22::].strip().split()
+        if not(re.match(r'https://vk\.com/.+', user)):
+            self.__messages_send(message='Неправильно введенные данные: "'+user+'"', peer_id=from_id)
+        id = self.__users_get(user)
+        self.delete_administrator(id)
+        self.__online_log('Удален администратор: administrator - "'+str(id)+'"')
+        
     def __add_new_user(self, message, from_id):
-        new_user, email = message[28::].strip().split()
+        new_user, email = message[21::].strip().split()
         if re.match(r'.+@.*\..*', new_user) and re.match(r'https://vk\.com/.+', email):
             new_user, email = email, new_user
         if not(re.match(r'.+@.*\..*', email) and re.match(r'https://vk\.com/.+', new_user)):
@@ -104,7 +120,7 @@ class VkSession:
         self.__online_log('Добавлен пользователь: email - "'+email+'", user - "'+str(id)+'"')
 
     def __add_new_administrator(self, message, from_id):
-        new_administrator = message[30::].strip()
+        new_administrator = message[23::].strip()
         if not(re.match(r'https://vk\.com/.+', new_administrator)):
             self.__messages_send(message='Неправильно введенные данные: "'+new_administrator+'"', peer_id=from_id)
         id = self.__users_get(new_administrator)
@@ -147,8 +163,10 @@ class VkSession:
         print('________________administrator_action___________')
         message = data['object']['message']['text']
         from_id = data['object']['message']['from_id']
-        if 'добавить нового пользователя' in message.lower():
+        if 'добавить пользователя' in message.lower():
             self.__add_new_user(message, from_id)
+        elif 'удалить пользователя' in message.lower():
+            self.__delete_user(message, from_id)
         else:
             self.__user_action('god@god.ru', data)
         
@@ -156,8 +174,10 @@ class VkSession:
         print('__________________god_action____________________')
         message = data['object']['message']['text']
         from_id = data['object']['message']['from_id']
-        if 'добавить нового администратора' in message.lower():
+        if 'добавить администратора' in message.lower():
             self.__add_new_administrator(message, from_id)
+        elif 'удалить администратора' in message.lower():
+            self.__delete_administrator(message, from_id)
         elif 'test' in message.lower():
             self.__online_log('Test passed')
         else:
@@ -178,6 +198,31 @@ class VkSession:
                     self.__user_action(email, data)
                     break
 
+    def delete_user(self, user):
+        user = str(user)
+        finded = False
+        for email in self.users:
+            if user in self.users[email]:
+                self.users[email].remove(user)
+                finded = True
+        with open(self.users_filename, 'r') as file:
+            lines = [line.replace(' '+user+' ', ' ') for line in file]
+        with open(self.users_filename, 'w') as file:
+            file.writelines(lines)
+        if not finded:
+            return
+
+    def delete_administrator(self, user):
+        user = str(user)
+        if user in self.administrators:
+            self.administrators.remove(user)
+            with open(self.administrators_filename, 'r') as file:
+                lines = [line.replace(' '+user+' ', ' ') for line in file]
+            with open(self.administrators_filename, 'w') as file:
+                file.writelines(lines)
+        else:
+            return      
+
     def new_user(self, email, user):
         email = str(email)
         user = str(user)
@@ -186,14 +231,14 @@ class VkSession:
                 return
             self.users[email].append(user)
             with open(self.users_filename, 'r') as file:
-                lines = [line.rstrip() + ' ' + user + '\n' if email in line else line for line in file]
+                lines = [line.rstrip() + ' ' + user + ' \n' if email in line else line for line in file]
             with open(self.users_filename, 'w') as file:
                 file.writelines(lines)
         else:
             self.users[email] = []
             self.users[email].append(user)
             with open(self.users_filename, 'a') as file:
-                file.write(email+' '+user+'\n')
+                file.write(email+' '+user+' \n')
         
     def new_administrator(self, user):
         user = str(user)
