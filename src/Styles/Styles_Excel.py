@@ -43,6 +43,59 @@ Style_1 = NamedStyle(name='Style_1',
                                   bottom=border),
                     font=Font(name='Arial', bold=True, size=14 ))
 
+Style_1_10px = NamedStyle(name='Style_1_10px', 
+                    fill=PatternFill('solid', 
+                                     fgColor='ccffff'),
+                    border=Border(left=border, 
+                                  top=border, 
+                                  right=border, 
+                                  bottom=border),
+                    font=Font(name='Arial', bold=True, size=10 ))
+
+Style_1_Center = NamedStyle(name='Style_1_Center', 
+                    fill=PatternFill('solid', 
+                                     fgColor='ccffff'),
+                    border=Border(left=border, 
+                                  top=border, 
+                                  right=border, 
+                                  bottom=border),
+                    font=Font(name='Arial', bold=True, size=14 ),
+                    alignment=Alignment(horizontal='center',
+                    vertical='center'))
+
+Style_1_Red_Center = NamedStyle(name='Style_1_Red_Center', 
+                    fill=PatternFill('solid', 
+                                     fgColor='ff6666'),
+                    border=Border(left=border, 
+                                  top=border, 
+                                  right=border, 
+                                  bottom=border),
+                    font=Font(name='Arial', bold=True, size=14 ),
+                    alignment=Alignment(horizontal='center',
+                    vertical='center'))
+
+Style_1_10px_center = NamedStyle(name='Style_1_10px_center', 
+                    fill=PatternFill('solid', 
+                                     fgColor='ccffff'),
+                    border=Border(left=border, 
+                                  top=border, 
+                                  right=border, 
+                                  bottom=border),
+                    font=Font(name='Arial', bold=True, size=10 ),
+                    alignment=Alignment(horizontal='center',
+                    vertical='center'))
+
+Style_1_Red_10px = NamedStyle(name='Style_1_Red_10px', 
+                    fill=PatternFill('solid', 
+                                     fgColor='ff6666'),
+                    border=Border(left=border, 
+                                  top=border, 
+                                  right=border, 
+                                  bottom=border),
+                    font=Font(name='Arial', bold=True, size=10 ),
+                    alignment=Alignment(horizontal='center',
+                    vertical='center'))
+
 Style_2 = NamedStyle(name='Style_2', 
                               fill=PatternFill('solid', 
                                                fgColor='00f4cccc'), 
