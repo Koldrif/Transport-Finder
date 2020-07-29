@@ -163,6 +163,31 @@ def old_format(inn, database):
     sheet1['C8'].style = Styles_Excel.Style_1_10px
     sheet1['D8'].style = Styles_Excel.Style_1_10px
     sheet1['E8'].style = Styles_Excel.Style_1_10px
+    sheet1['F3'] = '117342, г. Москва, ул Бутлерова, дом 17, БЦ Нео Гео'
+    sheet1['F3'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['G3'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['H3'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['I3'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['F4'] = 'ПИШИТЕ WHATSAPP +7(926)862-02-09'
+    sheet1['F4'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['G4'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['H4'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['I4'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['F5'] = 'ЗВОНИТЕ 8 (495) 021-22-28'
+    sheet1['F5'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['G5'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['H5'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['I5'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['F6'] = 'ПИШИТЕ YOURSPEC@YOURSPEC.NET'
+    sheet1['F6'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['G6'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['H6'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['I6'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['F7'] = 'yourspec.net'
+    sheet1['F7'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['G7'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['H7'].style = Styles_Excel.Style_1_ligh_Green_10px_center
+    sheet1['I7'].style = Styles_Excel.Style_1_ligh_Green_10px_center
     sheet1['A10'] = 'ПАМЯТКА ПЕРЕВОЗЧИКУ:'
     sheet1['A10'].style = Styles_Excel.Style_1_Red_Center
     sheet1['B10'].style = Styles_Excel.Style_1_Red_Center
@@ -288,6 +313,11 @@ def old_format(inn, database):
         sheet1.cell(i+34, 7, data[i][2])
         sheet1.cell(i+34, 8, data[i][3])
         #sheet1.cell(i+33+1, 8, data[i][10]) #! Тут нужно имя файла
+        sheet1.cell(i+34, 10, data[i][10]) # АТП
+        sheet1.cell(i+34, 11, data[i][12])
+        sheet1.cell(i+34, 12, data[i][9])
+        sheet1.cell(i+34, 13, data[i][8])
+        sheet1.cell(i+34, 14, data[i][11])
         if ((data[i][10] == '' or data[i][10] == 'Н/Д' or data[i][12] == '' or data[i][12] == 'Н/Д' or data[i][9] == '' or  data[i][9] == 'Н/Д' or data[i][8] == '' or  data[i][8] == 'Н/Д' or data[i][11] == '' or data[i][11] == 'Н/Д')):
             sheet1.cell(i+34, 1, 'Категорировать')
             sheet1.cell(i+34, 1).style = Styles_Excel.Attention_Style
@@ -299,11 +329,6 @@ def old_format(inn, database):
         else:
             sheet1.cell(i+34, 1, 'Не требуется') #? Под вопросом, нужно еще несколько условий, это просто для заполнения
             sheet1.cell(i+34, 1).style = Styles_Excel.Ok_Style                       
-        sheet1.cell(i+34, 10, data[i][10]) # АТП
-        sheet1.cell(i+34, 11, data[i][12])
-        sheet1.cell(i+34, 12, data[i][9])
-        sheet1.cell(i+34, 13, data[i][8])
-        sheet1.cell(i+34, 14, data[i][11])
 
     dims = {}
     for row in sheet1.rows:
