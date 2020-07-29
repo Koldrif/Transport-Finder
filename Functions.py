@@ -4,7 +4,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.drawing.image import Image
 from src.Styles import Styles_Excel
 
-imgLogo = Image('D:\Work\Transport-Finder\src\Images\Logo.png')
+imgLogo = Image('.\src\Images\Logo.png')
 imgLogo.width = 160
 imgLogo.height = 50
 save_file_name = 'openPyxl.xlsx'
