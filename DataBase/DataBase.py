@@ -1409,6 +1409,8 @@ class DataBase:
                 join owners on owners.Owner_id = transport_owners.Owner_id
             WHERE
                 {list_of_given}
+
+            GROUP BY `transport`.`VIN`;    
         '''
         column_list = {
             'inn': '`owners`.`INN`',
