@@ -85,6 +85,17 @@ Style_1_10px_center = NamedStyle(name='Style_1_10px_center',
                     alignment=Alignment(horizontal='center',
                     vertical='center'))
 
+Style_1_ligh_Green_10px_center = NamedStyle(name='Style_1_ligh_Green_10px_center', 
+                    fill=PatternFill('solid', 
+                                     fgColor='BFFFDB'),
+                    border=Border(left=border, 
+                                  top=border, 
+                                  right=border, 
+                                  bottom=border),
+                    font=Font(name='Arial', bold=True, size=10 ),
+                    alignment=Alignment(horizontal='center',
+                    vertical='center'))
+
 Style_1_Red_10px = NamedStyle(name='Style_1_Red_10px', 
                     fill=PatternFill('solid', 
                                      fgColor='ff6666'),
