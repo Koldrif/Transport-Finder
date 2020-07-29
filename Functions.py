@@ -340,6 +340,13 @@ def old_format(inn, database):
 
 
     sheet1.column_dimensions['A'].width = 30
+    sheet1.column_dimensions['B'].width = 30
+    sheet1.column_dimensions['C'].width = 30
+    sheet1.column_dimensions['D'].width = 30
+    sheet1.column_dimensions['E'].width = 30
+    sheet1.column_dimensions['F'].width = 30
+    sheet1.column_dimensions['I'].width = 30
+    sheet1.column_dimensions['N'].width = 30
     sheet1.row_dimensions[1].height = 40
 
     file_output.save(save_file_name)

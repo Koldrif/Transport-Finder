@@ -13,7 +13,8 @@ Bold_Font_header = NamedStyle(name='Bold_Font_header',
                                       right=border, 
                                       bottom=border),
                          font=Font(name='Arial', bold=True, size=14, vertAlign='baseline'),
-                         alignment=Alignment(horizontal='center')) # , vertical='center'))
+                         alignment=Alignment(horizontal='center')
+                              ) # , vertical='center'))
 
 Bold_Font_subhead = NamedStyle(name='Bold_Font_subhead', 
                     #    border=Border(left=border, 
