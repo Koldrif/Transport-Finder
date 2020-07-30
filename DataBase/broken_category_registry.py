@@ -44,9 +44,6 @@ def registry_3(self, document_name, log=None):
                 type_of_transport = str(self.row[2]).replace('\'', '\\\'')
                 brand = str(self.row[3]).replace('\'', '\\\'')
                 vin = str(self.row[4]).replace('\'', '\\\'')
-                reg_address = str(self.row[5]).replace('\'', '\\\'')
-                fact_address = str(self.row[6]).replace('\'', '\\\'')
-                reg_number = str(self.row[8]).replace('\'', '\\\'')
                 date_of_category = str(self.row[11]).replace('\'', '\\\'')
                 category = str(self.row[10]).replace('\'', '\\\'')
                 self.insert_database(
