@@ -3,7 +3,7 @@
 *.xml
 sql_server.bat
 .vscode/*
-venv/*
+
 DataBase/test.py
 DataBase/__pycache__/*
 Find equances/*
