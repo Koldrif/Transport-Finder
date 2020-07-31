@@ -10,3 +10,5 @@ Find equances/*
 test_Igor.py
 openPyxl.xlsx
 __pycache__/*
+flask_app.py
+log.txt
