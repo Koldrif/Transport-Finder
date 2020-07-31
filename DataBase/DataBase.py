@@ -6,14 +6,15 @@ from xlrd.xldate import xldate_as_tuple as xldate
 import time
 
 DB_SERVER = 'localhost'
-LOGIN = u'server'
+LOGIN = u''
 PASSWORD = u'secret'
 DATABASE = u'transportfinder'
 CHARSET = u'utf8'
+PORT = u'3306'
 
 
 class DataBase:
-    def __init__(self, host=DB_SERVER, user=LOGIN, password=PASSWORD, db=DATABASE, charset=CHARSET):
+    def __init__(self, host, port, user, password, db, charset=CHARSET):
         self.begins = {
             'license_2': 3,
             'license_4': 5,
@@ -63,7 +64,8 @@ class DataBase:
             user=user,
             password=password,
             db=db,
-            charset=charset
+            charset=charset,
+            port=port
         )
         self.functions = {
             'license_2': self.read_license_2,
@@ -163,7 +165,6 @@ class DataBase:
                 'model': 'model',
                 'type': 'ttype',
                 'Registered_at': 'registered_at',
-                'License_number': 'license_number',
                 'Status': 'status',
                 'Action_with_vehicle': 'action_with_vehicle',
                 'Categorized': 'categorized',
@@ -227,7 +228,7 @@ class DataBase:
                 id_ts = rows[0][0]
             else:
                 raise Exception('Database_error: few transport was found')
-        elif 'inn' in data:
+        if 'inn' in data:
             request = '''
                 SELECT `Owner_id`, `INN` 
                 FROM transportfinder.owners WHERE `INN` = '{inn}' 
@@ -242,7 +243,6 @@ class DataBase:
                 id_own = rows[0][0]
             else:
                 raise Exception('Database_error: few owners was found')
-
         elif 'license_number' in data:
             request = '''
                 SELECT `Owner_id`, `License_number` 
@@ -259,12 +259,22 @@ class DataBase:
             else:
                 raise Exception('Database_error: few owners was found')
         if id_ts != -1 and id_own != -1:
-            request = '''
-                INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) 
-                VALUES ('{owner}', '{transport}')
-            '''.format(
-                owner=id_own, transport=id_ts)
-            self.task(request)
+            check_request = '''
+            SELECT `transportfinder`.`transport_owners`.`owner_id`, `transportfinder`.`transport_owners`.`transport_id` 
+                FROM `transportfinder`.`transport_owners`;
+            ''' # 0 - owner_id, 1 - transport_id
+            answer = self.task_get(check_request)
+            if len(answer) == 0:
+                request = '''
+                    INSERT INTO `transportfinder`.`transport_owners` (`owner_id`, `transport_id`) 
+                    VALUES ('{owner}', '{transport}')
+                '''.format(
+                    owner=id_own, transport=id_ts)
+                self.task(request)
+            elif len(answer) == 1:
+                return
+            else:
+                raise Exception('Custom Error: conflict owner-transport table idts: {} , idown: {}'.format(id_ts, id_own))
 
     def insert_transport(self, vin='Н/Д', srm='Н/Д', region='Н/Д', date_of_issue='Н/Д', pass_ser='Н/Д',
                            ownership='Н/Д', end_of_ownership='Н/Д', model='Н/Д', brand='Н/Д', ttype='Н/Д',
@@ -416,7 +426,6 @@ class DataBase:
     def read_license_2(self):
         date_of_registration = self.reformat_date(self.row[3])
         reg_number = self.row[4]
-        duration_of_license = self.row[5]
         company = self.row[7]
         company_address = self.row[8]
         actual_address = self.row[9]
@@ -453,7 +462,6 @@ class DataBase:
     def read_license_7(self):
         date_of_license = self.reformat_date(self.row[3])
         number_of_license = self.row[4]
-        duration_of_license = self.row[5]
         company_name = self.row[7]
         address = self.row[8]
         implement_address = self.row[9]
@@ -522,7 +530,6 @@ class DataBase:
     def read_license_13(self):
         date = self.reformat_date(self.row[3])
         reg_number = self.row[4]
-        duration_of_license = self.row[5]
         company = self.row[7]
         address = self.row[8]
         implement_address = self.row[9]
@@ -709,7 +716,6 @@ class DataBase:
 
     def read_bus_7(self):
         srm = self.row[0]
-        date_of_last_issue = self.reformat_date(self.row[1])
         name_of_company = self.row[2]
         region = self.row[3]
         license_number = self.row[4]
@@ -730,7 +736,6 @@ class DataBase:
 
     def read_bus_8(self):
         srm = self.row[0]
-        date_of_last_issue = self.row[1]
         name_of_company = self.row[2]
         license_number = self.row[3]
         date_of_license = self.reformat_date(self.row[5])
@@ -758,6 +763,7 @@ class DataBase:
         name_of_company = self.row[15]
         self.insert_database(status=status,
                                srm=srm,
+                               company=name_of_company,
                                region=region,
                                date_of_issue=date_of_issue,
                                vin=vin,
@@ -794,7 +800,6 @@ class DataBase:
 
     def read_bus_13(self):
         srm = self.row[0]
-        date_of_last_issue = self.row[1]
         name_of_company = self.row[2]
         region = self.row[3]
         license_number = self.row[4]
@@ -845,7 +850,6 @@ class DataBase:
         status = self.row[1]
         srm = self.row[2]
         code_of_region = self.row[3]
-        date_of_last_issue = self.reformat_date(self.row[4])
         license_number = self.row[6] + '-' + self.row[5]
         ownership = self.row[7]
         end_of_license = self.reformat_date(self.row[8])
@@ -858,7 +862,6 @@ class DataBase:
 
     def read_bus_22(self):
         srm = self.row[0]
-        date_of_last_issue = self.reformat_date(self.row[1])
         name_of_company = self.row[2]
         region = self.row[3]
         license_number = self.row[4]
@@ -879,7 +882,6 @@ class DataBase:
 
     def read_bus_23(self):
         srm = self.row[0]
-        date_of_last_issue = self.reformat_date(self.row[1])
         name_of_company = self.row[2]
         region = self.row[3]
         license_number = self.row[4]
@@ -900,7 +902,6 @@ class DataBase:
 
     def read_bus_24(self):
         srm = self.row[0]
-        date_of_last_issue = self.row[1]
         name_of_company = self.row[2]
         region = self.row[3]
         license_number = self.row[4]
@@ -930,7 +931,6 @@ class DataBase:
         model_number = self.row[8]
         ownership = self.row[9]
         date_of_end_rent = self.reformat_date(self.row[10])
-        serial = self.row[11]
         number_of_license = self.row[11] + '-' + self.row[12]
         company = self.row[13]
         inn = self.row[14]
@@ -996,7 +996,6 @@ class DataBase:
         name_of_owner = self.row[8]
         inn = self.row[9]
         ogrn = self.row[10]
-        date_of_last_techcheck = self.row[11]
         date_of_license = self.row[12]
         production_year = self.row[14]
         ownership = self.row[15]
@@ -1132,14 +1131,10 @@ class DataBase:
         date_of_manufacture = self.reformat_date(self.row[7])
         date_of_creation = self.reformat_date(self.row[8])  # Дата создания
         model = self.row[9]
-        date_of_change = self.reformat_date(self.row[10])
-        owner_type = self.row[11]
         company = self.row[12]
         inn = self.row[13]
         ogrn = self.row[14]
-        date_of_initial_activation = self.reformat_date(self.row[15])
         ownership = self.row[16]
-        institute_name = self.row[17]
         end_of_leasing = self.reformat_date(self.row[18])
         serial = self.row[18]  # Серия паспорта
         self.insert_database(registred_at=date_of_creation,  # Под вопросом
@@ -1166,16 +1161,12 @@ class DataBase:
         vin = self.row[5]
         license_number = self.row[6]
         owner_type = self.row[7]
-        inn_sobst = self.row[8]
-        ogrn_sobst = self.row[9]
         inn_owner = self.row[10]
         ogrn_owner = self.row[11]
         brand = self.row[12]
         create_date = self.reformat_date(self.row[13])
         model = self.row[14]
         company = self.row[15]
-        date_of_last_to = data_of_last_changes = self.reformat_date(
-            self.row[16])
         self.insert_database(registred_at=create_date,  # Но это не точно
                                region=region,
                                srm=srm,
@@ -1183,6 +1174,7 @@ class DataBase:
                                vin=vin,
                                license_number=license_number,
                                company=company,
+                               ownership=owner_type,
                                inn=inn_owner,
                                ogrn=ogrn_owner,
                                brand=brand,
@@ -1191,15 +1183,10 @@ class DataBase:
 
     def read_license_and_bus_20(self):
         srm = self.row[0]
-        data_of_last_changes = self.reformat_date(self.row[1])
         licensee = self.row[2]
-        administration = self.row[3]
         number_of_license = self.row[4]
-        date_of_license_issue = self.reformat_date(self.row[5])
         date_of_inclusion_in_the_register = self.reformat_date(self.row[6])
         vin = self.row[7]
-        date_of_the_last_technical_inspection = self.reformat_date(
-            self.row[8])
         ownership = self.row[9]
         term_of_the_lease_agreement = self.reformat_date(self.row[10])
         status = self.row[11]
@@ -1214,12 +1201,12 @@ class DataBase:
 
     def read_license_and_bus_21(self):
         srm = self.row[1]
-        region_number = self.row[2]
         ts_brand = self.row[3]  # Марка транспортного средства
         # Модель (коммерческое наименование) транспортного средства
         model_of_ts = self.row[4]
         vin = self.row[5]
-        vin_main_component = self.row[6]
+        if vin == '': 
+            vin = self.row[6]
         manufacture_year = self.row[7]  # Год выпуска ТС
         license_number = self.row[8]
         inn = self.row[9]
@@ -1228,7 +1215,6 @@ class DataBase:
         ownership = self.row[12]
         end_of_contract = self.reformat_date(self.row[13])
         date_of_inclusion_in_the_register = self.reformat_date(self.row[14])
-        inclusion_number = self.row[15]
         self.insert_database(registred_at=date_of_inclusion_in_the_register,
                                srm=srm,
                                date_of_issue=manufacture_year,
@@ -1245,13 +1231,11 @@ class DataBase:
     def read_license_and_bus_26(self):
         status = self.row[1]
         srm = self.row[2]
-        number_of_region = self.row[3]
         year_of_manufacture = self.row[4]
         vin = self.row[5]
         number_of_license = self.row[6]
         inn = self.row[7]
         ogrn = self.row[8]
-        uniq_owner_identificaator = self.row[9]
         self.insert_database(srm=srm,
                                date_of_issue=year_of_manufacture,
                                vin=vin,
@@ -1262,15 +1246,10 @@ class DataBase:
 
     def read_license_and_bus_27(self):
         srm = self.row[0]
-        data_of_last_changes = self.reformat_date(self.row[1])
         licensee = self.row[2]
-        administration = self.row[3]
         number_of_license = self.row[4]
-        date_of_license_issue = self.reformat_date(self.row[5])
         date_of_inclusion_in_the_register = self.reformat_date(self.row[6])
         vin = self.row[7]
-        date_of_the_last_technical_inspection = self.reformat_date(
-            self.row[8])
         ownership = self.row[9]
         date_of_end_rent = self.reformat_date(self.row[10])
         status = self.row[11]
@@ -1311,26 +1290,24 @@ class DataBase:
         self.book = xlrd.open_workbook(document_name)
         self.sheet = self.book.sheet_by_index(0)
         nrows = self.sheet.nrows
-        ncols = self.sheet.ncols
         for i_row in range(24, nrows):
             try:
                 self.row = self.sheet.row_values(i_row)
-                name_of_company = str(self.row[1]).replace('\'', '\\\'')
-                address = str(self.row[2]).replace('\'', '\\\'')
-                activity_place = str(self.row[3]).replace('\'', '\\\'')
-                ogrn = str(self.row[5]).replace('\'', '\\\'')
-                inn = str(self.row[6]).replace('\'', '\\\'')
-                mission = str(self.row[7]).replace('\'', '\\\'')
+                name_of_company = str(self.row[1]).replace('\'', '"')
+                address = str(self.row[2]).replace('\'', '"')
+                activity_place = str(self.row[3]).replace('\'', '"')
+                ogrn = str(self.row[5]).replace('\'', '"')
+                inn = str(self.row[6]).replace('\'', '"')
+                mission = str(self.row[7]).replace('\'', '"')
                 date_of_ogrn = self.reformat_date(self.row[8])
                 date_of_check = self.reformat_date(self.row[9])
-                other_reason = str(self.row[11]).replace('\'', '\\\'')
-                amount_of_time = str(self.row[13]).replace('\'', '\\\'')
-                form_of_check = str(self.row[15]).replace('\'', '\\\'')
+                other_reason = str(self.row[11]).replace('\'', '"')
+                amount_of_time = str(self.row[13]).replace('\'', '"')
+                form_of_check = str(self.row[15]).replace('\'', '"')
                 name_of_addititional_subject = str(
-                    self.row[16]).replace('\'', '\\\'')
-                punishment = str(self.row[17]).replace('\'', '\\\'')
-                activity_category = str(self.row[18]).replace('\'', '\\\'')
-                #danger = str(self.row[19]).replace('\'', '\\\'')
+                    self.row[16]).replace('\'', '"')
+                punishment = str(self.row[17]).replace('\'', '"')
+                #danger = str(self.row[19]).replace('\'', '"')
                 self.insert_database(
                     company=name_of_company,
                     reg_address=address,
@@ -1366,15 +1343,15 @@ class DataBase:
                 self.row = self.sheet.row_values(i_row)
                 try:
                     if self.row[1] == '':
-                        cat_reg = str(self.row[0]).replace('\'', '\\\'')
+                        cat_reg = str(self.row[0]).replace('\'', '"')
                     if self.row[1] != '':
-                        index_in_registr = str(self.row[0]).replace('\'', '\\\'')
+                        index_in_registr = str(self.row[0]).replace('\'', '"')
                         date_of_record = self.reformat_date(self.row[1])
-                        type_of_transport = str(self.row[2]).replace('\'', '\\\'')
-                        brand = str(self.row[3]).replace('\'', '\\\'')
-                        vin = str(self.row[4]).replace('\'', '\\\'')
-                        other_owner = str(self.row[5]).replace('\'', '\\\'')
-                        purpose = str(self.row[6]).replace('\'', '\\\'')
+                        type_of_transport = str(self.row[2]).replace('\'', '"')
+                        brand = str(self.row[3]).replace('\'', '"')
+                        vin = str(self.row[4]).replace('\'', '"')
+                        other_owner = str(self.row[5]).replace('\'', '"')
+                        purpose = str(self.row[6]).replace('\'', '"')
                         date_of_category_and_category = self.row[7].split()
                         date_of_category = date_of_category_and_category[0]
                         category = date_of_category_and_category[1]
@@ -1441,7 +1418,6 @@ class DataBase:
             'model': '`transport`.`model`',
             'type': '`transport`.`type`',
             'registered_at_t': '`transport`.`Registered_at`',
-            'license_number': '`transport`.`License_number`',
             'status': '`transport`.`Status`',
             'action_with_vehicle': '`transport`.`Action_with_vehicle`',
             'categorized': '`transport`.`Categorized`',
