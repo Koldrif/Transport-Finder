@@ -4,7 +4,7 @@ import xlrd
 import os
 
 
-typerisator1 = lambda index: 'license_and_bus_'+str(int(index) if index not in [2.0, 2.1, 2.2] else index))
+typerisator1 = lambda index: 'license_and_bus_'+str(int(index) if index not in [2.0, 2.1, 2.2] else index)
 typerisator2 = lambda index: 'license_'+str(int(index) if index not in [2.0, 2.1, 2.2] else index)
 typerisator3 = lambda index: 'bus_'+str(int(index) if index not in [2.0, 2.1, 2.2] else index)
 
