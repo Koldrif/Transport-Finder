@@ -7,5 +7,5 @@ database = Database(host='127.0.0.1', user='root', password='pZFEkd2H9HwwETAc', 
 
 print('Время начала:', time.time())
 
-database.read_license_and_bus('C:\\Users\\Administrator\\Documents\\Реестры лицензий и автобусов\\1 - БД+- Лицензии и ТС ( Москва, МО, Тверь, Тула) на 24.07.2020.xls')
+database.read_license_and_bus('C:\\Users\\Administrator\\Documents\\Реестры лицензий и автобусов\\1 - БД+- Лицензии и ТС ( Москва, МО, Тверь, Тула) на 24.07.2020.xls', 'license_and_bus_1')
 print('Время конца:', time.time())        
