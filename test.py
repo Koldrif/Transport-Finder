@@ -3,16 +3,9 @@ import Functions as funcs
 import os
 import time
 
-database = Database(host=u'localhost', user=u'Ariken', password=u'F0ll0wAriken', db=u'transportfinder')
-
-path = 'D:\Work\Transport-Finder\Реестры и т.д\\3 - Реестры категорирования (Актуальны на 19.06.2020)\\'
+database = Database(host='127.0.0.1', user='root', password='pZFEkd2H9HwwETAc', db='transportfinder')
 
 print('Время начала:', time.time())
 
-# for name in os.listdir(path):
-#     index = name.split('-')[2]
-#     if int(index) >= 7:
-#         database.read_category_register(path + name)
-
-database.read_category_register(path + 'reestr-ts-9-chast-atp0139863-0159736.xlsx')
+database.read_license_and_bus('C:\\Users\\Administrator\\Documents\\Реестры лицензий и автобусов\\1 - БД+- Лицензии и ТС ( Москва, МО, Тверь, Тула) на 24.07.2020.xls')
 print('Время конца:', time.time())        
