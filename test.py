@@ -3,9 +3,7 @@ import Functions as funcs
 import os
 import time
 
-database = Database(host='localhost', user='root', password='6786')
-
-
+database = Database(host=u'localhost', user=u'Ariken', password=u'F0ll0wAriken', db=u'transportfinder')
 
 path = 'D:\Work\Transport-Finder\Реестры и т.д\\3 - Реестры категорирования (Актуальны на 19.06.2020)\\'
 

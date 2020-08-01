@@ -14,7 +14,7 @@ PORT = u'3306'
 
 
 class DataBase:
-    def __init__(self, host, port, user, password, db, charset=CHARSET):
+    def __init__(self, host, user, password, db, charset=CHARSET):
         self.begins = {
             'license_2': 3,
             'license_4': 5,
@@ -64,8 +64,7 @@ class DataBase:
             user=user,
             password=password,
             db=db,
-            charset=charset,
-            port=port
+            charset=charset
         )
         self.functions = {
             'license_2': self.read_license_2,
@@ -113,16 +112,16 @@ class DataBase:
         }
 
     def task_get(self, request):
-        with self.connect:
-            cursor = self.connect.cursor()
-            cursor.execute(request)
-            rows = cursor.fetchall()
-            return rows
+        cursor = self.connect.cursor()
+        cursor.execute(request)
+        rows = cursor.fetchall()
+        cursor.close()
+        return rows
 
     def task(self, request):
-        with self.connect:
-            cursor = self.connect.cursor()
-            cursor.execute(request)
+        cursor = self.connect.cursor()
+        cursor.execute(request)
+        cursor.close()
 
     def update_record(self, id, type, data):
         if type == 'owner':
@@ -1278,7 +1277,7 @@ class DataBase:
                           e, '\nFile name:', document_name, file=log)
             self.book.release_resources()
         try:
-            print('book was read by {} seconds'.format(
+            print('book was read in {} seconds'.format(
                 time.process_time() - a))
 
         except:
