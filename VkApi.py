@@ -133,6 +133,7 @@ class VkSession:
             filename, recomendation = old_format(inn, self.database)
         except:
             self.__messages_send(peer_id=peer_id, message='ИНН не найден')
+            return
         file = open(filename, 'rb')
         answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(inn), tags=None, peer_id=peer_id)
         type_doc = answer['type']
