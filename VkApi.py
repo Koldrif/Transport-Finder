@@ -129,7 +129,10 @@ class VkSession:
         
     def __send_report(self, inn, peer_id):
         print('send, file')
-        filename, recomendation = old_format(inn, self.database)
+        try:
+            filename, recomendation = old_format(inn, self.database)
+        except:
+            self.__messages_send(peer_id=peer_id, message='ИНН не найден')
         file = open(filename, 'rb')
         answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(inn), tags=None, peer_id=peer_id)
         type_doc = answer['type']
