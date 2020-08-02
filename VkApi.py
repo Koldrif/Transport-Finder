@@ -133,7 +133,7 @@ class VkSession:
             filename, recomendation = old_format(inn, self.database)
         except Exception as e:
             print(e)
-            self.__messages_send(peer_id=peer_id, message='Ошибка при выполнении запроса, проверьте правильность введенных данных')
+            self.__messages_send(peer_id=peer_id, message='ИНН по Вашему запросу не найден, проверьте правильность введенных данных или напишите Администратору в Whatsapp +7 (926) 862-02-09')
             return
         file = open(filename, 'rb')
         answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(inn), tags=None, peer_id=peer_id)
