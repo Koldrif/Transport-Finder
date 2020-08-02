@@ -68,6 +68,7 @@ class DataBase:
         )
         self.functions = {
             'license_2': self.read_license_2,
+            'license_4': self.read_license_4,
             'license_3': self.read_license_3,
             'license_7': self.read_license_7,
             'license_8': self.read_license_8,
