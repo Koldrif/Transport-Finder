@@ -1283,6 +1283,133 @@ class DataBase:
                                end_of_ownership=date_of_end_rent,
                                status=status)
 
+
+    def read_license_79(self):
+        company = self.row[3]
+        inn = self.row[4]
+        ogrn = self.row[5]
+        pass_ser = self.row[8]
+        license_number = self.row[9]
+        registered_at = self.reformat_date(self.row[10])
+        self.insert_database(
+            company = company,
+            inn = inn,
+            ogrn = ogrn,
+            pass_ser = pass_ser,
+            license_number = license_number,
+            registered_at = registered_at
+        )
+
+    def read_bus_79(self):
+        status = self.row[1]
+        srm = self.row[2]
+        region = self.row[3]
+        date_of_issue = self.reformat_date(self.row[4])
+        brand = self.row[5]
+        model = self.row[6]
+        vin = self.row[7]
+        license_number = self.row[9]
+        end_of_ownership = self.reformat_date(self.row[11])
+        inn = self.row[12]
+        ogrn = self.row[13]
+        company = self.row[14]
+        self.insert_database(        
+            status=status,
+            srm=srm,
+            region=region,
+            date_of_issue=date_of_issue,
+            brand=brand,
+            model=model,
+            vin=vin,
+            license_number=license_number,
+            end_of_ownership=end_of_ownership,
+            inn=inn,
+            ogrn=ogrn,
+            company=company
+        )
+
+
+    def read_license_63(self):      
+        inn = self.row[4]
+        ogrn = self.row[5]
+        company = self.row[6]
+        registered_at = self.reformat_date(self.row[1])
+        license_number = self.row[3]
+        risk_category = self.row[11]
+        pass_ser = self.row[2]
+        self.insert_database( 
+            inn=inn,
+            ogrn=ogrn,
+            company=company,
+            registered_at=registered_at,
+            license_number=license_number,
+            risk_category=risk_category,
+            pass_ser=pass_ser
+        )
+
+    def read_bus_63(self):    
+        status = self.row[1]
+        company = self.row[3]
+        srm = self.row[4]
+        inn = self.row[13]
+        vin = self.row[6]
+        region = self.row[5]
+        date_of_issue = self.reformat_date(self.row[9])
+        pass_ser = self.row[10]
+        end_of_ownership = self.reformat_date(self.row[12])
+        brand = self.row[7]
+        model = self.row[8]
+        registered_at = self.reformat_date(self.row[14])
+        license_number = self.row[11]
+        self.insert_database(
+            status=status,
+            company=company,
+            srm=srm,
+            inn=inn,
+            vin=vin,
+            region=region,
+            date_of_issue=date_of_issue,
+            pass_ser=pass_ser,
+            end_of_ownership=end_of_ownership,
+            brand=brand,
+            model=model,
+            registered_at=registered_at,
+            license_number=license_number
+        )
+
+
+    #? чувашия
+
+    def read_license_21_chuv(self):
+        inn = self.row[2]
+        ogrn = self.row[3]
+        company = self.row[4]
+        registered_at = self.reformat_date(self.row[8])
+        license_number = self.row[9]
+        pass_ser = self.row[7]
+        self.insert_database(
+            inn = inn,
+            ogrn = ogrn,
+            company = company,
+            registered_at = registered_at,
+            license_number = license_number,
+            pass_ser = pass_ser
+        )
+
+    def read_bus_21_chuv(self):  
+        company = self.row[5]  #! Не знаю, надо или нет
+        vin = self.row[4] 
+        srm = self.row[2] 
+        region = self.row[3] 
+        status = self.row[1]
+        self.insert_database(
+            company=company,
+            vin=vin,
+            srm=srm,
+            region=region,
+            status=status
+        ) 
+
     def read_license_and_bus(self, document_name, type, sheets=[0], log=sys.stdout):
         print('reading {}...'.format(type))
         a = time.process_time()
