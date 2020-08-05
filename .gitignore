@@ -3,7 +3,7 @@
 *.xml
 sql_server.bat
 .vscode/*
-
+test.py
 DataBase/test.py
 DataBase/__pycache__/*
 Find equances/*
@@ -12,3 +12,5 @@ openPyxl.xlsx
 __pycache__/*
 log.txt
 
+1test.py
+test.py

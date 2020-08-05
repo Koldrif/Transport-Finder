@@ -1,5 +1,5 @@
 import sys
-
+import mysql.connector as sql
 import pymysql as pms
 import xlrd
 from xlrd.xldate import xldate_as_tuple as xldate
@@ -59,7 +59,7 @@ class DataBase:
             'license_and_bus_26': 3,
             'license_and_bus_27': 1,
         }
-        self.connect = pms.connect(
+        self.connect = sql.connect(
             host=host,
             user=user,
             password=password,
@@ -117,13 +117,15 @@ class DataBase:
         cursor.execute(request)
         rows = cursor.fetchall()
         cursor.close()
+        self.connect.commit()
         return rows
 
     def task(self, request):
         cursor = self.connect.cursor()
         cursor.execute(request)
         cursor.close()
-
+        self.connect.commit()
+        
     def update_record(self, id, type, data):
         if type == 'owner':
             keywords = {
@@ -228,11 +230,11 @@ class DataBase:
                 id_ts = rows[0][0]
             else:
                 raise Exception('Database_error: few transport was found')
-        if 'inn' in data:
+        if 'license_number' in data:
             request = '''
-                SELECT `Owner_id`, `INN` 
-                FROM transportfinder.owners WHERE `INN` = '{inn}' 
-                '''.format(inn=data['inn'])
+                SELECT `Owner_id`, `License_number` 
+                FROM transportfinder.owners WHERE `License_number` = '{license_number}' 
+            '''.format(license_number=data['license_number'])
             rows = self.task_get(request)
             if len(rows) == 1:
                 id_own = rows[0][0]
@@ -243,11 +245,11 @@ class DataBase:
                 id_own = rows[0][0]
             else:
                 raise Exception('Database_error: few owners was found')
-        elif 'license_number' in data:
+        elif 'inn' in data:
             request = '''
-                SELECT `Owner_id`, `License_number` 
-                FROM transportfinder.owners WHERE `License_number` = '{license_number}' 
-            '''.format(license_number=data['license_number'])
+                SELECT `Owner_id`, `INN` 
+                FROM transportfinder.owners WHERE `INN` = '{inn}' 
+                '''.format(inn=data['inn'])
             rows = self.task_get(request)
             if len(rows) == 1:
                 id_own = rows[0][0]
@@ -1270,6 +1272,7 @@ class DataBase:
             self.sheet = self.book.sheet_by_index(i_sheet)
             nrows = self.sheet.nrows
             for i_row in range(self.begins[type], nrows):
+                print(round(i_row / nrows * 100, 2), '%')
                 self.row = self.sheet.row_values(i_row)
                 try:
                     self.functions[type]()
