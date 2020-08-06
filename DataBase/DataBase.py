@@ -262,9 +262,16 @@ class DataBase:
                 raise Exception('Database_error: few owners was found')
         if id_ts != -1 and id_own != -1:
             check_request = '''
-            SELECT `transportfinder`.`transport_owners`.`owner_id`, `transportfinder`.`transport_owners`.`transport_id` 
-                FROM `transportfinder`.`transport_owners`;
-            ''' # 0 - owner_id, 1 - transport_id
+            SELECT 
+            `transportfinder`.`transport_owners`.`owner_id`, 
+            `transportfinder`.`transport_owners`.`transport_id` 
+            FROM 
+            `transportfinder`.`transport_owners`
+            WHERE 
+            `transportfinder`.`transport_owners`.`owner_id` = '{}' 
+            AND 
+            `transportfinder`.`transport_owners`.`transport_id` = '{}';
+            '''.format(id_own, id_ts) # 0 - owner_id, 1 - transport_id
             answer = self.task_get(check_request)
             if len(answer) == 0:
                 request = '''
