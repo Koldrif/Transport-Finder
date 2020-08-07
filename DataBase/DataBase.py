@@ -451,8 +451,54 @@ class DataBase:
         )
 
     def read_license_3(self):
-        # todo: ask about this fucking shit
-        pass
+        if self.index_of_sheet == 0:
+            if self.row[10] != '':
+                self.insert_database(
+                    registered_at=self.reformat_date(self.row[0]),
+                    company=self.row[3],
+                    reg_address=self.row[4],
+                    inn=self.row[5],
+                    ogrn=self.row[6],
+                    license_number=self.row[10],
+                    risk_category=self.row[24]
+                )
+        elif self.index_of_sheet == 1:
+            if self.row[1] != '':
+                self.insert_database(
+                    license_number=self.row[0],
+                    srm=self.row[1],
+                    region=self.row[2],
+                    vin=self.row[3],
+                    brand=self.row[4],
+                    model=self.row[5],
+                    date_of_issue=self.row[6],
+                    ownership=self.row[7],
+                    end_of_ownership=self.reformat_date(self.row[8])
+                )
+        elif self.index_of_sheet == 2:
+            if self.row[1] != '':
+                self.insert_database(
+                    registred_at=self.reformat_date(self.row[1]),
+                    company=self.reformat_date(self.row[4]),
+                    implement_address=self.row[5],
+                    inn=self.row[6],
+                    ogrn=self.row[7],
+                    license_number=self.row[10],
+                    risk_category=self.row[21]
+                )
+        elif self.index_of_sheet == 3:
+            if self.row[1] != '':
+                self.insert_database(
+                    license_number=self.row[0],
+                    srm=self.row[1],
+                    region=self.row[2],
+                    inn=self.row[3],
+                    brand=self.row[4],
+                    model=self.row[5],
+                    date_of_issue=self.row[6],
+                    ownership=self.row[7],
+                    end_of_ownership=self.row[8]
+                )
 
     def read_license_4(self):
         license_number = self.row[1] + '-' + self.row[2]
@@ -1277,6 +1323,7 @@ class DataBase:
         self.book = xlrd.open_workbook(document_name)
         for i_sheet in sheets:
             self.sheet = self.book.sheet_by_index(i_sheet)
+            self.index_of_sheet = i_sheet
             nrows = self.sheet.nrows
             for i_row in range(self.begins[type], nrows):
                 print(round(i_row / nrows * 100, 2), '%')
