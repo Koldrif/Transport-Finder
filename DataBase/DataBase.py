@@ -17,6 +17,7 @@ class DataBase:
         self.begins = {
             'license_2': 3,
             'license_4': 5,
+            'license_3': 3,
             'license_7': 3,
             'license_8': 3,
             'license_9': 7,
@@ -26,11 +27,14 @@ class DataBase:
             'license_15': 6,
             'license_16': 3,
             'license_17': 4,
+            'license_21_chuv': 6,
             'license_22_v': 2,
             'license_22_p': 3,
             'license_23': 2,
             'license_24': 2,
             'license_25': 7,
+            'license_63': 7,
+            'license_73': 6,
             'bus_2': 4,
             'bus_4': 5,
             'bus_7': 2,
@@ -41,9 +45,12 @@ class DataBase:
             'bus_15': 6,
             'bus_16': 4,
             'bus_17': 4,
+            'bus_21_chuv': 5,
             'bus_22': 3,
             'bus_23': 3,
             'bus_24': 3,
+            'bus_63': 7,
+            'bus_73': 6,
             'license_and_bus_1': 4,
             'license_and_bus_5': 7,
             'license_and_bus_6': 7,
@@ -77,11 +84,14 @@ class DataBase:
             'license_15': self.read_license_15,
             'license_16': self.read_license_16,
             'license_17': self.read_license_17,
+            'license_21_chuv': self.read_license_21_chuv,
             'license_22_v': self.read_license_22_vologodsk,
             'license_22_p': self.read_license_22_pskov,
             'license_23': self.read_license_23,
             'license_24': self.read_license_24,
             'license_25': self.read_license_25,
+            'license_63': self.read_license_63,
+            'license_73': self.read_license_73,
             'bus_2': self.read_bus_2,
             'bus_4': self.read_bus_4,
             'bus_7': self.read_bus_7,
@@ -92,9 +102,12 @@ class DataBase:
             'bus_15': self.read_bus_15,
             'bus_16': self.read_bus_16,
             'bus_17': self.read_bus_17,
+            'bus_21_chuv': self.read_bus_21_chuv,
             'bus_22': self.read_bus_22,
             'bus_23': self.read_bus_23,
             'bus_24': self.read_bus_24,
+            'bus_63': self.read_bus_63,
+            'bus_73': self.read_bus_73,
             'license_and_bus_1': self.read_license_and_bus_1,
             'license_and_bus_5': self.read_license_and_bus_5,
             'license_and_bus_6': self.read_license_and_bus_6,
@@ -1284,7 +1297,7 @@ class DataBase:
                                status=status)
 
 
-    def read_license_79(self):
+    def read_license_73(self):
         company = self.row[3]
         inn = self.row[4]
         ogrn = self.row[5]
@@ -1300,7 +1313,7 @@ class DataBase:
             registered_at = registered_at
         )
 
-    def read_bus_79(self):
+    def read_bus_73(self):
         status = self.row[1]
         srm = self.row[2]
         region = self.row[3]
