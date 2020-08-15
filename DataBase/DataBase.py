@@ -1,6 +1,5 @@
 import sys
 import mysql.connector as sql
-import pymysql as pms
 import xlrd
 from xlrd.xldate import xldate_as_tuple as xldate
 import time
