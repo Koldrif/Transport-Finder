@@ -14,6 +14,11 @@ PORT = u'3306'
 
 class DataBase:
     def __init__(self, host, user, password, db, charset=CHARSET):
+        self.host=host,
+        self.user=user,
+        self.password=password,
+        self.db=db,
+        self.charset=charset
         self.begins = {
             'license_2': 2,
             'license_4': 4,
@@ -64,13 +69,6 @@ class DataBase:
             'license_and_bus_26': 3,
             'license_and_bus_27': 1,
         }
-        self.connect = sql.connect(
-            host=host,
-            user=user,
-            password=password,
-            db=db,
-            charset=charset
-        )
         self.functions = {
             'license_2': self.read_license_2,
             'license_4': self.read_license_4,
@@ -124,14 +122,29 @@ class DataBase:
         }
 
     def task_get(self, request):
+        self.connect = sql.connect(
+            host=self.host,
+            user=self.user,
+            password=self.password,
+            db=self.db,
+            charset=self.charset
+        )
         cursor = self.connect.cursor()
         cursor.execute(request)
         rows = cursor.fetchall()
         cursor.close()
         self.connect.commit()
+        self.connect.close()
         return rows
 
     def task(self, request):
+        self.connect = sql.connect(
+            host=self.host,
+            user=self.user,
+            password=self.password,
+            db=self.db,
+            charset=self.charset
+        )
         cursor = self.connect.cursor()
         cursor.execute(request)
         cursor.close()
