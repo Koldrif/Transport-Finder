@@ -14,10 +14,10 @@ PORT = u'3306'
 
 class DataBase:
     def __init__(self, host, user, password, db, charset=CHARSET):
-        self.host=host,
-        self.user=user,
-        self.password=password,
-        self.db=db,
+        self.host=host
+        self.user=user
+        self.password=password
+        self.db=db
         self.charset=charset
         self.begins = {
             'license_2': 2,
