@@ -17,6 +17,7 @@ class DataBase:
     def __init__(self, host, user, password, db, charset=CHARSET):
         self.begins = {
             'license_2': 2,
+            'license_3': 2,
             'license_4': 4,
             'license_7': 2,
             'license_8': 2,
