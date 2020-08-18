@@ -1,6 +1,5 @@
 import sys
 import mysql.connector as sql
-import pymysql as pms
 import xlrd
 from xlrd.xldate import xldate_as_tuple as xldate
 import time
@@ -15,6 +14,11 @@ PORT = u'3306'
 
 class DataBase:
     def __init__(self, host, user, password, db, charset=CHARSET):
+        self.host=host
+        self.user=user
+        self.password=password
+        self.db=db
+        self.charset=charset
         self.begins = {
             'license_2': 2,
             'license_3': 2,
@@ -28,11 +32,14 @@ class DataBase:
             'license_15': 5,
             'license_16': 2,
             'license_17': 3,
+            'license_21_chuv': 6,
             'license_22_v': 1,
             'license_22_p': 2,
             'license_23': 1,
             'license_24': 1,
             'license_25': 6,
+            'license_63': 7,
+            'license_73': 6,
             'bus_2': 3,
             'bus_4': 4,
             'bus_7': 1,
@@ -43,9 +50,12 @@ class DataBase:
             'bus_15': 5,
             'bus_16': 3,
             'bus_17': 3,
+            'bus_21_chuv': 5,
             'bus_22': 2,
             'bus_23': 2,
             'bus_24': 2,
+            'bus_63': 7,
+            'bus_73': 6,
             'license_and_bus_1': 3,
             'license_and_bus_5': 6,
             'license_and_bus_6': 6,
@@ -60,13 +70,6 @@ class DataBase:
             'license_and_bus_26': 3,
             'license_and_bus_27': 1,
         }
-        self.connect = sql.connect(
-            host=host,
-            user=user,
-            password=password,
-            db=db,
-            charset=charset
-        )
         self.functions = {
             'license_2': self.read_license_2,
             'license_4': self.read_license_4,
@@ -80,11 +83,14 @@ class DataBase:
             'license_15': self.read_license_15,
             'license_16': self.read_license_16,
             'license_17': self.read_license_17,
+            'license_21_chuv': self.read_license_21_chuv,
             'license_22_v': self.read_license_22_vologodsk,
             'license_22_p': self.read_license_22_pskov,
             'license_23': self.read_license_23,
             'license_24': self.read_license_24,
             'license_25': self.read_license_25,
+            'license_63': self.read_license_63,
+            'license_73': self.read_license_73,
             'bus_2': self.read_bus_2,
             'bus_4': self.read_bus_4,
             'bus_7': self.read_bus_7,
@@ -95,9 +101,12 @@ class DataBase:
             'bus_15': self.read_bus_15,
             'bus_16': self.read_bus_16,
             'bus_17': self.read_bus_17,
+            'bus_21_chuv': self.read_bus_21_chuv,
             'bus_22': self.read_bus_22,
             'bus_23': self.read_bus_23,
             'bus_24': self.read_bus_24,
+            'bus_63': self.read_bus_63,
+            'bus_73': self.read_bus_73,
             'license_and_bus_1': self.read_license_and_bus_1,
             'license_and_bus_5': self.read_license_and_bus_5,
             'license_and_bus_6': self.read_license_and_bus_6,
@@ -114,14 +123,29 @@ class DataBase:
         }
 
     def task_get(self, request):
+        self.connect = sql.connect(
+            host=self.host,
+            user=self.user,
+            password=self.password,
+            db=self.db,
+            charset=self.charset
+        )
         cursor = self.connect.cursor()
         cursor.execute(request)
         rows = cursor.fetchall()
         cursor.close()
         self.connect.commit()
+        self.connect.close()
         return rows
 
     def task(self, request):
+        self.connect = sql.connect(
+            host=self.host,
+            user=self.user,
+            password=self.password,
+            db=self.db,
+            charset=self.charset
+        )
         cursor = self.connect.cursor()
         cursor.execute(request)
         cursor.close()
@@ -1317,6 +1341,133 @@ class DataBase:
                                company=licensee,
                                end_of_ownership=date_of_end_rent,
                                status=status)
+
+
+    def read_license_73(self):
+        company = self.row[3]
+        inn = self.row[4]
+        ogrn = self.row[5]
+        pass_ser = self.row[8]
+        license_number = self.row[9]
+        registered_at = self.reformat_date(self.row[10])
+        self.insert_database(
+            company = company,
+            inn = inn,
+            ogrn = ogrn,
+            pass_ser = pass_ser,
+            license_number = license_number,
+            registered_at = registered_at
+        )
+
+    def read_bus_73(self):
+        status = self.row[1]
+        srm = self.row[2]
+        region = self.row[3]
+        date_of_issue = self.reformat_date(self.row[4])
+        brand = self.row[5]
+        model = self.row[6]
+        vin = self.row[7]
+        license_number = self.row[9]
+        end_of_ownership = self.reformat_date(self.row[11])
+        inn = self.row[12]
+        ogrn = self.row[13]
+        company = self.row[14]
+        self.insert_database(        
+            status=status,
+            srm=srm,
+            region=region,
+            date_of_issue=date_of_issue,
+            brand=brand,
+            model=model,
+            vin=vin,
+            license_number=license_number,
+            end_of_ownership=end_of_ownership,
+            inn=inn,
+            ogrn=ogrn,
+            company=company
+        )
+
+
+    def read_license_63(self):      
+        inn = self.row[4]
+        ogrn = self.row[5]
+        company = self.row[6]
+        registered_at = self.reformat_date(self.row[1])
+        license_number = self.row[3]
+        risk_category = self.row[11]
+        pass_ser = self.row[2]
+        self.insert_database( 
+            inn=inn,
+            ogrn=ogrn,
+            company=company,
+            registered_at=registered_at,
+            license_number=license_number,
+            risk_category=risk_category,
+            pass_ser=pass_ser
+        )
+
+    def read_bus_63(self):    
+        status = self.row[1]
+        company = self.row[3]
+        srm = self.row[4]
+        inn = self.row[13]
+        vin = self.row[6]
+        region = self.row[5]
+        date_of_issue = self.reformat_date(self.row[9])
+        pass_ser = self.row[10]
+        end_of_ownership = self.reformat_date(self.row[12])
+        brand = self.row[7]
+        model = self.row[8]
+        registered_at = self.reformat_date(self.row[14])
+        license_number = self.row[11]
+        self.insert_database(
+            status=status,
+            company=company,
+            srm=srm,
+            inn=inn,
+            vin=vin,
+            region=region,
+            date_of_issue=date_of_issue,
+            pass_ser=pass_ser,
+            end_of_ownership=end_of_ownership,
+            brand=brand,
+            model=model,
+            registered_at=registered_at,
+            license_number=license_number
+        )
+
+
+    #? чувашия
+
+    def read_license_21_chuv(self):
+        inn = self.row[2]
+        ogrn = self.row[3]
+        company = self.row[4]
+        registered_at = self.reformat_date(self.row[8])
+        license_number = self.row[9]
+        pass_ser = self.row[7]
+        self.insert_database(
+            inn = inn,
+            ogrn = ogrn,
+            company = company,
+            registered_at = registered_at,
+            license_number = license_number,
+            pass_ser = pass_ser
+        )
+
+    def read_bus_21_chuv(self):  
+        company = self.row[5]  #! Не знаю, надо или нет
+        vin = self.row[4] 
+        srm = self.row[2] 
+        region = self.row[3] 
+        status = self.row[1]
+        self.insert_database(
+            company=company,
+            vin=vin,
+            srm=srm,
+            region=region,
+            status=status
+        ) 
 
     def read_license_and_bus(self, document_name, type, sheets=[0], log=sys.stdout):
         print('reading {}...'.format(type))
