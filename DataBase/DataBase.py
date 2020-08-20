@@ -225,7 +225,7 @@ class DataBase:
     def insert_database(self, **data):
         id_ts = -1
         id_own = -1
-        if 'srm' in data:
+        if 'srm' in data and id_ts == -1:
             request = '''
                 SELECT `transport_id`, `State_Registr_Mark` 
                 FROM transportfinder.transport WHERE `State_Registr_Mark` = '{srm}' 
@@ -240,7 +240,7 @@ class DataBase:
                 id_ts = rows[0][0]
             else:
                 raise Exception('Database_error: few transports was found')
-        elif 'vin' in data:
+        if 'vin' in data and id_ts == -1:
             request = '''
                 SELECT `transport_id`, `VIN` 
                 FROM transportfinder.transport WHERE `VIN` = '{vin}' 
@@ -255,7 +255,7 @@ class DataBase:
                 id_ts = rows[0][0]
             else:
                 raise Exception('Database_error: few transport was found')
-        if 'license_number' in data:
+        if 'license_number' in data and id_own == -1:
             request = '''
                 SELECT `Owner_id`, `License_number` 
                 FROM transportfinder.owners WHERE `License_number` = '{license_number}' 
@@ -270,7 +270,7 @@ class DataBase:
                 id_own = rows[0][0]
             else:
                 raise Exception('Database_error: few owners was found')
-        elif 'inn' in data:
+        if 'inn' in data and id_own == -1:
             request = '''
                 SELECT `Owner_id`, `INN` 
                 FROM transportfinder.owners WHERE `INN` = '{inn}' 
