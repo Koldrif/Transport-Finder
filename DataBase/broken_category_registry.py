@@ -131,6 +131,26 @@ def registry_3(self, document_name, log=None):
 
     print('Book was read...', file=log)
 
+def registry_1_2(self, document_name, log=None):
+    print('reading category registr...', file=log)
+    self.book = xlrd.open_workbook(document_name)
+    for sheet in self.book.sheets():
+        for i_row in range(3, sheet.nrows):
+            self.row = sheet.row_values(i_row)
+            if self.row[1] == '':
+                cat_reg = str(self.row[0]).replace('\'', '"')
+            if self.row[1] != '':
+                self.insert_database(
+                    atp=str(self.row[0]).replace('\'', '"'),
+                    date_in_cat_reg=str(self.row[1]).replace('\'', '"'),
+                    ttype=str(self.row[2]).replace('\'', '"'),
+                    model_from_cat_reg=str(self.row[3]).replace('\'', '"'),
+                    vin=str(self.row[4]).replace('\'', '"'),
+                    owner_from_cat_reg=cat_reg,
+                    category=str(self.row[10]).replace('\'', '"'),
+                    date_of_cat_reg=str(self.row[11]).replace('\'', '"')
+                )
+
 def fix_big_suck(self, log=None):
     get_broken_license = """
     SELECT 
