@@ -148,9 +148,11 @@ class DataBase:
         )
         cursor = self.connect.cursor()
         cursor.execute(request)
+        id = cursor.lastrowid
         cursor.close()
         self.connect.commit()
-        
+        return id
+
     def update_record(self, id, type, data):
         if type == 'owner':
             keywords = {
@@ -235,9 +237,7 @@ class DataBase:
                 id_ts = rows[0][0]
                 self.update_record(id=id_ts, type='transport', data=data)
             elif len(rows) == 0:
-                self.insert_transport(**data)
-                rows = self.task_get(request)
-                id_ts = rows[0][0]
+                id_ts = -1
             else:
                 raise Exception('Database_error: few transports was found')
         if 'vin' in data and id_ts == -1:
@@ -250,11 +250,11 @@ class DataBase:
                 id_ts = rows[0][0]
                 self.update_record(id=id_ts, type='transport', data=data)
             elif len(rows) == 0:
-                self.insert_transport(**data)
-                rows = self.task_get(request)
-                id_ts = rows[0][0]
+                id_ts = -1
             else:
                 raise Exception('Database_error: few transport was found')
+        if id_ts == -1 and ('vin' in data or 'srm' in data):
+            id_ts = self.insert_transport(**data)
         if 'license_number' in data and id_own == -1:
             request = '''
                 SELECT `Owner_id`, `License_number` 
@@ -265,9 +265,7 @@ class DataBase:
                 id_own = rows[0][0]
                 self.update_record(id=id_own, type='owner', data=data)
             elif len(rows) == 0:
-                self.insert_owner(**data)
-                rows = self.task_get(request)
-                id_own = rows[0][0]
+                id_own = -1
             else:
                 raise Exception('Database_error: few owners was found')
         if 'inn' in data and id_own == -1:
@@ -280,11 +278,11 @@ class DataBase:
                 id_own = rows[0][0]
                 self.update_record(id=id_own, type='owner', data=data)
             elif len(rows) == 0:
-                self.insert_owner(**data)
-                rows = self.task_get(request)
-                id_own = rows[0][0]
+                id_own = -1
             else:
                 raise Exception('Database_error: few owners was found')
+        if id_own == -1 and ('inn' in data or 'license_number' in data):
+            id_own = self.insert_owner(**data)
         if id_ts != -1 and id_own != -1:
             check_request = '''
             SELECT 
@@ -379,7 +377,7 @@ class DataBase:
             category,
             date_of_cat_reg,
         )
-        self.task(request)
+        return self.task(request)
 
     def insert_owner(self,
                        inn='Н/Д',
@@ -449,7 +447,7 @@ class DataBase:
             punishment,
             description
         )
-        self.task(request)
+        return self.task(request)
 
     def reformat_date(self, date_old_format):
         if type(date_old_format) == float:

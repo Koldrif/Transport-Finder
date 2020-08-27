@@ -7,11 +7,16 @@ database = Database(host='127.0.0.1', user='root', password='F0ll0wMy$QL', db='t
 
 print('Время начала:', time.time())
 
-#database.read_license_and_bus('D:\\YandexDisk\\Programming\\Transport-Finder\\Реестры и т.д\\1 - Реестр лицензий и автобус\\3 - БД+ лицензий и автобусов (без ИНН) Краснодар Адыгея 23.07.2020 .xlsx', 'license_3')
+database.read_license_and_bus('.\\Реестры и т.д\\1 - Реестр лицензий и автобус\\1 - БД+- Лицензии и ТС ( Москва, МО, Тверь, Тула) на 24.07.2020.xls', 'license_and_bus_1')
+#Москва 
+
+database.read_license_and_bus('.\\Реестры и т.д\\1 - Реестр лицензий и автобус\\3 - БД+ лицензий и автобусов (без ИНН) Краснодар Адыгея 23.07.2020 .xlsx', 'license_3')
 #Краснодар
 
-database.read_license_and_bus('D:\\YandexDisk\\Programming\\Transport-Finder\\Реестры и т.д\\1 - Реестр лицензий и автобус\\2 - БД- лицензий Санкт-Петерубург, ЛО.03.07.2020.xlsx', 'license_2')
-database.read_license_and_bus('D:\\YandexDisk\\Programming\\Transport-Finder\\Реестры и т.д\\1 - Реестр лицензий и автобус\\2 - БД+ автобусов Санкт-Петерубург, ЛО.03.07.2020 Без ИНН.xlsx', 'bus_2')
+database.read_license_and_bus('.\\Реестры и т.д\\1 - Реестр лицензий и автобус\\2 - БД- лицензий Санкт-Петерубург, ЛО.03.07.2020.xlsx', 'license_2')
+database.read_license_and_bus('.\\Реестры и т.д\\1 - Реестр лицензий и автобус\\2 - БД+ автобусов Санкт-Петерубург, ЛО.03.07.2020 Без ИНН.xlsx', 'bus_2')
 #Санкт-Питербург
+
+
 
 print('Время конца:', time.time())        
