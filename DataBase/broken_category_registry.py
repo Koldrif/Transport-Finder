@@ -30,7 +30,7 @@ def registry_3(self, document_name, log=None):
                 print('File:', document_name, file=log)
                 print('Error:', e, file=log)                        
             except:
-                    pass
+                pass
     self.sheet = self.book.sheet_by_index(1)
     nrows = self.sheet.nrows
     for i_row in range(2, nrows):
@@ -57,7 +57,7 @@ def registry_3(self, document_name, log=None):
                     owner_from_cat_reg=cat_reg,
                     vin=vin,
                     date_of_cat_reg=date_of_category,
-                    category=category,
+                    category=category
                 )
         except Exception as e:
             try:
@@ -65,7 +65,7 @@ def registry_3(self, document_name, log=None):
                 print('File:', document_name, file=log)
                 print('Error:', e, file=log)                        
             except:
-                    pass
+                pass
     self.sheet = self.book.sheet_by_index(2)
     nrows = self.sheet.nrows
     for i_row in range(4, nrows):
@@ -127,7 +127,7 @@ def registry_3(self, document_name, log=None):
                 print('File:', document_name, file=log)
                 print('Error:', e, file=log)                        
             except:
-                    pass
+                pass
 
     print('Book was read...', file=log)
 
@@ -137,19 +137,22 @@ def registry_1_2(self, document_name, log=None):
     for sheet in self.book.sheets():
         for i_row in range(3, sheet.nrows):
             self.row = sheet.row_values(i_row)
-            if self.row[1] == '':
-                cat_reg = str(self.row[0]).replace('\'', '"')
-            if self.row[1] != '':
-                self.insert_database(
-                    atp=str(self.row[0]).replace('\'', '"'),
-                    date_in_cat_reg=str(self.row[1]).replace('\'', '"'),
-                    ttype=str(self.row[2]).replace('\'', '"'),
-                    model_from_cat_reg=str(self.row[3]).replace('\'', '"'),
-                    vin=str(self.row[4]).replace('\'', '"'),
-                    owner_from_cat_reg=cat_reg,
-                    category=str(self.row[10]).replace('\'', '"'),
-                    date_of_cat_reg=str(self.row[11]).replace('\'', '"')
-                )
+            try:
+                if self.row[1] == '':
+                    cat_reg = str(self.row[0]).replace('\'', '"')
+                if self.row[1] != '':
+                    self.insert_database(
+                        atp=str(self.row[0]).replace('\'', '"'),
+                        date_in_cat_reg=str(self.row[1]).replace('\'', '"'),
+                        ttype=str(self.row[2]).replace('\'', '"'),
+                        model_from_cat_reg=str(self.row[3]).replace('\'', '"'),
+                        vin=str(self.row[4]).replace('\'', '"'),
+                        owner_from_cat_reg=cat_reg,
+                        category=str(self.row[10]).replace('\'', '"'),
+                        date_of_cat_reg=str(self.row[11]).replace('\'', '"')
+                    )
+            except:
+                pass
 
 def fix_big_suck(self, log=None):
     get_broken_license = """

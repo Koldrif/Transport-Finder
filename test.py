@@ -18,9 +18,14 @@ print('Время начала:', time.time())
 #database.read_license_and_bus('.\\Реестры и т.д\\1 - Реестр лицензий и автобус\\2 - БД+ автобусов Санкт-Петерубург, ЛО.03.07.2020 Без ИНН.xlsx', 'bus_2')
 #Санкт-Питербург
 
-registry_1_2(database, '.\\Реестры и т.д\\3 - Реестры категорирования\\reestr-ts-1-chast-1-10.xlsx')
-registry_1_2(database, '.\\Реестры и т.д\\3 - Реестры категорирования\\reestr-ts-2-chast-11-20.xlsx')
-registry_3(database, '.\\Реестры и т.д\\3 - Реестры категорирования\\reestr-ts-3-chast-21-30-atp0025730-0049380.xlsx')
+database.read_license_and_bus('.\\Реестры и т.д\\1 - Реестр лицензий и автобус\\2.1 - БД- лицензий Калининград 02.07.2020.xlsx', 'license_2')
+database.read_license_and_bus('.\\Реестры и т.д\\1 - Реестр лицензий и автобус\\2.1 - БД+ автобусов Калининград 02.07.2020 Без ИНН.xlsx', 'bus_2')
+#Калининград
 
+#registry_1_2(database, '.\\Реестры и т.д\\3 - Реестры категорирования\\reestr-ts-1-chast-1-10.xlsx')
+#registry_1_2(database, '.\\Реестры и т.д\\3 - Реестры категорирования\\reestr-ts-2-chast-11-20.xlsx')
+#registry_3(database, '.\\Реестры и т.д\\3 - Реестры категорирования\\reestr-ts-3-chast-21-30-atp0025730-0049380.xlsx')
+
+database.read_license_and_bus('')
 
 print('Время конца:', time.time())        
