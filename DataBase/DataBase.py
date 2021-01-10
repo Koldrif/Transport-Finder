@@ -141,7 +141,7 @@ class DataBase:
 
     def reformat_date(self, date_old_format):
         if type(date_old_format) == float:
-            return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:])[::-1])
+            return ':'.join(list(map(str, xldate(float(date_old_format), self.book.datemode))[:3:])[::-1])
         else:
             return date_old_format
 
