@@ -409,7 +409,7 @@ def find_INN(inn, database):
             sheet1.cell(6+i, 5, data[i][6])
             sheet1.cell(6+i, 6, data[i][17])
     else:
-        recommendation = 'INN не найден'
+        recommendation = 'ИНН не найден'
     
     dims = {}
     for row in sheet1.rows:

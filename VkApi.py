@@ -5,7 +5,7 @@ from random import randint
 import os.path as os
 import re
 
-from Functions import old_format
+from Functions import old_format, find_INN, find_VIN
 
 LOG = 2000000001
 INFORMATION_ABOUT_BOT = '''
@@ -130,7 +130,7 @@ class VkSession:
     def __send_report_for_inn(self, inn, peer_id):
         print('send, file')
         try:
-            filename, recomendation = old_format(inn, self.database)
+            filename, recomendation = find_INN(inn, self.database)
         except Exception as e:
             print(e)
             self.__messages_send(peer_id=peer_id, message='ИНН по Вашему запросу не найден, проверьте правильность введенных данных или напишите Администратору в Whatsapp +7 (926) 862-02-09')
@@ -153,7 +153,7 @@ class VkSession:
             self.__messages_send(peer_id=peer_id, message='ИНН по Вашему запросу не найден, проверьте правильность введенных данных или напишите Администратору в Whatsapp +7 (926) 862-02-09')
             return
         file = open(filename, 'rb')
-        answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(inn), tags=None, peer_id=peer_id)
+        answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(vin), tags=None, peer_id=peer_id)
         type_doc = answer['type']
         owner_id = answer['doc']['owner_id']
         media_id = answer['doc']['id']
