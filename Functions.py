@@ -419,6 +419,7 @@ def find_INN(inn, database):
     for col, value in dims.items():
         sheet1.column_dimensions[chr(col+64)].width = value + 5
 
+    recommendation = 'Больше информации по ссылке - https://sputnikx.net\n' + recommendation
     file_output.save(filename)
     return filename, recommendation
 
@@ -492,5 +493,6 @@ def find_VIN(vin, database):
     for col, value in dims.items():
         sheet1.column_dimensions[chr(col+64)].width = value + 5
 
+    recommendation = 'Больше информации по ссылке - https://sputnikx.net\n' + recommendation
     file_output.save(filename)
     return filename, recommendation

@@ -11,6 +11,9 @@ LOG = 2000000001
 INFORMATION_ABOUT_BOT = '''
 Приветствуем, бот находиться в стадии разработки, но вы можете воспользоваться командами:
 Позвать администратора
+VIN
+ИНН
+Больше информации на сайте SputnikX
 '''
 
 class VkSession:
@@ -136,7 +139,7 @@ class VkSession:
             self.__messages_send(peer_id=peer_id, message='ИНН по Вашему запросу не найден, проверьте правильность введенных данных или напишите Администратору в Whatsapp +7 (926) 862-02-09')
             return
         file = open(filename, 'rb')
-        answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(inn), tags=None, peer_id=peer_id)
+        answer = self.upload.document_message(file, title='SputnikX-'+str(inn), tags=None, peer_id=peer_id)
         type_doc = answer['type']
         owner_id = answer['doc']['owner_id']
         media_id = answer['doc']['id']
@@ -153,7 +156,7 @@ class VkSession:
             self.__messages_send(peer_id=peer_id, message='ИНН по Вашему запросу не найден, проверьте правильность введенных данных или напишите Администратору в Whatsapp +7 (926) 862-02-09')
             return
         file = open(filename, 'rb')
-        answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(vin), tags=None, peer_id=peer_id)
+        answer = self.upload.document_message(file, title='SputnikX-'+str(vin), tags=None, peer_id=peer_id)
         type_doc = answer['type']
         owner_id = answer['doc']['owner_id']
         media_id = answer['doc']['id']
@@ -175,7 +178,13 @@ class VkSession:
         if 'инн ' in message.lower():
             inn = message[4::]
             self.__send_report_for_inn(inn, from_id)
+        elif 'inn ' in message.lower():
+            inn = message[4::]
+            self.__send_report_for_inn(inn, from_id)
         elif 'vin ' in message.lower():
+            vin = message[4::]
+            self.__send_report_for_vin(vin, from_id)
+        elif 'вин ' in message.lower():
             vin = message[4::]
             self.__send_report_for_vin(vin, from_id)
         elif 'позвать администратора' in message.lower():
