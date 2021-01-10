@@ -9,11 +9,11 @@ from Functions import old_format, find_INN, find_VIN
 
 LOG = 2000000001
 INFORMATION_ABOUT_BOT = '''
-Приветствуем, бот находиться в стадии разработки, но вы можете воспользоваться командами:
+Приветствуем, команды для пользования ботом:
 Позвать администратора
 VIN
 ИНН
-Больше информации на сайте SputnikX
+Больше информации на cайте https://sputnikx.net
 '''
 
 class VkSession:
@@ -227,11 +227,13 @@ class VkSession:
         elif str(from_id) in self.administrators:
             self.__administrator_action(data)
         else:
+            self.__user_action('any@people.ru', data)
+            '''
             for email in self.users:
                 if str(from_id) in self.users[email]:
                     self.__user_action(email, data)
                     break
-
+'''
     def delete_user(self, user):
         user = str(user)
         finded = False
