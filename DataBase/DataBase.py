@@ -52,48 +52,23 @@ class DataBase:
         self.connect.commit()
         return id
 
-    def update_record(self, id, type, data):
+    def update_transport(self, **data):
         if type == 'transport':
-            keywords = {
-                'VIN': 'vin',
-                'State_Registr_Mark': 'srm',
-                'Region': 'region',
-                'Date_of_issue': 'date_of_issue',
-                'pass_ser': 'pass_ser',
-                'Ownership': 'ownership',
-                'End_date_of_ownership': 'end_of_ownership',
-                'brand': 'brand',
-                'model': 'model',
-                'type': 'ttype',
-                'Registered_at': 'registered_at',
-                'Status': 'status',
-                'Action_with_vehicle': 'action_with_vehicle',
-                'Categorized': 'categorized',
-                'Number_of_cat_reg': 'number_of_cat_reg',
-                'Data_in_cat_reg': 'date_in_cat_reg',
-                'ATP': 'atp',
-                'Model_from_cat_reg': 'model_from_cat_reg',
-                'Owner_from_cat_reg': 'owner_from_cat_reg',
-                'Purpose_into_cat_reg': 'purpose_into_cat_reg',
-                'Category': 'category',
-                'Date_of_cat_reg': 'date_of_cat_reg'
-            }
             request = """
                 UPDATE
                     `transportfinder`.`transport`
                 SET
                     {list_of_updates}
                 WHERE
-                    (`transport_id` = '{id}');
+                    (`RegistrID` = '{id}');
             """
         else:
             raise Exception('Error: wrong type of table')
         list_of_updates = ""
-        for key in keywords:
-            if keywords[key] in data:
-                list_of_updates += "`{key}` = '{value}', ".format(
-                    key=key, value=data[keywords[key]])
-        request = request.format(list_of_updates=list_of_updates[:-2:], id=id)
+        for key in data:
+            list_of_updates += "`transport`.`{key}` = '{value}', ".format(
+                key=key, value=data[key])
+        request = request.format(list_of_updates=list_of_updates[:-2:], id=data['RegistrID'])
         self.task(request)
 
     def insert_transport(self, RegistrId='Н/Д', DateOfEntryInTheRegister='Н/Д', TypeOfObject='Н/Д', TransportType='Н/Д', TransportMark='Н/Д', 
@@ -179,30 +154,61 @@ class DataBase:
         for i_row in range(24, nrows):
             try:
                 self.row = self.sheet.row_values(i_row)
-                self.insert_transport(
-                    RegistrId=str(self.row[0]).replace('\'', '"'),
-                    DateOfEntryInTheRegister=self.reformat_date(self.row[1]),
-                    TypeOfObject=str(self.row[2]).replace('\'', '"'),
-                    TransportType=str(self.row[3]).replace('\'', '"'),
-                    TransportMark=str(self.row[4]).replace('\'', '"'),
-                    TransportModel=str(self.row[5]).replace('\'', '"'),
-                    TransportID=str(self.row[6]).replace('\'', '"'),
-                    TypeOfTransportSubject=str(self.row[7]).replace('\'', '"'),
-                    CodeOfRCOOALF=str(self.row[8]).replace('\'', '"'),
-                    NameOfOwner=str(self.row[9]).replace('\'', '"'),
-                    OwnerIndex=str(self.row[10]).replace('\'', '"'),
-                    OwnerLocation=str(self.row[11]).replace('\'', '"'),
-                    OwnerAddress=str(self.row[12]).replace('\'', '"'),
-                    INN=str(self.row[13]).replace('\'', '"'),
-                    OGRN=str(int(self.row[14])),
-                    DateOfRegistrationOfOwner=self.reformat_date(self.row[15]),
-                    TransportLocation=str(self.row[16]).replace('\'', '"'),
-                    OrderForEntry=str(self.row[17]).replace('\'', '"'),
-                    OrderForChanges=str(self.row[18]).replace('\'', '"'),
-                    DateOfChanges=self.reformat_date(self.row[19]),
-                    OrderForExclusion=str(self.row[20]).replace('\'', '"'),
-                    DateOfExclusion=self.reformat_date(str(self.row[21])),
-                )
+                check = '''
+                    SELECT `RegistrID` 
+                    FROM transportfinder.transport WHERE `RegistrID` = '{id}' 
+            '''.format(id=self.row[0])
+                result = len(self.task_get(check)) == 0
+                if result:
+                    self.insert_transport(
+                        RegistrId=str(self.row[0]).replace('\'', '"'),
+                        DateOfEntryInTheRegister=self.reformat_date(self.row[1]),
+                        TypeOfObject=str(self.row[2]).replace('\'', '"'),
+                        TransportType=str(self.row[3]).replace('\'', '"'),
+                        TransportMark=str(self.row[4]).replace('\'', '"'),
+                        TransportModel=str(self.row[5]).replace('\'', '"'),
+                        TransportID=str(self.row[6]).replace('\'', '"'),
+                        TypeOfTransportSubject=str(self.row[7]).replace('\'', '"'),
+                        CodeOfRCOOALF=str(self.row[8]).replace('\'', '"'),
+                        NameOfOwner=str(self.row[9]).replace('\'', '"'),
+                        OwnerIndex=str(self.row[10]).replace('\'', '"'),
+                        OwnerLocation=str(self.row[11]).replace('\'', '"'),
+                        OwnerAddress=str(self.row[12]).replace('\'', '"'),
+                        INN=str(self.row[13]).replace('\'', '"'),
+                        OGRN=str(int(self.row[14])),
+                        DateOfRegistrationOfOwner=self.reformat_date(self.row[15]),
+                        TransportLocation=str(self.row[16]).replace('\'', '"'),
+                        OrderForEntry=str(self.row[17]).replace('\'', '"'),
+                        OrderForChanges=str(self.row[18]).replace('\'', '"'),
+                        DateOfChanges=self.reformat_date(self.row[19]),
+                        OrderForExclusion=str(self.row[20]).replace('\'', '"'),
+                        DateOfExclusion=self.reformat_date(str(self.row[21]))
+                    )
+                else:
+                    self.update_transport( 
+                        RegistrId=str(self.row[0]).replace('\'', '"'),
+                        DateOfEntryInTheRegister=self.reformat_date(self.row[1]),
+                        TypeOfObject=str(self.row[2]).replace('\'', '"'),
+                        TransportType=str(self.row[3]).replace('\'', '"'),
+                        TransportMark=str(self.row[4]).replace('\'', '"'),
+                        TransportModel=str(self.row[5]).replace('\'', '"'),
+                        TransportID=str(self.row[6]).replace('\'', '"'),
+                        TypeOfTransportSubject=str(self.row[7]).replace('\'', '"'),
+                        CodeOfRCOOALF=str(self.row[8]).replace('\'', '"'),
+                        NameOfOwner=str(self.row[9]).replace('\'', '"'),
+                        OwnerIndex=str(self.row[10]).replace('\'', '"'),
+                        OwnerLocation=str(self.row[11]).replace('\'', '"'),
+                        OwnerAddress=str(self.row[12]).replace('\'', '"'),
+                        INN=str(self.row[13]).replace('\'', '"'),
+                        OGRN=str(int(self.row[14])),
+                        DateOfRegistrationOfOwner=self.reformat_date(self.row[15]),
+                        TransportLocation=str(self.row[16]).replace('\'', '"'),
+                        OrderForEntry=str(self.row[17]).replace('\'', '"'),
+                        OrderForChanges=str(self.row[18]).replace('\'', '"'),
+                        DateOfChanges=self.reformat_date(self.row[19]),
+                        OrderForExclusion=str(self.row[20]).replace('\'', '"'),
+                        DateOfExclusion=self.reformat_date(str(self.row[21])),
+                    )
             except Exception as e:
                 print('Data:', self.row, file=log)
                 print('File:', document_name, file=log)
