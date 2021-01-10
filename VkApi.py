@@ -127,10 +127,27 @@ class VkSession:
         self.new_administrator(id)
         self.__online_log('Добавлен администратор: user - "'+str(id)+'"')
         
-    def __send_report(self, inn, peer_id):
+    def __send_report_for_inn(self, inn, peer_id):
         print('send, file')
         try:
             filename, recomendation = old_format(inn, self.database)
+        except Exception as e:
+            print(e)
+            self.__messages_send(peer_id=peer_id, message='ИНН по Вашему запросу не найден, проверьте правильность введенных данных или напишите Администратору в Whatsapp +7 (926) 862-02-09')
+            return
+        file = open(filename, 'rb')
+        answer = self.upload.document_message(file, title='spravka_yourspec_inn_'+str(inn), tags=None, peer_id=peer_id)
+        type_doc = answer['type']
+        owner_id = answer['doc']['owner_id']
+        media_id = answer['doc']['id']
+        doc_url = '{type}{owner_id}_{media_id}'.format(type=type_doc, owner_id=owner_id, media_id=media_id)
+        self.__messages_send(peer_id=peer_id, message=recomendation, attachment=doc_url)
+        file.close()
+    
+    def __send_report_for_vin(self, vin, peer_id):
+        print('send, file')
+        try:
+            filename, recomendation = find_VIN(vin, self.database)
         except Exception as e:
             print(e)
             self.__messages_send(peer_id=peer_id, message='ИНН по Вашему запросу не найден, проверьте правильность введенных данных или напишите Администратору в Whatsapp +7 (926) 862-02-09')
@@ -155,9 +172,12 @@ class VkSession:
         message = data['object']['message']['text']
         from_id = data['object']['message']['from_id']
         print(message.lower())
-        if 'данные по инн' in message.lower():
-            inn = int(message[13::])
-            self.__send_report(inn, from_id)
+        if 'инн ' in message.lower():
+            inn = message[4::]
+            self.__send_report_for_inn(inn, from_id)
+        elif 'vin ' in message.lower():
+            vin = message[4::]
+            self.__send_report_for_vin(vin, from_id)
         elif 'позвать администратора' in message.lower():
             self.__call_administrator(from_id)
             self.__messages_send(message='Ожидайте', peer_id=from_id)
