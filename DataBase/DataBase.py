@@ -166,7 +166,7 @@ class DataBase:
 
     def reformat_date(self, date_old_format):
         if type(date_old_format) == float:
-            return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:]))
+            return ':'.join(map(str, xldate(float(date_old_format), self.book.datemode)[:3:])[::-1])
         else:
             return date_old_format
 
@@ -217,14 +217,13 @@ class DataBase:
                 {list_of_taken}
             FROM
                 transport
-                join transport_owners on transport.transport_id = transport_owners.transport_id
-                join owners on owners.Owner_id = transport_owners.Owner_id
             WHERE
                 {list_of_given}
 
-            GROUP BY `transport`.`VIN`;    
+            GROUP BY `transport`.`RegistrId`;    
         '''
         column_list = {
+            'RegistrId': '`transport`.`RegistrId`',
             'DateOfEntryInTheRegister': '`transport`.`DateOfEntryInTheRegister`',
             'TypeOfObject': '`transport`.`TypeOfObject`',
             'TransportType': '`transport`.`TransportType`',
@@ -265,7 +264,6 @@ class DataBase:
                 raise Exception('Custom Error: wrong format for given : {}'.format(argument))
         
         request = request.format(list_of_given=list_of_given, list_of_taken=list_of_taken[:-2:])
-        print('Запроос: \n' + request)
 
         return self.task_get(request)
         

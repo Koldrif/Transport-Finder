@@ -4,7 +4,7 @@ from DataBase.DataBase import DataBase as Database
 
 
 def main():
-    database = Database(host='127.0.0.1', user='root', password='pZFEkd2H9HwwETAc', db='transportfinder')
+    database = Database(host='127.0.0.1', user='root', password='F0ll0wSQL', db='transportfinder')
     vk_session = VkSession(database, token=VK_API_TOKEN, vkgroup=VK_GROUP_ID, users_filename='users.txt', administrators_filename='administrators.txt')
     print('Бот запущен')
     while True:

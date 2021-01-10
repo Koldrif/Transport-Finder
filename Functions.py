@@ -7,7 +7,6 @@ from src.Styles import Styles_Excel
 imgLogo = Image('.\src\Images\Logo.png')
 imgLogo.width = 160
 imgLogo.height = 50
-save_file_name = 'openPyxl.xlsx'
 
 def as_text(value):
     if value is None:
@@ -16,7 +15,7 @@ def as_text(value):
 
 def old_format(inn, database):
     inn = str(inn)
-    filename = ''
+    save_file_name = 'openPyxl.xlsx'
     data = database.get_data(
         'vin',                           # 0
         'srm',                           # 1
@@ -353,3 +352,145 @@ def old_format(inn, database):
     return save_file_name, recommendation
 
     
+def find_INN(inn, database):
+    inn = str(inn)
+    filename = 'openPyxl.xlsx'
+    recommendation = 'Запрос по ИНН (' + str(inn) + ')'
+    data = database.get_data(
+        'RegistrId',                         # 0
+        'DateOfEntryInTheRegister',          # 1
+        'TypeOfObject',                      # 2
+        'TransportType',                     # 3
+        'TransportMark',                     # 4
+        'TransportModel',                    # 5
+        'TransportID',                       # 6
+        'TypeOfTransportSubject',            # 7
+        'CodeOfRCOOALF',                     # 8
+        'NameOfOwner',                       # 9
+        'OwnerIndex',                        # 10
+        'OwnerLocation',                     # 11
+        'OwnerAddress',                      # 12
+        'INN',                               # 13
+        'OGRN',                              # 14
+        'DateOfRegistrationOfOwner',         # 15
+        'TransportLocation',                 # 16
+        'OrderForEntry',                     # 17
+        INN = inn
+    )
+    file_output = Workbook()
+    sheet1 = file_output.active
+
+    sheet1.cell(1, 2, u'Запрос')
+    sheet1.cell(1, 4, u'Ответ')
+    sheet1.cell(2, 1, u'ИНН')
+    sheet1.cell(2, 2, inn)
+    if data != []:
+        sheet1.cell(2, 4, u'ИНН найден')
+    else:
+        sheet1.cell(2, 4, u'ИНН не найден')
+    sheet1.cell(3, 1, u'Наименование компании')
+    if data != []:
+        sheet1.cell(3, 2, data[0][9])
+    else:
+        sheet1.cell(3, 2, u'Неизвестно')
+    
+    if data != []:
+        sheet1.cell(5, 1, u'Реестровый номер')
+        sheet1.cell(5, 2, u'Дата внесения в Реестр')
+        sheet1.cell(5, 3, u'Марка')
+        sheet1.cell(5, 4, u'Модель')
+        sheet1.cell(5, 5, u'Идентификационный номер')
+        sheet1.cell(5, 6, u'Основание для внесения в Реестр')
+        for i in range(len(data)):
+            sheet1.cell(6+i, 1, data[i][0])
+            sheet1.cell(6+i, 2, data[i][1])
+            sheet1.cell(6+i, 3, data[i][4])
+            sheet1.cell(6+i, 4, data[i][5])
+            sheet1.cell(6+i, 5, data[i][6])
+            sheet1.cell(6+i, 6, data[i][17])
+    else:
+        recommendation = 'INN не найден'
+    
+    dims = {}
+    for row in sheet1.rows:
+        for cell in row:
+            if cell.value:
+                dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))    
+    for col, value in dims.items():
+        sheet1.column_dimensions[chr(col+64)].width = value + 5
+
+    file_output.save(filename)
+    return filename, recommendation
+
+def find_VIN(vin, database):
+    vin = str(vin)
+    filename = 'openPyxl.xlsx'
+    recommendation = 'Запрос по VIN (' + str(vin) + ')'
+    data = database.get_data(
+        'RegistrId',                         # 0
+        'DateOfEntryInTheRegister',          # 1
+        'TypeOfObject',                      # 2
+        'TransportType',                     # 3
+        'TransportMark',                     # 4
+        'TransportModel',                    # 5
+        'TransportID',                       # 6
+        'TypeOfTransportSubject',            # 7
+        'CodeOfRCOOALF',                     # 8
+        'NameOfOwner',                       # 9
+        'OwnerIndex',                        # 10
+        'OwnerLocation',                     # 11
+        'OwnerAddress',                      # 12
+        'INN',                               # 13
+        'OGRN',                              # 14
+        'DateOfRegistrationOfOwner',         # 15
+        'TransportLocation',                 # 16
+        'OrderForEntry',                     # 17
+        TransportID = vin
+    )
+    file_output = Workbook()
+    sheet1 = file_output.active
+
+    sheet1.cell(1, 2, u'Запрос')
+    sheet1.cell(1, 3, u'Ответ')
+    sheet1.cell(2, 1, u'Идентификационный номер транспортного средства')
+    sheet1.cell(2, 2, vin)
+    if data != []:
+        sheet1.cell(2, 3, u'VIN найден')
+    else:
+        sheet1.cell(2, 3, u'VIN не найден')
+    sheet1.cell(3, 1, u'ИНН')
+    if data != []:
+        sheet1.cell(3, 2, data[0][13])
+    else:
+        sheet1.cell(3, 2, u'ИНН не найден')
+    sheet1.cell(4, 1, u'Наименование компании')
+    if data != []:
+        sheet1.cell(4, 2, data[0][9])
+    else:
+        sheet1.cell(4, 2, u'Компания не найдена')
+    if data != []:
+        sheet1.cell(6, 1, u'Реестровый номер')
+        sheet1.cell(6, 2, u'Дата внесения в реестр')
+        sheet1.cell(6, 3, u'Марка')
+        sheet1.cell(6, 4, u'Модель')
+        sheet1.cell(6, 5, u'Идентификационный номер')
+        sheet1.cell(6, 6, u'Основание для внесения в реестр')
+        sheet1.cell(7, 1, data[0][0])
+        sheet1.cell(7, 2, data[0][1])
+        sheet1.cell(7, 3, data[0][4])
+        sheet1.cell(7, 4, data[0][5])
+        sheet1.cell(7, 5, data[0][6])
+        sheet1.cell(7, 6, data[0][17])
+    else:
+        recommendation = 'VIN не найден'
+
+    dims = {}
+    for row in sheet1.rows:
+        for cell in row:
+            if cell.value:
+                dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))    
+    for col, value in dims.items():
+        sheet1.column_dimensions[chr(col+64)].width = value + 5
+
+    file_output.save(filename)
+    return filename, recommendation
