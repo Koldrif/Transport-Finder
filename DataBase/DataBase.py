@@ -19,12 +19,7 @@ class DataBase:
         self.password=password
         self.db=db
         self.charset=charset
-        self.begins = {
-            'registry_of_bus': 5
-        }
-        self.functions = {
-            'registry_of_bus': self.read_bus
-        }
+        self.request = ''
 
     def task_get(self, request):
         self.connect = sql.connect(
@@ -101,27 +96,14 @@ class DataBase:
         request = request.format(list_of_updates=list_of_updates[:-2:], id=id)
         self.task(request)
 
-    def insert_database(self, **data):
-        request = '''
-            SELECT `transport_id`, `State_Registr_Mark` 
-            FROM transportfinder.transport WHERE `State_Registr_Mark` = '{srm}' 
-        '''.format(srm=data['srm'])
-        rows = self.task_get(request)
-        if len(rows) == 1:
-            id_ts = rows[0][0]
-            self.update_record(id=id_ts, type='transport', data=data)
-        elif len(rows) == 0:
-            id_ts = -1
-        else:
-            raise Exception('Database_error: few transports was found')
-
-    def insert_transport(self, DateOfEntryInTheRegister='Н/Д', TypeOfObject='Н/Д', TransportType='Н/Д', TransportMark='Н/Д', 
+    def insert_transport(self, RegistrId='Н/Д', DateOfEntryInTheRegister='Н/Д', TypeOfObject='Н/Д', TransportType='Н/Д', TransportMark='Н/Д', 
                          TransportModel='Н/Д', TransportID='Н/Д', TypeOfTransportSubject='Н/Д', CodeOfRCOOALF='Н/Д', NameOfOwner='Н/Д', 
                          OwnerIndex='Н/Д', OwnerLocation='Н/Д', OwnerAddress='Н/Д', INN='Н/Д', OGRN='Н/Д', DateOfRegistrationOfOwner='Н/Д', 
                          TransportLocation='Н/Д', OrderForEntry='Н/Д', OrderForChanges='Н/Д', DateOfChanges='Н/Д', OrderForExclusion='Н/Д', 
                          DateOfExclusion='Н/Д', **trash):
         request = '''
             INSERT INTO `transportfinder`.`transport` (
+                    `RegistrId`,
                     `DateOfEntryInTheRegister`,
                     `TypeOfObject`,
                     `TransportType`,
@@ -142,7 +124,7 @@ class DataBase:
                     `OrderForChanges`,
                     `DateOfChanges`,
                     `OrderForExclusion`,
-                    `DateOfExclusion`,
+                    `DateOfExclusion`
                 )
             VALUES
                 (
@@ -153,9 +135,10 @@ class DataBase:
                     '{}', '{}',             '{}', '{}',
                     '{}', '{}',             '{}', '{}', 
                           '{}', '{}', '{}', '{}',
-                                   '{}',
+                                '{}', '{}'
                 );
             '''.format(
+                    RegistrId,
                     DateOfEntryInTheRegister,
                     TypeOfObject,
                     TransportType,
@@ -178,6 +161,7 @@ class DataBase:
                     OrderForExclusion,
                     DateOfExclusion
         )
+        self.request = request
         return self.task(request)
 
     def reformat_date(self, date_old_format):
@@ -195,36 +179,36 @@ class DataBase:
         for i_row in range(24, nrows):
             try:
                 self.row = self.sheet.row_values(i_row)
-                self.insert_database(
-                    DateOfEntryInTheRegister=self.reformat_date(self.row[0]),
-                    TypeOfObject=self.row[1].replace('\'', '"'),
-                    TransportType=self.row[2].replace('\'', '"'),
-                    TransportMark=self.row[3].replace('\'', '"'),
-                    TransportModel=self.row[4].replace('\'', '"'),
-                    TransportID=self.row[5].replace('\'', '"'),
-                    TypeOfTransportSubject=self.row[6].replace('\'', '"'),
-                    CodeOfRCOOALF=self.row[7].replace('\'', '"'),
-                    NameOfOwner=self.row[8].replace('\'', '"'),
-                    OwnerIndex=self.row[9].replace('\'', '"'),
-                    OwnerLocation=self.row[10].replace('\'', '"'),
-                    OwnerAddress=self.row[11].replace('\'', '"'),
-                    INN=self.row[12].replace('\'', '"'),
-                    OGRN=self.row[13].replace('\'', '"'),
-                    DateOfRegistrationOfOwner=self.reformat_date(self.row[14]),
-                    TransportLocation=self.row[15].replace('\'', '"'),
-                    OrderForEntry=self.row[16].replace('\'', '"'),
-                    OrderForChanges=self.row[17].replace('\'', '"'),
-                    DateOfChanges=self.reformat_date(self.row[18]),
-                    OrderForExclusion=self.row[19].replace('\'', '"'),
-                    DateOfExclusion=self.reformat_date(self.row[20]),
+                self.insert_transport(
+                    RegistrId=str(self.row[0]).replace('\'', '"'),
+                    DateOfEntryInTheRegister=self.reformat_date(self.row[1]),
+                    TypeOfObject=str(self.row[2]).replace('\'', '"'),
+                    TransportType=str(self.row[3]).replace('\'', '"'),
+                    TransportMark=str(self.row[4]).replace('\'', '"'),
+                    TransportModel=str(self.row[5]).replace('\'', '"'),
+                    TransportID=str(self.row[6]).replace('\'', '"'),
+                    TypeOfTransportSubject=str(self.row[7]).replace('\'', '"'),
+                    CodeOfRCOOALF=str(self.row[8]).replace('\'', '"'),
+                    NameOfOwner=str(self.row[9]).replace('\'', '"'),
+                    OwnerIndex=str(self.row[10]).replace('\'', '"'),
+                    OwnerLocation=str(self.row[11]).replace('\'', '"'),
+                    OwnerAddress=str(self.row[12]).replace('\'', '"'),
+                    INN=str(self.row[13]).replace('\'', '"'),
+                    OGRN=str(int(self.row[14])),
+                    DateOfRegistrationOfOwner=self.reformat_date(self.row[15]),
+                    TransportLocation=str(self.row[16]).replace('\'', '"'),
+                    OrderForEntry=str(self.row[17]).replace('\'', '"'),
+                    OrderForChanges=str(self.row[18]).replace('\'', '"'),
+                    DateOfChanges=self.reformat_date(self.row[19]),
+                    OrderForExclusion=str(self.row[20]).replace('\'', '"'),
+                    DateOfExclusion=self.reformat_date(str(self.row[21])),
                 )
             except Exception as e:
-                try:
-                    print('Data:', self.row, file=log)
-                    print('File:', document_name, file=log)
-                    print('Error:', e, file=log)
-                except:
-                    pass
+                print('Data:', self.row, file=log)
+                print('File:', document_name, file=log)
+                print('SQL Request:', self.request, file=log)
+                print('Error:', e, file=log)
+                
         print('Book was read...', file=log)
 
     def get_data(self, *taken, **given):
