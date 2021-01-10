@@ -53,22 +53,20 @@ class DataBase:
         return id
 
     def update_transport(self, **data):
-        if type == 'transport':
-            request = """
-                UPDATE
-                    `transportfinder`.`transport`
-                SET
-                    {list_of_updates}
-                WHERE
-                    (`RegistrID` = '{id}');
-            """
-        else:
-            raise Exception('Error: wrong type of table')
+        request = """
+            UPDATE
+                `transportfinder`.`transport`
+            SET
+                {list_of_updates}
+            WHERE
+                (`RegistrId` = '{id}');
+        """
         list_of_updates = ""
         for key in data:
             list_of_updates += "`transport`.`{key}` = '{value}', ".format(
                 key=key, value=data[key])
-        request = request.format(list_of_updates=list_of_updates[:-2:], id=data['RegistrID'])
+        request = request.format(list_of_updates=list_of_updates[:-2:], id=data['RegistrId'])
+        self.request = request
         self.task(request)
 
     def insert_transport(self, RegistrId='Н/Д', DateOfEntryInTheRegister='Н/Д', TypeOfObject='Н/Д', TransportType='Н/Д', TransportMark='Н/Д', 
@@ -141,12 +139,12 @@ class DataBase:
 
     def reformat_date(self, date_old_format):
         if type(date_old_format) == float:
-            return ':'.join(list(map(str, xldate(float(date_old_format), self.book.datemode))[:3:])[::-1])
+            return '.'.join(list(map(str, xldate(float(date_old_format), self.book.datemode)))[:3:-1])
         else:
             return date_old_format
 
     def read_bus(self, document_name, log=sys.stdout):
-        print('reading prosecutors check...', file=log)
+        print('reading', document_name, file=log)
         a = time.process_time()
         self.book = xlrd.open_workbook(document_name)
         self.sheet = self.book.sheet_by_index(0)
